@@ -9,8 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <!-- O script é carregado com 'defer' para esperar o carregamento do HTML -->
+    <script src="script.js" defer></script>
   </head>
-
   <body>
     <header>
       <div class="logo">
@@ -19,15 +20,15 @@
           alt="Logo Apenas um Católico"
         />
       </div>
-
-      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-
+      <button class="menu-toggle" aria-expanded="false" onclick="toggleMenu()">
+        ☰
+      </button>
       <nav class="menu">
         <ul>
-          <li><a href="#">Início</a></li>
-          <li><a href="#">Sobre</a></li>
-          <li><a href="#">Galeria</a></li>
-          <li><a href="#">Contato</a></li>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+          <li><a href="galeria.html">Galeria</a></li>
+          <li><a href="contato.html">Contato</a></li>
         </ul>
       </nav>
     </header>
@@ -60,8 +61,9 @@
 
         <h2>Por que veneramos os Santos?</h2>
         <p>
-          Os santos foram homens e mulheres que seguiram fielmente os passos de
-          Jesus.
+          Homens e mulheres de fé que trilharam os caminhos de Jesus, os santos
+          deixaram um legado de amor, serviço e dedicação que transcende o tempo
+          e continua a inspirar milhões.
         </p>
       </section>
 
@@ -89,8 +91,8 @@
       </div>
     </main>
 
-    <footer>© 2025 - Site devocional criado para evangelizar e inspirar</footer>
-
-    <script src="script.js"></script>
+    <footer>
+      <p>&copy; 2025 - Site devocional criado para evangelizar e inspirar</p>
+    </footer>
   </body>
 </html>

@@ -1,10 +1,35 @@
-body {
+/* RESET + ESTILOS GLOBAIS */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   font-family: "Montserrat", sans-serif;
   background-color: #f9f9f9;
   color: #333;
+  line-height: 1.6;
 }
 
+/* Imagens responsivas */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Transição em links */
+a {
+  text-decoration: none;
+  color: #005b96;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* HEADER */
 header {
   background-color: #e3f2fd;
   display: flex;
@@ -16,19 +41,28 @@ header {
 
 .logo img {
   max-width: 180px;
-  height: auto;
 }
 
+/* Botão Menu (sempre visível) */
 .menu-toggle {
-  background: none;
-  border: none;
-  font-size: 2rem;
+  background-color: #fff; /* Fundo branco para destaque */
+  border: 2px solid #005b96; /* Borda com a cor do tema */
+  border-radius: 5px; /* Cantos levemente arredondados */
+  padding: 5px 10px; /* Espaçamento interno */
+  font-size: 2rem; /* Tamanho da fonte (para o ícone ☰) */
   cursor: pointer;
-  color: #005b96;
+  color: #005b96; /* Cor do ícone */
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
+.menu-toggle:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.1);
+}
+
+/* MENU (dropdown) - sempre posicionado no canto */
 .menu {
-  display: none;
+  display: none; /* Será ativado via JS */
   flex-direction: column;
   background-color: #e3f2fd;
   position: absolute;
@@ -37,6 +71,10 @@ header {
   border-radius: 8px;
   padding: 10px;
   z-index: 10;
+}
+
+.menu.active {
+  display: flex;
 }
 
 .menu ul {
@@ -50,29 +88,20 @@ header {
 }
 
 .menu a {
-  text-decoration: none;
-  color: #005b96;
   font-weight: bold;
 }
 
+/* MANTENDO O MENU DROPDOWN TAMBÉM NO DESKTOP */
 @media (min-width: 768px) {
-  .menu {
-    display: flex;
-    flex-direction: row;
-    position: static;
-    background: none;
-    padding: 0;
-  }
-
-  .menu li {
-    margin: 0 15px;
-  }
-
+  /* Não ocultamos o botão, e mantemos o menu dropdown fixo no canto */
   .menu-toggle {
-    display: none;
+    /* Se preferir, você pode ajustar o tamanho no desktop: */
+    font-size: 1.5rem;
+    padding: 5px 8px;
   }
 }
 
+/* MAIN */
 main {
   max-width: 1000px;
   margin: 30px auto;
@@ -101,14 +130,21 @@ h2 {
   margin-bottom: 20px;
 }
 
-footer {
+/* CONTEÚDO */
+.conteudo p,
+.conteudo blockquote {
   text-align: center;
-  padding: 15px;
-  background-color: #e3f2fd;
-  color: #333;
-  margin-top: 40px;
+  margin: 20px 0;
 }
 
+.conteudo blockquote {
+  font-style: italic;
+  color: #666;
+  padding: 10px;
+  border-left: 4px solid #ccc;
+}
+
+/* GALERIA (mantendo a parte das imagens como estava) */
 .galeria {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -140,24 +176,24 @@ footer {
   color: #0077b6;
 }
 
-/* Botão Estilizado para Mobile e PC */
-button {
-  background-color: #0077b6;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 30px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 15px;
+  background-color: #e3f2fd;
+  color: #333;
+  margin-top: 40px;
 }
 
-button:hover {
-  background-color: #005b96;
-  transform: translateY(-2px);
-}
-
-button:active {
-  transform: scale(0.98);
+/* TIPOGRAFIA RESPONSIVA */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  main {
+    padding: 0 10px;
+  }
 }

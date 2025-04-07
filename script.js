@@ -3,22 +3,35 @@ function toggleMenu() {
   const menuToggle = document.querySelector(".menu-toggle");
   const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
 
-  // Alternar estado do menu
   menu.classList.toggle("active");
   menuToggle.setAttribute("aria-expanded", !isExpanded);
 
-  // Prevenir scroll do corpo quando menu está aberto
-  document.body.style.overflow = isExpanded ? "auto" : "hidden";
+  // Desativa scroll do body apenas no mobile
+  if (window.innerWidth <= 768) {
+    document.body.style.overflow = isExpanded ? "auto" : "hidden";
+  }
 }
 
-// Adicionar evento ao botão
+// Evento do botão para abrir/fechar menu no mobile
 document.querySelector(".menu-toggle").addEventListener("click", toggleMenu);
 
-// Fechar menu ao clicar em um link (opcional)
+// Fecha o menu ao clicar em um link no mobile
 document.querySelectorAll(".menu a").forEach((link) => {
   link.addEventListener("click", () => {
     if (window.innerWidth <= 768) {
       toggleMenu();
     }
   });
+});
+
+// Garante que o menu sempre fique visível no desktop ao redimensionar
+window.addEventListener("resize", () => {
+  const menu = document.querySelector(".menu");
+  const menuToggle = document.querySelector(".menu-toggle");
+
+  if (window.innerWidth > 768) {
+    menu.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "auto"; // Libera scroll no desktop
+  }
 });
