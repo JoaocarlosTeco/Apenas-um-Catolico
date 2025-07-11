@@ -195,7 +195,7 @@ const Controls = styled.div`
   padding: 16px;
   background: ${props => props.theme.colors.cardBackground};
   border-radius: 8px;
-  box-shadow: ${props => props.theme.shadows.light};
+  box-shadow: ${props => props.theme.shadows.soft};
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     flex-direction: column;
@@ -281,7 +281,7 @@ const ErrorMessage = styled.div`
   background: ${props => props.theme.colors.cardBackground};
   border-radius: 12px;
   margin: 20px 0;
-  box-shadow: ${props => props.theme.shadows.light};
+  box-shadow: ${props => props.theme.shadows.soft};
 `;
 
 // Função para gerar conteúdo dinâmico baseado no dia

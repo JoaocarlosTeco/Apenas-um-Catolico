@@ -30,7 +30,7 @@ const Table = styled.table`
   border-collapse: collapse;
   background: ${props => props.theme.colors.white};
   border-radius: 12px;
-  box-shadow: ${props => props.theme.shadows.light};
+  box-shadow: ${props => props.theme.shadows.soft};
   overflow: hidden;
 `;
 
