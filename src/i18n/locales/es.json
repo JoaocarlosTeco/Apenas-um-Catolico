@@ -1,0 +1,209 @@
+{
+  "common": {
+    "home": "Inicio",
+    "saints": "Santos",
+    "prayers": "Oraciones",
+    "blog": "Blog",
+    "about": "Acerca de",
+    "search": "Buscar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "tryAgain": "Intentar de nuevo",
+    "readMore": "Leer más",
+    "share": "Compartir",
+    "favorite": "Añadir a favoritos",
+    "unfavorite": "Quitar de favoritos",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "navigation": {
+    "mainMenu": "Menú principal",
+    "skipToContent": "Saltar al contenido principal",
+    "skipToNavigation": "Saltar a la navegación",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "languageSelector": "Seleccionar idioma"
+  },
+  "header": {
+    "logoAlt": "Logo Solo un Católico",
+    "goToHome": "Ir a la página de inicio"
+  },
+  "footer": {
+    "allRightsReserved": "Todos los derechos reservados",
+    "builtWithLove": "Desarrollado con ❤️ para la comunidad católica",
+    "followUs": "Síguenos",
+    "contact": "Contacto",
+    "privacyPolicy": "Política de Privacidad",
+    "termsOfUse": "Términos de Uso"
+  },
+  "home": {
+    "title": "Solo un Católico",
+    "subtitle": "Evangelización y Devoción",
+    "description": "Sitio web católico dedicado a la evangelización y devoción a los santos",
+    "welcomeMessage": "Bienvenidos a nuestra comunidad de fe",
+    "featuredSaints": "Santos Destacados",
+    "dailyPrayers": "Oraciones Diarias",
+    "latestPosts": "Últimas Publicaciones",
+    "exploreContent": "Explora nuestro contenido",
+    "joinCommunity": "Únete a nuestra comunidad"
+  },
+  "saints": {
+    "title": "Santos Católicos",
+    "description": "Conoce la vida y enseñanzas de los santos de la Iglesia Católica",
+    "searchPlaceholder": "Buscar santos...",
+    "filterByCategory": "Filtrar por categoría",
+    "allCategories": "Todas las categorías",
+    "founders": "Fundadores",
+    "martyrs": "Mártires",
+    "doctors": "Doctores de la Iglesia",
+    "mystics": "Místicos",
+    "missionaries": "Misioneros",
+    "feastDay": "Día de la fiesta",
+    "patronOf": "Patrón de",
+    "biography": "Biografía",
+    "curiosities": "Curiosidades",
+    "relics": "Reliquias",
+    "intercedes": "Intercede por",
+    "canonization": "Canonización",
+    "birthPlace": "Lugar de nacimiento",
+    "deathPlace": "Lugar de muerte",
+    "attributes": "Atributos",
+    "noSaintsFound": "No se encontraron santos",
+    "loadMoreSaints": "Cargar más santos"
+  },
+  "prayers": {
+    "title": "Oraciones Católicas",
+    "description": "Colección de oraciones tradicionales y devociones católicas",
+    "searchPlaceholder": "Buscar oraciones...",
+    "filterByCategory": "Filtrar por categoría",
+    "allCategories": "Todas las categorías",
+    "fundamental": "Oraciones Fundamentales",
+    "marian": "Oraciones Marianas",
+    "protection": "Oraciones de Protección",
+    "penitential": "Oraciones Penitenciales",
+    "morning": "Oraciones Matutinas",
+    "evening": "Oraciones Vespertinas",
+    "eucharistic": "Oraciones Eucarísticas",
+    "occasion": "Ocasión",
+    "intention": "Intención",
+    "origin": "Origen",
+    "explanation": "Explicación",
+    "whenToPray": "Cuándo orar",
+    "copyPrayer": "Copiar oración",
+    "prayerCopied": "¡Oración copiada!",
+    "noPrayersFound": "No se encontraron oraciones"
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Reflexiones, enseñanzas y noticias sobre la fe católica",
+    "readingTime": "{{minutes}} min de lectura",
+    "publishedOn": "Publicado el {{date}}",
+    "author": "Autor",
+    "category": "Categoría",
+    "tags": "Etiquetas",
+    "relatedPosts": "Posts relacionados",
+    "sharePost": "Compartir post",
+    "noPostsFound": "No se encontraron posts",
+    "loadMorePosts": "Cargar más posts"
+  },
+  "liturgy": {
+    "title": "Liturgia Diaria",
+    "description": "Sigue las lecturas y reflexiones litúrgicas del día",
+    "todaysLiturgy": "Liturgia de Hoy",
+    "firstReading": "Primera Lectura",
+    "psalm": "Salmo Responsorial",
+    "secondReading": "Segunda Lectura",
+    "gospel": "Evangelio",
+    "reflection": "Reflexión",
+    "saint": "Santo del Día",
+    "previousDay": "Día anterior",
+    "nextDay": "Día siguiente",
+    "goToToday": "Ir a hoy"
+  },
+  "laudes": {
+    "title": "Laudes",
+    "description": "Oración de Laudes - Liturgia de las Horas",
+    "morningPrayer": "Oración de la Mañana",
+    "hymn": "Himno",
+    "antiphon": "Antífona",
+    "canticle": "Cántico",
+    "intercessions": "Preces",
+    "finalPrayer": "Oración Final"
+  },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Escribe tu búsqueda...",
+    "results": "Resultados de búsqueda",
+    "noResults": "No se encontraron resultados",
+    "searchIn": "Buscar en",
+    "allContent": "Todo el contenido",
+    "suggestions": "Sugerencias",
+    "recentSearches": "Búsquedas recientes",
+    "clearHistory": "Limpiar historial"
+  },
+  "accessibility": {
+    "increaseFontSize": "Aumentar tamaño de fuente",
+    "decreaseFontSize": "Disminuir tamaño de fuente",
+    "resetFontSize": "Restablecer tamaño de fuente",
+    "toggleHighContrast": "Alternar alto contraste",
+    "skipLinks": "Enlaces de navegación rápida",
+    "screenReaderOnly": "Solo para lectores de pantalla",
+    "keyboardNavigation": "Navegación por teclado disponible"
+  },
+  "errors": {
+    "pageNotFound": "Página no encontrada",
+    "networkError": "Error de conexión",
+    "serverError": "Error del servidor",
+    "goBackHome": "Volver al inicio",
+    "tryAgain": "Intentar de nuevo",
+    "reportError": "Reportar error"
+  },
+  "time": {
+    "justNow": "Ahora mismo",
+    "minutesAgo": {
+      "one": "hace {{count}} minuto",
+      "other": "hace {{count}} minutos"
+    },
+    "hoursAgo": {
+      "one": "hace {{count}} hora",
+      "other": "hace {{count}} horas"
+    },
+    "daysAgo": {
+      "one": "hace {{count}} día",
+      "other": "hace {{count}} días"
+    },
+    "monthsAgo": {
+      "one": "hace {{count}} mes",
+      "other": "hace {{count}} meses"
+    },
+    "yearsAgo": {
+      "one": "hace {{count}} año",
+      "other": "hace {{count}} años"
+    }
+  },
+  "meta": {
+    "siteTitle": "Solo un Católico - Evangelización y Devoción",
+    "siteDescription": "Sitio web católico dedicado a la evangelización y devoción a los santos. Conoce la historia de los santos, oraciones y reflexiones espirituales.",
+    "keywords": "católico, santos, oraciones, evangelización, fe, devoción, religión, cristianismo, Iglesia Católica, espiritualidad"
+  },
+  "notifications": {
+    "welcome": "¡Bienvenido a Solo un Católico!",
+    "subscribeToUpdates": "Suscríbete para recibir actualizaciones",
+    "newContentAvailable": "Nuevo contenido disponible",
+    "offlineMode": "Modo sin conexión activado",
+    "backOnline": "Conexión restablecida"
+  },
+  "language": {
+    "current": "Idioma actual",
+    "select": "Seleccionar idioma",
+    "portuguese": "Português",
+    "english": "English",
+    "spanish": "Español"
+  }
+} 

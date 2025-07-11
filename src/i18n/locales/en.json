@@ -1,0 +1,209 @@
+{
+  "common": {
+    "home": "Home",
+    "saints": "Saints",
+    "prayers": "Prayers",
+    "blog": "Blog",
+    "about": "About",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "tryAgain": "Try again",
+    "readMore": "Read more",
+    "share": "Share",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "close": "Close",
+    "open": "Open",
+    "next": "Next",
+    "previous": "Previous",
+    "save": "Save",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "mainMenu": "Main menu",
+    "skipToContent": "Skip to main content",
+    "skipToNavigation": "Skip to navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "languageSelector": "Select language"
+  },
+  "header": {
+    "logoAlt": "Just a Catholic Logo",
+    "goToHome": "Go to homepage"
+  },
+  "footer": {
+    "allRightsReserved": "All rights reserved",
+    "builtWithLove": "Built with ❤️ for the Catholic community",
+    "followUs": "Follow us",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use"
+  },
+  "home": {
+    "title": "Just a Catholic",
+    "subtitle": "Evangelization and Devotion",
+    "description": "Catholic website dedicated to evangelization and devotion to saints",
+    "welcomeMessage": "Welcome to our faith community",
+    "featuredSaints": "Featured Saints",
+    "dailyPrayers": "Daily Prayers",
+    "latestPosts": "Latest Posts",
+    "exploreContent": "Explore our content",
+    "joinCommunity": "Join our community"
+  },
+  "saints": {
+    "title": "Catholic Saints",
+    "description": "Learn about the life and teachings of Catholic Church saints",
+    "searchPlaceholder": "Search saints...",
+    "filterByCategory": "Filter by category",
+    "allCategories": "All categories",
+    "founders": "Founders",
+    "martyrs": "Martyrs",
+    "doctors": "Doctors of the Church",
+    "mystics": "Mystics",
+    "missionaries": "Missionaries",
+    "feastDay": "Feast day",
+    "patronOf": "Patron of",
+    "biography": "Biography",
+    "curiosities": "Curiosities",
+    "relics": "Relics",
+    "intercedes": "Intercedes for",
+    "canonization": "Canonization",
+    "birthPlace": "Birthplace",
+    "deathPlace": "Place of death",
+    "attributes": "Attributes",
+    "noSaintsFound": "No saints found",
+    "loadMoreSaints": "Load more saints"
+  },
+  "prayers": {
+    "title": "Catholic Prayers",
+    "description": "Collection of traditional Catholic prayers and devotions",
+    "searchPlaceholder": "Search prayers...",
+    "filterByCategory": "Filter by category",
+    "allCategories": "All categories",
+    "fundamental": "Fundamental Prayers",
+    "marian": "Marian Prayers",
+    "protection": "Protection Prayers",
+    "penitential": "Penitential Prayers",
+    "morning": "Morning Prayers",
+    "evening": "Evening Prayers",
+    "eucharistic": "Eucharistic Prayers",
+    "occasion": "Occasion",
+    "intention": "Intention",
+    "origin": "Origin",
+    "explanation": "Explanation",
+    "whenToPray": "When to pray",
+    "copyPrayer": "Copy prayer",
+    "prayerCopied": "Prayer copied!",
+    "noPrayersFound": "No prayers found"
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Reflections, teachings and news about the Catholic faith",
+    "readingTime": "{{minutes}} min read",
+    "publishedOn": "Published on {{date}}",
+    "author": "Author",
+    "category": "Category",
+    "tags": "Tags",
+    "relatedPosts": "Related posts",
+    "sharePost": "Share post",
+    "noPostsFound": "No posts found",
+    "loadMorePosts": "Load more posts"
+  },
+  "liturgy": {
+    "title": "Daily Liturgy",
+    "description": "Follow the liturgical readings and reflections of the day",
+    "todaysLiturgy": "Today's Liturgy",
+    "firstReading": "First Reading",
+    "psalm": "Responsorial Psalm",
+    "secondReading": "Second Reading",
+    "gospel": "Gospel",
+    "reflection": "Reflection",
+    "saint": "Saint of the Day",
+    "previousDay": "Previous day",
+    "nextDay": "Next day",
+    "goToToday": "Go to today"
+  },
+  "laudes": {
+    "title": "Lauds",
+    "description": "Lauds Prayer - Liturgy of the Hours",
+    "morningPrayer": "Morning Prayer",
+    "hymn": "Hymn",
+    "antiphon": "Antiphon",
+    "canticle": "Canticle",
+    "intercessions": "Intercessions",
+    "finalPrayer": "Final Prayer"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Type your search...",
+    "results": "Search results",
+    "noResults": "No results found",
+    "searchIn": "Search in",
+    "allContent": "All content",
+    "suggestions": "Suggestions",
+    "recentSearches": "Recent searches",
+    "clearHistory": "Clear history"
+  },
+  "accessibility": {
+    "increaseFontSize": "Increase font size",
+    "decreaseFontSize": "Decrease font size",
+    "resetFontSize": "Reset font size",
+    "toggleHighContrast": "Toggle high contrast",
+    "skipLinks": "Quick navigation links",
+    "screenReaderOnly": "Screen reader only",
+    "keyboardNavigation": "Keyboard navigation available"
+  },
+  "errors": {
+    "pageNotFound": "Page not found",
+    "networkError": "Connection error",
+    "serverError": "Server error",
+    "goBackHome": "Go back home",
+    "tryAgain": "Try again",
+    "reportError": "Report error"
+  },
+  "time": {
+    "justNow": "Just now",
+    "minutesAgo": {
+      "one": "{{count}} minute ago",
+      "other": "{{count}} minutes ago"
+    },
+    "hoursAgo": {
+      "one": "{{count}} hour ago",
+      "other": "{{count}} hours ago"
+    },
+    "daysAgo": {
+      "one": "{{count}} day ago",
+      "other": "{{count}} days ago"
+    },
+    "monthsAgo": {
+      "one": "{{count}} month ago",
+      "other": "{{count}} months ago"
+    },
+    "yearsAgo": {
+      "one": "{{count}} year ago",
+      "other": "{{count}} years ago"
+    }
+  },
+  "meta": {
+    "siteTitle": "Just a Catholic - Evangelization and Devotion",
+    "siteDescription": "Catholic website dedicated to evangelization and devotion to saints. Learn about the history of saints, prayers and spiritual reflections.",
+    "keywords": "catholic, saints, prayers, evangelization, faith, devotion, religion, christianity, Catholic Church, spirituality"
+  },
+  "notifications": {
+    "welcome": "Welcome to Just a Catholic!",
+    "subscribeToUpdates": "Subscribe to receive updates",
+    "newContentAvailable": "New content available",
+    "offlineMode": "Offline mode activated",
+    "backOnline": "Connection restored"
+  },
+  "language": {
+    "current": "Current language",
+    "select": "Select language",
+    "portuguese": "Português",
+    "english": "English",
+    "spanish": "Español"
+  }
+} 
