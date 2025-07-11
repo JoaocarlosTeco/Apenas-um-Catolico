@@ -1,30 +1,30 @@
 {
   "files": {
-    "main.js": "/Apenas-um-Catolico/static/js/main.9e7064fb.js",
-    "static/js/43.a5e573e1.chunk.js": "/Apenas-um-Catolico/static/js/43.a5e573e1.chunk.js",
-    "static/js/783.dd083ef0.chunk.js": "/Apenas-um-Catolico/static/js/783.dd083ef0.chunk.js",
-    "static/js/542.14ba6a59.chunk.js": "/Apenas-um-Catolico/static/js/542.14ba6a59.chunk.js",
-    "static/js/966.80d0db3b.chunk.js": "/Apenas-um-Catolico/static/js/966.80d0db3b.chunk.js",
-    "static/js/325.d8f6e657.chunk.js": "/Apenas-um-Catolico/static/js/325.d8f6e657.chunk.js",
-    "static/js/191.7305265e.chunk.js": "/Apenas-um-Catolico/static/js/191.7305265e.chunk.js",
-    "static/js/230.1ff0fb36.chunk.js": "/Apenas-um-Catolico/static/js/230.1ff0fb36.chunk.js",
-    "static/js/949.69322481.chunk.js": "/Apenas-um-Catolico/static/js/949.69322481.chunk.js",
-    "static/js/372.540fe8fe.chunk.js": "/Apenas-um-Catolico/static/js/372.540fe8fe.chunk.js",
-    "static/js/77.1d9228f0.chunk.js": "/Apenas-um-Catolico/static/js/77.1d9228f0.chunk.js",
+    "main.js": "/Apenas-um-Catolico/static/js/main.7eba5ef6.js",
+    "static/js/43.6e3b2640.chunk.js": "/Apenas-um-Catolico/static/js/43.6e3b2640.chunk.js",
+    "static/js/783.b6b51143.chunk.js": "/Apenas-um-Catolico/static/js/783.b6b51143.chunk.js",
+    "static/js/542.3b2b9633.chunk.js": "/Apenas-um-Catolico/static/js/542.3b2b9633.chunk.js",
+    "static/js/966.3b942588.chunk.js": "/Apenas-um-Catolico/static/js/966.3b942588.chunk.js",
+    "static/js/325.52dd972a.chunk.js": "/Apenas-um-Catolico/static/js/325.52dd972a.chunk.js",
+    "static/js/191.541aa021.chunk.js": "/Apenas-um-Catolico/static/js/191.541aa021.chunk.js",
+    "static/js/230.a52cbf28.chunk.js": "/Apenas-um-Catolico/static/js/230.a52cbf28.chunk.js",
+    "static/js/949.1f252fa4.chunk.js": "/Apenas-um-Catolico/static/js/949.1f252fa4.chunk.js",
+    "static/js/372.76f7c6db.chunk.js": "/Apenas-um-Catolico/static/js/372.76f7c6db.chunk.js",
+    "static/js/496.814fb001.chunk.js": "/Apenas-um-Catolico/static/js/496.814fb001.chunk.js",
     "index.html": "/Apenas-um-Catolico/index.html",
-    "main.9e7064fb.js.map": "/Apenas-um-Catolico/static/js/main.9e7064fb.js.map",
-    "43.a5e573e1.chunk.js.map": "/Apenas-um-Catolico/static/js/43.a5e573e1.chunk.js.map",
-    "783.dd083ef0.chunk.js.map": "/Apenas-um-Catolico/static/js/783.dd083ef0.chunk.js.map",
-    "542.14ba6a59.chunk.js.map": "/Apenas-um-Catolico/static/js/542.14ba6a59.chunk.js.map",
-    "966.80d0db3b.chunk.js.map": "/Apenas-um-Catolico/static/js/966.80d0db3b.chunk.js.map",
-    "325.d8f6e657.chunk.js.map": "/Apenas-um-Catolico/static/js/325.d8f6e657.chunk.js.map",
-    "191.7305265e.chunk.js.map": "/Apenas-um-Catolico/static/js/191.7305265e.chunk.js.map",
-    "230.1ff0fb36.chunk.js.map": "/Apenas-um-Catolico/static/js/230.1ff0fb36.chunk.js.map",
-    "949.69322481.chunk.js.map": "/Apenas-um-Catolico/static/js/949.69322481.chunk.js.map",
-    "372.540fe8fe.chunk.js.map": "/Apenas-um-Catolico/static/js/372.540fe8fe.chunk.js.map",
-    "77.1d9228f0.chunk.js.map": "/Apenas-um-Catolico/static/js/77.1d9228f0.chunk.js.map"
+    "main.7eba5ef6.js.map": "/Apenas-um-Catolico/static/js/main.7eba5ef6.js.map",
+    "43.6e3b2640.chunk.js.map": "/Apenas-um-Catolico/static/js/43.6e3b2640.chunk.js.map",
+    "783.b6b51143.chunk.js.map": "/Apenas-um-Catolico/static/js/783.b6b51143.chunk.js.map",
+    "542.3b2b9633.chunk.js.map": "/Apenas-um-Catolico/static/js/542.3b2b9633.chunk.js.map",
+    "966.3b942588.chunk.js.map": "/Apenas-um-Catolico/static/js/966.3b942588.chunk.js.map",
+    "325.52dd972a.chunk.js.map": "/Apenas-um-Catolico/static/js/325.52dd972a.chunk.js.map",
+    "191.541aa021.chunk.js.map": "/Apenas-um-Catolico/static/js/191.541aa021.chunk.js.map",
+    "230.a52cbf28.chunk.js.map": "/Apenas-um-Catolico/static/js/230.a52cbf28.chunk.js.map",
+    "949.1f252fa4.chunk.js.map": "/Apenas-um-Catolico/static/js/949.1f252fa4.chunk.js.map",
+    "372.76f7c6db.chunk.js.map": "/Apenas-um-Catolico/static/js/372.76f7c6db.chunk.js.map",
+    "496.814fb001.chunk.js.map": "/Apenas-um-Catolico/static/js/496.814fb001.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.9e7064fb.js"
+    "static/js/main.7eba5ef6.js"
   ]
 }
