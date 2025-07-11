@@ -223,7 +223,7 @@ const Footer: React.FC<FooterProps> = ({ className, ...props }) => {
     },
     {
       name: 'GitHub',
-      url: 'https://github.com/JoaocarlosTeco',
+      url: 'https://github.com/joaocarlosteco',
       icon: GitHubIcon,
       color: '#333'
     },
