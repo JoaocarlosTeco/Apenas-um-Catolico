@@ -1,4 +1,5 @@
 import React from 'react';
+import { getSantoImagePath } from '../../utils/imageUtils';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -224,7 +225,7 @@ const santos = [
   {
     id: 4,
     name: 'São Francisco de Assis',
-    image: '/images/santos/São franciso.jpg',
+          image: getSantoImagePath('São franciso.jpg'),
     description: 'Padroeiro dos animais e da ecologia, fundador da Ordem Franciscana',
     link: '/santos/sao-francisco',
     objectPosition: 'center 20%',
@@ -233,7 +234,7 @@ const santos = [
   {
     id: 2,
     name: 'Santa Teresinha',
-    image: '/images/santos/Santa terezinha.jpg',
+          image: getSantoImagePath('Santa terezinha.jpg'),
     description: 'Doutora da Igreja e padroeira das missões, exemplo de simplicidade',
     objectPosition: 'center 30%',
     icon: <FiStar />
@@ -241,7 +242,7 @@ const santos = [
   {
     id: 3,
     name: 'São Padre Pio',
-    image: '/images/santos/Padre-Pio.webp',
+          image: getSantoImagePath('Padre-Pio.webp'),
     description: 'Padre estigmatizado e confessor, exemplo de oração e penitência',
     objectPosition: 'center 25%',
     icon: <FiHeart />
@@ -249,7 +250,7 @@ const santos = [
   {
     id: 1,
     name: 'Nossa Senhora',
-    image: '/images/santos/Nossa senhora.webp',
+          image: getSantoImagePath('Nossa senhora.webp'),
     description: 'Mãe de Jesus e nossa intercessora, Rainha do Céu e da Terra',
     objectPosition: 'center 40%',
     icon: <FiStar />

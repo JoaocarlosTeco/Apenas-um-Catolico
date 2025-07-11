@@ -9,7 +9,7 @@ const STATIC_RESOURCES = [
   '/static/js/bundle.js',
   '/static/css/main.css',
   '/manifest.json',
-  '/images/logos/Logo tipo apenas um catolico.png',
+  '/Apenas-um-Catolico/images/logos/Logo tipo apenas um catolico.png',
   // Páginas principais
   '/santos',
   '/oracao',
@@ -277,20 +277,20 @@ self.addEventListener('push', (event) => {
   const data = event.data.json();
   const options = {
     body: data.body || 'Nova mensagem de Apenas um Católico',
-    icon: '/images/logos/Logo tipo apenas um catolico.png',
-    badge: '/images/logos/badge-icon.png',
+    icon: '/Apenas-um-Catolico/images/logos/Logo tipo apenas um catolico.png',
+    badge: '/Apenas-um-Catolico/images/logos/badge-icon.png',
     image: data.image,
     data: data.url ? { url: data.url } : undefined,
     actions: [
       {
         action: 'open',
         title: 'Abrir',
-        icon: '/images/icons/open.png'
+        icon: '/Apenas-um-Catolico/images/icons/open.png'
       },
       {
         action: 'close',
         title: 'Fechar',
-        icon: '/images/icons/close.png'
+        icon: '/Apenas-um-Catolico/images/icons/close.png'
       }
     ],
     tag: data.tag || 'default',

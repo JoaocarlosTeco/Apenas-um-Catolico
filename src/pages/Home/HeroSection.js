@@ -1,4 +1,5 @@
 import React from 'react';
+import { getLogoPath } from '../../utils/imageUtils';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
@@ -185,7 +186,7 @@ const HeroSection = () => {
     <HeroContainer>
       <CatholicSymbols />
       <HeroContent>
-        <Logo src="/images/logos/Logo tipo apenas um catolico.png" alt="Apenas um Católico" />
+        <Logo src={getLogoPath("Logo tipo apenas um catolico.png")} alt="Apenas um Católico" />
         <HeroText>
           <h1>Jesus Cristo:<br />Nosso Senhor e Salvador</h1>
           <p>"Eu sou o caminho, a verdade e a vida. Ninguém vem ao Pai senão por mim."</p>

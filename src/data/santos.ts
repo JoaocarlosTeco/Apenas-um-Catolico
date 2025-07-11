@@ -1,4 +1,5 @@
 import { Santo, Oracao } from '../types';
+import { getSantoImagePath } from '../utils/imageUtils';
 
 // Orações específicas para os santos
 const oracaoSaoFrancisco: Oracao = {
@@ -113,7 +114,7 @@ export const santos: Santo[] = [
       'Sua vida inspirou inúmeras obras de arte, literatura e cinema ao longo dos séculos'
     ],
     oracoes: [oracaoSaoFrancisco],
-    imagem: '/images/sao-francisco.jpg',
+    imagem: getSantoImagePath('sao-francisco.jpg'),
     padroeiro: ['Ecologia', 'Animais', 'Meio Ambiente', 'Itália', 'Comerciantes'],
     simbolos: ['Cruz', 'Lobo', 'Pássaros', 'Estigmas', 'Hábito marrom'],
     vida: {
@@ -155,7 +156,7 @@ export const santos: Santo[] = [
       'Sua festa coincide com o Dia das Crianças no Brasil'
     ],
     oracoes: [oracaoNossaSenhoraAparecida],
-    imagem: '/images/nossa-senhora-aparecida.jpg',
+    imagem: getSantoImagePath('nossa-senhora-aparecida.jpg'),
     padroeiro: ['Brasil', 'Famílias brasileiras', 'Pescadores', 'Navegação'],
     simbolos: ['Manto azul', 'Coroa imperial', 'Rosas', 'Pesca milagrosa'],
     vida: {
@@ -196,7 +197,7 @@ export const santos: Santo[] = [
       'Inspirou milhares de vocações missionárias através de seus escritos'
     ],
     oracoes: [oracaoSantaTeresinha],
-    imagem: '/images/santa-teresinha.jpg',
+    imagem: getSantoImagePath('santa-teresinha.jpg'),
     padroeiro: ['Missões', 'Missionários', 'França', 'Tuberculosos', 'Floricultores'],
     simbolos: ['Rosas', 'Crucifixo', 'Hábito carmelita', 'Livro (autobiografia)'],
     vida: {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { getHeroImagePath } from '../../utils/imageUtils';
 import styled from 'styled-components';
 import { BaseHeroSection, BaseHeroContent, BaseHeroText } from './BaseHero';
 import { desktopStyles } from '../../styles/theme';
@@ -8,7 +9,7 @@ const DesktopHeroSection = styled(BaseHeroSection)`
   min-height: 500px;
   position: relative;
   overflow: hidden;
-  background-image: url('/images/heroes/clouds-bg.png');
+  background-image: url(${props => getHeroImagePath('clouds-bg.png')});
   background-size: cover;
   background-position: center;
   margin-top: -80px;
@@ -137,7 +138,7 @@ const DesktopHero = ({ title, subtitle }) => {
           </ButtonContainer>
         </HeroTextContent>
         <ImageContainer>
-          <img src="/images/heroes/hero-jesus.png" alt="Jesus Cristo" />
+          <img src={getHeroImagePath('hero-jesus.png')} alt="Jesus Cristo" />
         </ImageContainer>
       </DesktopHeroContent>
     </DesktopHeroSection>

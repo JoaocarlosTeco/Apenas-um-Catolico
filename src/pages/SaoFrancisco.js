@@ -1,4 +1,5 @@
 import React from 'react';
+import { getSantoImagePath } from '../utils/imageUtils';
 import styled, { createGlobalStyle } from 'styled-components';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
@@ -173,11 +174,11 @@ const SaoFrancisco = () => {
             <p>
               Ambicioso, desejava ser cavaleiro e conquistar honra nas batalhas. Contudo, após uma longa doença e experiências espirituais profundas, Francisco começou a repensar o sentido da vida. Um dia, ao rezar na igreja de São Damião, ouviu a voz de Cristo lhe dizendo: <em>"Francisco, reconstrói a minha Igreja"</em>.
             </p>
-            <SantoImage src="/images/santos/sao-francisco-jovem.webp" alt="São Francisco jovem" />
+            <SantoImage src={getSantoImagePath('sao-francisco-jovem.webp')} alt="São Francisco jovem" />
             <p>
               Num dia simples, mas muito especial, num momento em que Francisco rezava sozinho na Igreja de São Damião, em Assis, ele sentiu que o crucifixo falava com ele, repetindo por três vezes a frase que ficou famosa: "Francisco, repara minha casa, pois olhas que está em ruínas". O santo vendeu tudo o que tinha e levou o dinheiro ao padre da Igreja de São Damião, e pediu permissão para viver com ele. Francisco tinha vinte e cinco anos. Pedro Bernardone, ao saber o que seu filho tinha feito, foi buscá-lo indignado, levou-o para casa, bateu nele e acorrentou-o pelos pés. A mãe, porém, o libertou na ausência do marido, e o jovem retornou a São Damião. Seu pai foi de novo buscá-lo. Mandou que ele voltasse para casa ou que renunciasse à sua herança. Francisco então renunciou a toda a herança e disse: "As roupas que levo pertencem também a meu pai, tenho que devolvê-las". Em seguida se desnudou e entregou suas roupas a seu pai, dizendo-lhe: "Até agora tu tem sido meu pai na terra, mas agora poderei dizer: 'Pai nosso, que estais nos céus".
             </p>
-            <SantoImage src="/images/santos/sao-francisco-com-animais.png" alt="São Francisco com animais" />
+            <SantoImage src={getSantoImagePath('sao-francisco-com-animais.png')} alt="São Francisco com animais" />
             <h3>Vídeo sobre São Francisco</h3>
             <VideoWrapper>
               <iframe src="https://www.youtube.com/embed/YnaV24Z1_Oo" title="São Francisco de Assis" allowFullScreen></iframe>

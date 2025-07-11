@@ -1,4 +1,5 @@
 import React from 'react';
+import { getSantoImagePath } from '../utils/imageUtils';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -10,26 +11,26 @@ const santos = [
   {
     id: 4,
     name: 'São Francisco de Assis',
-    image: '/images/santos/São franciso.jpg',
+    image: getSantoImagePath('São franciso.jpg'),
     description: 'Padroeiro dos animais e da ecologia',
     link: '/santos/sao-francisco'
   },
   {
     id: 2,
     name: 'Santa Teresinha',
-    image: '/images/santos/Santa terezinha.jpg',
+    image: getSantoImagePath('Santa terezinha.jpg'),
     description: 'Doutora da Igreja e padroeira das missões.'
   },
   {
     id: 3,
     name: 'São Padre Pio',
-    image: '/images/santos/Padre-Pio.webp',
+    image: getSantoImagePath('Padre-Pio.webp'),
     description: 'Padre estigmatizado e confessor.'
   },
   {
     id: 1,
     name: 'Nossa Senhora',
-    image: '/images/santos/Nossa senhora.webp',
+    image: getSantoImagePath('Nossa senhora.webp'),
     description: 'Mãe de Jesus e nossa intercessora.'
   }
 ];

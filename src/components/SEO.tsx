@@ -1,4 +1,5 @@
 import React from 'react';
+import { getLogoPath } from '../utils/imageUtils';
 import { Helmet } from 'react-helmet';
 import { BaseComponentProps, BreadcrumbItem } from '../types';
 
@@ -60,7 +61,7 @@ const SEO: React.FC<SEOProps> = ({
   title = "Apenas um Católico - Evangelização e Devoção",
   description = "Site católico dedicado à evangelização e devoção aos santos. Conheça a história dos santos, orações e reflexões espirituais.",
   keywords = "católico, santos, orações, evangelização, fé, devoção, religião, cristianismo",
-  image = "/images/logos/Logo tipo apenas um catolico.png",
+  image = getLogoPath("Logo tipo apenas um catolico.png"),
   url = "https://apenas-um-catolico.vercel.app",
   type = "website",
   author = "Apenas um Católico",

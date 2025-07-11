@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
 import useDeviceType from './useDeviceType';
 import { useAccessibility } from '../hooks/useAccessibility';
+import { getLogoPath } from '../utils/imageUtils';
 
 import { BaseComponentProps } from '../types';
 
@@ -234,7 +235,7 @@ const Header: React.FC<HeaderProps> = ({ className, ...rest }) => {
       <HeaderContent isMobile={isMobile}>
         <Logo to="/" isMobile={isMobile} aria-label="Apenas um Católico - Página inicial">
           <img 
-            src="/images/logos/Logo tipo apenas um catolico.png" 
+            src={getLogoPath("Logo tipo apenas um catolico.png")} 
             alt="Logo Apenas um Católico"
             loading="eager"
           />

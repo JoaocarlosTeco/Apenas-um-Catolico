@@ -1,4 +1,5 @@
 import React from 'react';
+import { getHeroImagePath } from '../../utils/imageUtils';
 import styled from 'styled-components';
 import { BaseHeroSection, BaseHeroContent, BaseHeroText } from './BaseHero';
 import { mobileStyles } from '../../styles/theme';
@@ -6,7 +7,7 @@ import { mobileStyles } from '../../styles/theme';
 const MobileHeroSection = styled(BaseHeroSection)`
   height: 60vh;
   min-height: 400px;
-  background-image: url('/images/heroes/hero-jesus.png');
+  background-image: url(${props => getHeroImagePath('hero-jesus.png')});
   background-size: cover;
   background-position: center;
 
