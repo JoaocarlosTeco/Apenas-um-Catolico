@@ -292,7 +292,7 @@ const CelularPost = () => {
     try {
       playerRef.current = event.target;
       event.target.unMute();
-      event.target.setVolume(30);
+      event.target.setVolume(15);
       event.target.playVideo();
       setIsPlayerReady(true);
     } catch (error) {
@@ -318,7 +318,7 @@ const CelularPost = () => {
       try {
         if (isMuted) {
           playerRef.current.unMute();
-          playerRef.current.setVolume(30);
+          playerRef.current.setVolume(15);
         } else {
           playerRef.current.mute();
         }
@@ -456,7 +456,7 @@ const CelularPost = () => {
 
         <YouTubeContainer>
           <YouTube
-            videoId="rWFy--tFWmk"
+            videoId="dAv_8bg4LcY"
             opts={opts}
             onReady={onReady}
             onEnd={onEnd}
