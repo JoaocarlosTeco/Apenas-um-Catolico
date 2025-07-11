@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.js": "/Apenas-um-Catolico/static/js/main.aadff039.js",
-    "static/js/43.81743300.chunk.js": "/Apenas-um-Catolico/static/js/43.81743300.chunk.js",
-    "static/js/783.b3efab94.chunk.js": "/Apenas-um-Catolico/static/js/783.b3efab94.chunk.js",
-    "static/js/542.af52ce52.chunk.js": "/Apenas-um-Catolico/static/js/542.af52ce52.chunk.js",
+    "main.js": "/Apenas-um-Catolico/static/js/main.ecf2beb3.js",
+    "static/js/43.a5e573e1.chunk.js": "/Apenas-um-Catolico/static/js/43.a5e573e1.chunk.js",
+    "static/js/783.dd083ef0.chunk.js": "/Apenas-um-Catolico/static/js/783.dd083ef0.chunk.js",
+    "static/js/542.14ba6a59.chunk.js": "/Apenas-um-Catolico/static/js/542.14ba6a59.chunk.js",
     "static/js/966.80d0db3b.chunk.js": "/Apenas-um-Catolico/static/js/966.80d0db3b.chunk.js",
     "static/js/325.d8f6e657.chunk.js": "/Apenas-um-Catolico/static/js/325.d8f6e657.chunk.js",
     "static/js/191.7305265e.chunk.js": "/Apenas-um-Catolico/static/js/191.7305265e.chunk.js",
@@ -12,10 +12,10 @@
     "static/js/372.540fe8fe.chunk.js": "/Apenas-um-Catolico/static/js/372.540fe8fe.chunk.js",
     "static/js/77.1a3e8d5a.chunk.js": "/Apenas-um-Catolico/static/js/77.1a3e8d5a.chunk.js",
     "index.html": "/Apenas-um-Catolico/index.html",
-    "main.aadff039.js.map": "/Apenas-um-Catolico/static/js/main.aadff039.js.map",
-    "43.81743300.chunk.js.map": "/Apenas-um-Catolico/static/js/43.81743300.chunk.js.map",
-    "783.b3efab94.chunk.js.map": "/Apenas-um-Catolico/static/js/783.b3efab94.chunk.js.map",
-    "542.af52ce52.chunk.js.map": "/Apenas-um-Catolico/static/js/542.af52ce52.chunk.js.map",
+    "main.ecf2beb3.js.map": "/Apenas-um-Catolico/static/js/main.ecf2beb3.js.map",
+    "43.a5e573e1.chunk.js.map": "/Apenas-um-Catolico/static/js/43.a5e573e1.chunk.js.map",
+    "783.dd083ef0.chunk.js.map": "/Apenas-um-Catolico/static/js/783.dd083ef0.chunk.js.map",
+    "542.14ba6a59.chunk.js.map": "/Apenas-um-Catolico/static/js/542.14ba6a59.chunk.js.map",
     "966.80d0db3b.chunk.js.map": "/Apenas-um-Catolico/static/js/966.80d0db3b.chunk.js.map",
     "325.d8f6e657.chunk.js.map": "/Apenas-um-Catolico/static/js/325.d8f6e657.chunk.js.map",
     "191.7305265e.chunk.js.map": "/Apenas-um-Catolico/static/js/191.7305265e.chunk.js.map",
@@ -25,6 +25,6 @@
     "77.1a3e8d5a.chunk.js.map": "/Apenas-um-Catolico/static/js/77.1a3e8d5a.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.aadff039.js"
+    "static/js/main.ecf2beb3.js"
   ]
 }
