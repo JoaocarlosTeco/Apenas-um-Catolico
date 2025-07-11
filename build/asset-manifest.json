@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/Apenas-um-Catolico/static/js/main.ecf2beb3.js",
+    "main.js": "/Apenas-um-Catolico/static/js/main.9e7064fb.js",
     "static/js/43.a5e573e1.chunk.js": "/Apenas-um-Catolico/static/js/43.a5e573e1.chunk.js",
     "static/js/783.dd083ef0.chunk.js": "/Apenas-um-Catolico/static/js/783.dd083ef0.chunk.js",
     "static/js/542.14ba6a59.chunk.js": "/Apenas-um-Catolico/static/js/542.14ba6a59.chunk.js",
@@ -10,9 +10,9 @@
     "static/js/230.1ff0fb36.chunk.js": "/Apenas-um-Catolico/static/js/230.1ff0fb36.chunk.js",
     "static/js/949.69322481.chunk.js": "/Apenas-um-Catolico/static/js/949.69322481.chunk.js",
     "static/js/372.540fe8fe.chunk.js": "/Apenas-um-Catolico/static/js/372.540fe8fe.chunk.js",
-    "static/js/77.1a3e8d5a.chunk.js": "/Apenas-um-Catolico/static/js/77.1a3e8d5a.chunk.js",
+    "static/js/77.1d9228f0.chunk.js": "/Apenas-um-Catolico/static/js/77.1d9228f0.chunk.js",
     "index.html": "/Apenas-um-Catolico/index.html",
-    "main.ecf2beb3.js.map": "/Apenas-um-Catolico/static/js/main.ecf2beb3.js.map",
+    "main.9e7064fb.js.map": "/Apenas-um-Catolico/static/js/main.9e7064fb.js.map",
     "43.a5e573e1.chunk.js.map": "/Apenas-um-Catolico/static/js/43.a5e573e1.chunk.js.map",
     "783.dd083ef0.chunk.js.map": "/Apenas-um-Catolico/static/js/783.dd083ef0.chunk.js.map",
     "542.14ba6a59.chunk.js.map": "/Apenas-um-Catolico/static/js/542.14ba6a59.chunk.js.map",
@@ -22,9 +22,9 @@
     "230.1ff0fb36.chunk.js.map": "/Apenas-um-Catolico/static/js/230.1ff0fb36.chunk.js.map",
     "949.69322481.chunk.js.map": "/Apenas-um-Catolico/static/js/949.69322481.chunk.js.map",
     "372.540fe8fe.chunk.js.map": "/Apenas-um-Catolico/static/js/372.540fe8fe.chunk.js.map",
-    "77.1a3e8d5a.chunk.js.map": "/Apenas-um-Catolico/static/js/77.1a3e8d5a.chunk.js.map"
+    "77.1d9228f0.chunk.js.map": "/Apenas-um-Catolico/static/js/77.1d9228f0.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.ecf2beb3.js"
+    "static/js/main.9e7064fb.js"
   ]
 }

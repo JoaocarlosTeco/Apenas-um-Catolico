@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
 import { FiVolume2, FiVolumeX, FiArrowLeft } from 'react-icons/fi';
-import YouTube from 'react-youtube';
 import { Link } from 'react-router-dom';
 
 const PostContainer = styled.div`
@@ -231,18 +230,8 @@ const MuteButton = styled.button`
   }
 `;
 
-const YouTubeContainer = styled.div`
-  position: fixed;
-  bottom: -9999px;
-  right: -9999px;
-  opacity: 0;
-  pointer-events: none;
-  z-index: -1;
-  
-  iframe {
-    width: 1px;
-    height: 1px;
-  }
+const AudioPlayer = styled.audio`
+  display: none;
 `;
 
 const EndNote = styled.div`
@@ -270,97 +259,53 @@ const EndLine = styled.div`
 const CelularPost = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isPlayerReady, setIsPlayerReady] = useState(false);
-  const playerRef = useRef(null);
-
-  const opts = {
-    height: '1',
-    width: '1',
-    playerVars: {
-      autoplay: 1,
-      controls: 0,
-      disablekb: 1,
-      fs: 0,
-      start: 0,
-      modestbranding: 1,
-      playsinline: 1,
-      rel: 0,
-      mute: 0,
-    },
-  };
-
-  const onReady = (event) => {
-    try {
-      playerRef.current = event.target;
-      event.target.unMute();
-      event.target.setVolume(15);
-      event.target.playVideo();
-      setIsPlayerReady(true);
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Erro ao inicializar player:', error);
-      }
-    }
-  };
-
-  const onEnd = (event) => {
-    try {
-      event.target.seekTo(0);
-      event.target.playVideo();
-          } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Erro ao reiniciar vídeo:', error);
-        }
-    }
-  };
-
-  const toggleMute = () => {
-    if (playerRef.current && isPlayerReady) {
-      try {
-        if (isMuted) {
-          playerRef.current.unMute();
-          playerRef.current.setVolume(15);
-        } else {
-          playerRef.current.mute();
-        }
-        setIsMuted(!isMuted);
-      } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Erro ao alterar volume:', error);
-        }
-      }
-    }
-  };
+  const audioRef = useRef(null);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('CelularPost carregado com sucesso');
+    if (audioRef.current) {
+      audioRef.current.volume = 0.15; // 15% volume
+      audioRef.current.play().then(() => {
+        setIsPlayerReady(true);
+      }).catch(error => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Erro ao iniciar áudio:', error);
+        }
+      });
     }
-    // Garantir que a página comece no topo
+
     window.scrollTo(0, 0);
     
-    // Forçar o reposicionamento após o carregamento
     const timer = setTimeout(() => {
       window.scrollTo(0, 0);
     }, 100);
     
     return () => {
       clearTimeout(timer);
-      // Cleanup para parar o vídeo quando sair da página
-      if (playerRef.current) {
-        try {
-          playerRef.current.pauseVideo();
-        } catch (error) {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('Erro ao pausar vídeo:', error);
-          }
-        }
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
     };
   }, []);
 
+  const toggleMute = () => {
+    if (audioRef.current && isPlayerReady) {
+      if (isMuted) {
+        audioRef.current.volume = 0.15;
+      } else {
+        audioRef.current.volume = 0;
+      }
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <>
       <PostContainer>
+        <AudioPlayer
+          ref={audioRef}
+          src={`${process.env.PUBLIC_URL}/audio/blog-background.mp3`}
+          loop
+        />
         <Helmet>
           <title>Seu celular está destruindo sua vida - Blog Católico</title>
           <meta name="description" content="Uma reflexão sincera sobre como o uso do celular está afetando nossa capacidade de viver o momento presente e crescer espiritualmente." />
@@ -453,20 +398,6 @@ const CelularPost = () => {
             </p>
           </EndNote>
         </PostContent>
-
-        <YouTubeContainer>
-          <YouTube
-            videoId="dAv_8bg4LcY"
-            opts={opts}
-            onReady={onReady}
-            onEnd={onEnd}
-            onError={(error) => {
-              if (process.env.NODE_ENV === 'development') {
-                console.log('Erro no YouTube:', error);
-              }
-            }}
-          />
-        </YouTubeContainer>
 
         {isPlayerReady && (
           <AudioContainer>
