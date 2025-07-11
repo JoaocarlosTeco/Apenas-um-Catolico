@@ -262,11 +262,15 @@ const LiturgiaDiaria = () => {
           throw new Error('Erro ao carregar a liturgia');
         }
         const data = await response.json();
-        console.log('Dados da API:', data);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Dados da API:', data);
+        }
         setLiturgia(data);
         setLoading(false);
       } catch (err) {
-        console.error('Erro ao buscar liturgia:', err);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Erro ao buscar liturgia:', err);
+        }
         setError('Não foi possível carregar a liturgia. Por favor, tente novamente mais tarde.');
         setLoading(false);
       }
@@ -288,7 +292,11 @@ const LiturgiaDiaria = () => {
         title: 'Liturgia Diária',
         text: 'Confira a liturgia de hoje',
         url: window.location.href,
-      }).catch((error) => console.log('Erro ao compartilhar', error));
+      }).catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Erro ao compartilhar', error);
+        }
+      });
     } else {
       navigator.clipboard.writeText(window.location.href);
       alert('Link copiado para a área de transferência!');

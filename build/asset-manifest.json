@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.js": "/Apenas-um-Catolico/static/js/main.df9af8fc.js",
+    "main.js": "/Apenas-um-Catolico/static/js/main.44b81b70.js",
     "static/js/43.81743300.chunk.js": "/Apenas-um-Catolico/static/js/43.81743300.chunk.js",
     "static/js/783.b3efab94.chunk.js": "/Apenas-um-Catolico/static/js/783.b3efab94.chunk.js",
     "static/js/542.af52ce52.chunk.js": "/Apenas-um-Catolico/static/js/542.af52ce52.chunk.js",
@@ -8,11 +8,11 @@
     "static/js/325.d8f6e657.chunk.js": "/Apenas-um-Catolico/static/js/325.d8f6e657.chunk.js",
     "static/js/191.7305265e.chunk.js": "/Apenas-um-Catolico/static/js/191.7305265e.chunk.js",
     "static/js/230.1ff0fb36.chunk.js": "/Apenas-um-Catolico/static/js/230.1ff0fb36.chunk.js",
-    "static/js/949.6a99770d.chunk.js": "/Apenas-um-Catolico/static/js/949.6a99770d.chunk.js",
-    "static/js/372.07b78ede.chunk.js": "/Apenas-um-Catolico/static/js/372.07b78ede.chunk.js",
-    "static/js/77.5be80425.chunk.js": "/Apenas-um-Catolico/static/js/77.5be80425.chunk.js",
+    "static/js/949.69322481.chunk.js": "/Apenas-um-Catolico/static/js/949.69322481.chunk.js",
+    "static/js/372.540fe8fe.chunk.js": "/Apenas-um-Catolico/static/js/372.540fe8fe.chunk.js",
+    "static/js/77.1a3e8d5a.chunk.js": "/Apenas-um-Catolico/static/js/77.1a3e8d5a.chunk.js",
     "index.html": "/Apenas-um-Catolico/index.html",
-    "main.df9af8fc.js.map": "/Apenas-um-Catolico/static/js/main.df9af8fc.js.map",
+    "main.44b81b70.js.map": "/Apenas-um-Catolico/static/js/main.44b81b70.js.map",
     "43.81743300.chunk.js.map": "/Apenas-um-Catolico/static/js/43.81743300.chunk.js.map",
     "783.b3efab94.chunk.js.map": "/Apenas-um-Catolico/static/js/783.b3efab94.chunk.js.map",
     "542.af52ce52.chunk.js.map": "/Apenas-um-Catolico/static/js/542.af52ce52.chunk.js.map",
@@ -20,11 +20,11 @@
     "325.d8f6e657.chunk.js.map": "/Apenas-um-Catolico/static/js/325.d8f6e657.chunk.js.map",
     "191.7305265e.chunk.js.map": "/Apenas-um-Catolico/static/js/191.7305265e.chunk.js.map",
     "230.1ff0fb36.chunk.js.map": "/Apenas-um-Catolico/static/js/230.1ff0fb36.chunk.js.map",
-    "949.6a99770d.chunk.js.map": "/Apenas-um-Catolico/static/js/949.6a99770d.chunk.js.map",
-    "372.07b78ede.chunk.js.map": "/Apenas-um-Catolico/static/js/372.07b78ede.chunk.js.map",
-    "77.5be80425.chunk.js.map": "/Apenas-um-Catolico/static/js/77.5be80425.chunk.js.map"
+    "949.69322481.chunk.js.map": "/Apenas-um-Catolico/static/js/949.69322481.chunk.js.map",
+    "372.540fe8fe.chunk.js.map": "/Apenas-um-Catolico/static/js/372.540fe8fe.chunk.js.map",
+    "77.1a3e8d5a.chunk.js.map": "/Apenas-um-Catolico/static/js/77.1a3e8d5a.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.df9af8fc.js"
+    "static/js/main.44b81b70.js"
   ]
 }

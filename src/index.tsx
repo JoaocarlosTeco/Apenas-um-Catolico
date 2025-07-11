@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/Apenas-um-Catolico">
       <App />
     </BrowserRouter>
   </React.StrictMode>
@@ -25,7 +25,9 @@ if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
   window.addEventListener('load', async () => {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('SW registered successfully:', registration);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('SW registered successfully:', registration);
+      }
       
       // Escutar atualizações do service worker
       registration.addEventListener('updatefound', () => {
@@ -48,7 +50,9 @@ if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
       }
       
     } catch (error) {
-      console.log('SW registration failed:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('SW registration failed:', error);
+      }
     }
   });
 } 

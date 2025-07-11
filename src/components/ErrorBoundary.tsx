@@ -186,10 +186,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     }
 
     // Enviar para serviço de monitoramento (se configurado)
-    if (process.env.NODE_ENV === 'production') {
-      // Aqui você pode integrar com Sentry, LogRocket, etc.
-      console.log('Error ID:', eventId);
-    }
+          if (process.env.NODE_ENV === 'production') {
+        // Aqui você pode integrar com Sentry, LogRocket, etc.
+      } else if (process.env.NODE_ENV === 'development') {
+        console.log('Error ID:', eventId);
+      }
   }
 
   componentDidUpdate(prevProps: ErrorBoundaryProps, prevState: ErrorBoundaryState): void {

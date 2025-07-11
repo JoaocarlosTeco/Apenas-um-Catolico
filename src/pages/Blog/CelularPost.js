@@ -296,7 +296,9 @@ const CelularPost = () => {
       event.target.playVideo();
       setIsPlayerReady(true);
     } catch (error) {
-      console.log('Erro ao inicializar player:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Erro ao inicializar player:', error);
+      }
     }
   };
 
@@ -304,8 +306,10 @@ const CelularPost = () => {
     try {
       event.target.seekTo(0);
       event.target.playVideo();
-    } catch (error) {
-      console.log('Erro ao reiniciar vídeo:', error);
+          } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Erro ao reiniciar vídeo:', error);
+        }
     }
   };
 
@@ -320,13 +324,17 @@ const CelularPost = () => {
         }
         setIsMuted(!isMuted);
       } catch (error) {
-        console.log('Erro ao alterar volume:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Erro ao alterar volume:', error);
+        }
       }
     }
   };
 
   useEffect(() => {
-    console.log('CelularPost carregado com sucesso');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('CelularPost carregado com sucesso');
+    }
     // Garantir que a página comece no topo
     window.scrollTo(0, 0);
     
@@ -342,7 +350,9 @@ const CelularPost = () => {
         try {
           playerRef.current.pauseVideo();
         } catch (error) {
-          console.log('Erro ao pausar vídeo:', error);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Erro ao pausar vídeo:', error);
+          }
         }
       }
     };
@@ -450,7 +460,11 @@ const CelularPost = () => {
             opts={opts}
             onReady={onReady}
             onEnd={onEnd}
-            onError={(error) => console.log('Erro no YouTube:', error)}
+            onError={(error) => {
+              if (process.env.NODE_ENV === 'development') {
+                console.log('Erro no YouTube:', error);
+              }
+            }}
           />
         </YouTubeContainer>
 

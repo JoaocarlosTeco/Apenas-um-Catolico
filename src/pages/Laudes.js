@@ -403,7 +403,9 @@ const Laudes = () => {
             }
           }
         } catch (apiError) {
-          console.log('API principal falhou, tentando alternativa...');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('API principal falhou, tentando alternativa...');
+          }
         }
 
         // Tentativa 2: API alternativa com liturgia.up.railway.app
@@ -418,7 +420,9 @@ const Laudes = () => {
             }
           }
         } catch (apiError) {
-          console.log('API alternativa falhou, usando conteúdo dinâmico...');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('API alternativa falhou, usando conteúdo dinâmico...');
+          }
         }
 
         // Fallback: Conteúdo que varia por dia da semana e data
@@ -452,7 +456,11 @@ const Laudes = () => {
         title: 'Laudes - Oração da Manhã',
         text: 'Reze as Laudes de hoje',
         url: window.location.href,
-      }).catch((error) => console.log('Erro ao compartilhar', error));
+      }).catch((error) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Erro ao compartilhar', error);
+        }
+      });
     } else {
       navigator.clipboard.writeText(window.location.href);
       alert('Link copiado para a área de transferência!');

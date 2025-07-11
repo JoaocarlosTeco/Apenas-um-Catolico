@@ -1,7 +1,7 @@
 import { Santo, Oracao, LiturgiaResponse, Blog, ApiResponse, PaginatedResponse } from '../types';
 
 // Configuração base da API
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api-liturgia-diaria.vercel.app/api';
 
 interface RequestConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';

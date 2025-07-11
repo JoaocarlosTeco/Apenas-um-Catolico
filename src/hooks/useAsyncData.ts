@@ -327,7 +327,9 @@ export const usePaginatedData = <T extends { id: string }>(
 
     // const newData = [item, ...data];
     // Aqui você implementaria a lógica para atualizar o cache/estado
-    console.log('Adding item:', item);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Adding item:', item);
+    }
   }, [data]);
 
   const removeItem = useCallback((id: string): void => {
@@ -335,7 +337,9 @@ export const usePaginatedData = <T extends { id: string }>(
 
     // const newData = data.filter(item => item.id !== id);
     // Aqui você implementaria a lógica para atualizar o cache/estado
-    console.log('Removing item with id:', id);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Removing item with id:', id);
+    }
   }, [data]);
 
   const updateItem = useCallback((id: string, updates: Partial<T>): void => {
@@ -348,7 +352,9 @@ export const usePaginatedData = <T extends { id: string }>(
     
     // Exemplo de implementação (comentado para não quebrar)
     // setCachedData(cacheKey, newData);
-    console.log('Updating item:', id, 'with updates:', updates);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Updating item:', id, 'with updates:', updates);
+    }
   }, [data]);
 
   return {

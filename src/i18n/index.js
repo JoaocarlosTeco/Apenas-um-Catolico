@@ -110,7 +110,9 @@ export const I18nProvider = ({ children, defaultLanguage = 'pt-BR' }) => {
       translations[language] = module.default;
       return translations[language];
     } catch (error) {
-      console.warn(`Failed to load translations for ${language}:`, error);
+              if (process.env.NODE_ENV === 'development') {
+          console.warn(`Failed to load translations for ${language}:`, error);
+        }
       return translations[defaultLanguage];
     } finally {
       setIsLoading(false);
@@ -167,7 +169,9 @@ export const I18nProvider = ({ children, defaultLanguage = 'pt-BR' }) => {
   // Mudar idioma
   const changeLanguage = async (language) => {
     if (!AVAILABLE_LANGUAGES[language]) {
-      console.warn(`Language ${language} is not available`);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Language ${language} is not available`);
+      }
       return;
     }
 
