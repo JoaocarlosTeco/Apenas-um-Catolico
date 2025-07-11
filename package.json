@@ -2,7 +2,7 @@
   "name": "apenas-um-catolico",
   "version": "1.0.0",
   "description": "Site católico dedicado à evangelização e devoção aos santos",
-  "homepage": "https://joaocarlosteco.github.io/Apenas-um-Catolico/",
+  "homepage": "https://joaocarlosteco.github.io/Apenas-um-Catolico",
   "private": true,
   "dependencies": {
     "date-fns": "^3.6.0",
