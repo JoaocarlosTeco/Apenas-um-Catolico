@@ -276,6 +276,13 @@ const Header: React.FC<HeaderProps> = ({ className, ...rest }) => {
             Laudes
           </NavLink>
           <NavLink 
+            to="/calendario" 
+            isMobile={isMobile}
+            onClick={() => isMobile && setIsMenuOpen(false)}
+          >
+            Calendário
+          </NavLink>
+          <NavLink 
             to="/liturgia-diaria" 
             isMobile={isMobile}
             onClick={() => isMobile && setIsMenuOpen(false)}
