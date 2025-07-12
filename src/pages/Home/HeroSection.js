@@ -190,7 +190,7 @@ const HeroSection = () => {
         <HeroText>
           <h1>Jesus Cristo:<br />Nosso Senhor e Salvador</h1>
           <p>"Eu sou o caminho, a verdade e a vida. Ninguém vem ao Pai senão por mim."</p>
-          <div className="verse-reference">João 14:6</div>
+          <div className="verse-reference">João 14,6</div>
         </HeroText>
       </HeroContent>
     </HeroContainer>

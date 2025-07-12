@@ -400,7 +400,7 @@ const MobileLayout = () => {
               target="_blank" 
               rel="noopener noreferrer"
             >
-              (Êxodo 25:18)
+              (Êxodo 25,18)
             </a>
           </Versiculo>
 
