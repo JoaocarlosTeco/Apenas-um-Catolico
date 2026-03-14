@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { BaseComponentProps, ResponsiveProps } from '../types';
 
@@ -15,7 +16,7 @@ interface CardGridProps extends BaseComponentProps {
   minWidth?: string;
 }
 
-export const Card = styled.div<CardProps>`
+export const Card = styled(motion.div)<CardProps>`
   background: ${props => props.theme.colors.surface || 'white'};
   border-radius: ${props => props.theme.borderRadius?.lg || '16px'};
   padding: ${props => props.padding || '2rem'};

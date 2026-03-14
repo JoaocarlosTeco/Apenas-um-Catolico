@@ -23,7 +23,7 @@ const LiturgiaDiaria = React.lazy(() => import('./pages/LiturgiaDiaria'));
 const CelularPost = React.lazy(() => import('./pages/Blog/CelularPost'));
 
 // Estilos e Tema
-import GlobalStyles, { lightTheme, darkTheme } from './styles/GlobalStyles.js';
+import GlobalStyles, { lightTheme, darkTheme } from './styles/GlobalStyles';
 import { ThemeContext } from './context/ThemeContext';
 import { AppProvider } from './context/AppContext';
 import { I18nProvider } from './i18n';
@@ -56,7 +56,6 @@ const MainContent = styled(motion.main)`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding-top: 0;
   overflow-x: hidden;
 `;
 

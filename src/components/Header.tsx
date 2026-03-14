@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
-import useDeviceType from './useDeviceType';
+import { useDeviceType } from '../hooks/useDeviceType';
 import { useAccessibility } from '../hooks/useAccessibility';
 import { getLogoPath } from '../utils/imageUtils';
 
@@ -15,14 +15,16 @@ interface StyledProps {
 }
 
 const HeaderContainer = styled.header<StyledProps>`
-  background-color: ${props => props.theme.colors?.primary || '#1B3358'};
-  padding: ${props => props.isMobile ? '0.5rem 1rem' : '0.75rem 2rem'};
+  background-color: ${props => props.theme.colors.headerBg};
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: ${props => props.isMobile ? '0.5rem 1.25rem' : '0.85rem 2.5rem'};
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: ${props => props.theme.colors.glass.border};
+  box-shadow: ${props => props.theme.colors.glass.shadow};
 `;
 
 const HeaderContent = styled.div<StyledProps>`
@@ -39,9 +41,9 @@ const Logo = styled(Link)<StyledProps>`
   align-items: center;
   
   img {
-    height: ${props => props.isMobile ? '32px' : '45px'};
+    height: ${props => props.isMobile ? '40px' : '55px'};
     width: auto;
-    margin-right: ${props => props.isMobile ? '0' : '1rem'};
+    margin-right: ${props => props.isMobile ? '0' : '1.25rem'};
     transition: transform 0.3s ease;
     object-fit: contain;
     object-position: center;
@@ -64,50 +66,43 @@ const Nav = styled.nav<StyledProps>`
     top: 50px;
     left: 0;
     right: 0;
-    background: ${props => props.theme.colors?.primary || '#1B3358'};
+    background: ${props => props.theme.colors.headerBg};
+    backdrop-filter: blur(20px);
     flex-direction: column;
-    padding: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid ${props => props.theme.colors.secondary}15;
   }
 `;
 
 const NavLink = styled(Link)<StyledProps>`
-  color: white;
+  color: ${props => props.theme.colors.primary};
   text-decoration: none;
-  font-size: ${props => props.isMobile ? '1rem' : '1.1rem'};
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
   display: block;
-  border: 2px solid transparent;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: ${props => props.theme.colors.primary};
+    color: white;
     transform: translateY(-2px);
   }
 
-  &:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.8);
-    background-color: rgba(255, 255, 255, 0.1);
+  &[aria-current="page"], &.active {
+    background-color: ${props => props.theme.colors.secondary};
+    color: white;
   }
 
-  &[aria-current="page"] {
-    background-color: ${props => props.theme.colors?.secondary || '#C09553'};
-    font-weight: 700;
-  }
-
-  &.active {
-    background-color: ${props => props.theme.colors?.secondary || '#C09553'};
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    
-    &:hover {
-      transform: none;
-    }
+  @media (max-width: 768px) {
+    width: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 1rem;
   }
 `;
 
@@ -141,38 +136,23 @@ const SkipLink = styled.a`
     width: auto;
     height: auto;
     overflow: visible;
-    left: auto;
-    top: auto;
   }
 `;
 
 const MenuButton = styled.button<StyledProps>`
   display: none;
-  background: none;
+  background: ${props => props.theme.colors.primary}10;
   border: none;
-  color: white;
+  color: ${props => props.theme.colors.primary};
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  padding: 0.6rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 
-  &:hover, &:focus {
-    background-color: rgba(255, 255, 255, 0.1);
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+  &:hover {
+    background-color: ${props => props.theme.colors.primary};
+    color: white;
   }
 
   @media (max-width: 768px) {
@@ -235,7 +215,7 @@ const Header: React.FC<HeaderProps> = ({ className, ...rest }) => {
       <HeaderContent isMobile={isMobile}>
         <Logo to="/" isMobile={isMobile} aria-label="Apenas um Católico - Página inicial">
           <img 
-            src={getLogoPath("Logo tipo apenas um catolico.png")} 
+            src={getLogoPath("logo-apenas-um-catolico.png")} 
             alt="Logo Apenas um Católico"
             loading="eager"
           />
@@ -316,4 +296,4 @@ const Header: React.FC<HeaderProps> = ({ className, ...rest }) => {
   );
 };
 
-export default Header; 
+export default Header;

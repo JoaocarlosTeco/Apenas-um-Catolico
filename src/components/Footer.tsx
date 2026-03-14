@@ -27,12 +27,23 @@ interface FooterSectionData {
 
 // Styled Components
 const FooterContainer = styled.footer`
-  background: linear-gradient(135deg, ${props => props.theme.colors.primary} 0%, ${props => props.theme.colors.secondary} 100%);
+  background: ${props => props.theme.colors.primary};
   color: white;
-  padding: 3rem 0 1.5rem;
+  padding: 80px 0 40px;
   margin-top: auto;
   flex: 0 0 auto;
   position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, ${props => props.theme.colors.accent}40, transparent);
+  }
 `;
 
 const FooterContent = styled.div`
@@ -69,10 +80,12 @@ const FooterSectionContainer = styled.div`
 `;
 
 const FooterTitle = styled.h3`
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: white;
+  font-family: ${props => props.theme.fonts.heading};
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: ${props => props.theme.colors.accent};
+  letter-spacing: 0.02em;
 `;
 
 const FooterDescription = styled.p`
@@ -95,14 +108,15 @@ const FooterLinkItem = styled.li`
 const FooterLinkStyled = styled(Link)`
   color: white;
   text-decoration: none;
-  opacity: 0.8;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  opacity: 0.7;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.95rem;
+  display: inline-block;
   
   &:hover {
     opacity: 1;
-    color: ${props => props.theme.colors.accent || '#FFD700'};
-    transform: translateX(4px);
+    color: ${props => props.theme.colors.accent};
+    transform: translateX(8px);
   }
 `;
 

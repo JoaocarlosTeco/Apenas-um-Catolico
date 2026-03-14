@@ -21,6 +21,13 @@ declare module 'styled-components' {
       success: string;
       warning: string;
       info: string;
+      glass: {
+        background: string;
+        border: string;
+        shadow: string;
+      };
+      mobile?: string;
+      tablet?: string;
     };
     breakpoints: {
       mobile: string;
@@ -56,6 +63,7 @@ declare module 'styled-components' {
       soft: string;
       medium: string;
       strong: string;
+      heavy: string;
       float: string;
     };
     borderRadius: {
@@ -76,6 +84,7 @@ declare module 'styled-components' {
     fonts: {
       heading: string;
       body: string;
+      sacred: string;
       sizes: {
         xs: string;
         sm: string;

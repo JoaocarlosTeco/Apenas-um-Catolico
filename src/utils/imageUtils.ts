@@ -1,3 +1,5 @@
+const PUBLIC_URL = process.env.PUBLIC_URL || '';
+
 /**
  * Resolve o caminho correto para imagens baseado no ambiente
  * @param imagePath - Caminho da imagem (ex: '/images/santos/sao-francisco.jpg')
@@ -7,13 +9,9 @@ export const getImagePath = (imagePath: string): string => {
   // Remove barra inicial se existir
   const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
   
-  // Em produção (GitHub Pages), usa o PUBLIC_URL
-  if (process.env.NODE_ENV === 'production') {
-    return `${process.env.PUBLIC_URL}/${cleanPath}`;
-  }
-  
-  // Em desenvolvimento, usa o caminho normal
-  return `/${cleanPath}`;
+  // No React, process.env.PUBLIC_URL resolve para a base do site
+  // Em dev geralmente é vazio, em prod é o caminho configurado (ex: /Apenas-um-Catolico)
+  return `${PUBLIC_URL}/${cleanPath}`;
 };
 
 /**

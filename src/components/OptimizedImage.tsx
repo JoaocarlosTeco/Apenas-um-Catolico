@@ -138,6 +138,7 @@ interface OptimizedImageProps extends BaseComponentProps {
   borderRadius?: string;
   placeholder?: boolean;
   lazy?: boolean;
+  hover?: boolean;
   onLoad?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
   style?: React.CSSProperties;
