@@ -17,6 +17,7 @@ import {
   FiX,
 } from 'react-icons/fi';
 import { categorias, momentos, oracoes } from '../data/oracoes';
+import VelaDeIntencao from '../components/VelaDeIntencao';
 
 const TODAS = 'todas';
 const DO_DIA = 'do-dia';
@@ -1436,6 +1437,10 @@ const Oracao = () => {
             )}
           </section>
         ))}
+      </div>
+
+      <div style={{ marginTop: 56 }}>
+        <VelaDeIntencao />
       </div>
 
       {createPortal(

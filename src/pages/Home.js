@@ -7,6 +7,7 @@ import FolhinhaDeArrancar from '../components/FolhinhaDeArrancar';
 import EnfeiteDoTempo from '../components/EnfeiteDoTempo';
 import FestaDoSanto from '../components/FestaDoSanto';
 import IconeDaHora from '../components/IconeDaHora';
+import VelaDeIntencao from '../components/VelaDeIntencao';
 import { Emblema } from '../components/Emblemas';
 import SantosSection from './Home/SantosSection';
 import {
@@ -832,6 +833,10 @@ const Home = () => {
               </div>
             )}
           </DuasColunas>
+        </Secao>
+
+        <Secao>
+          <VelaDeIntencao />
         </Secao>
       </Pagina>
 
