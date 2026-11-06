@@ -1,171 +1,84 @@
-# Apenas um Católico 🙏
+# Apenas um Católico
 
-Site católico dedicado à evangelização e devoção aos santos, desenvolvido com React e styled-components.
+Site católico para rezar todos os dias: a liturgia de hoje, a vida dos santos, orações e o calendário litúrgico. Pensado primeiro para o celular.
 
-## ✨ Características Principais
+**No ar:** https://joaocarlosteco.github.io/Apenas-um-Catolico/
 
-- **Interface Responsiva**: Design adaptativo para desktop, tablet e mobile
-- **Performance Otimizada**: Lazy loading, code splitting e otimização de imagens
-- **SEO Avançado**: Meta tags dinâmicas e structured data
-- **Acessibilidade**: Componentes acessíveis e navegação keyboard-friendly
-- **Temas**: Suporte a modo claro e escuro
-- **PWA Ready**: Service worker e manifest configurados
+## O que tem
 
-## 🚀 Melhorias Implementadas
+- **Início que acompanha o dia.** A saudação muda com a hora e a folhinha do dia mostra a data, a celebração, a cor litúrgica e o Evangelho, como as folhinhas de parede. Logo abaixo, a semana litúrgica com as memórias dos santos e a roda do ano.
+- **Liturgia Diária.** Primeira leitura, salmo, segunda leitura, Evangelho e orações da Missa:
+  - funciona para qualquer data, navegando com anterior, hoje e próximo;
+  - mostra as leituras alternativas quando o dia tem mais de uma;
+  - os números dos versículos aparecem destacados e o tamanho do texto pode ser ajustado;
+  - o link de cada dia pode ser compartilhado.
+- **Ano litúrgico calculado no navegador.** Data da Páscoa pelo cômputo gregoriano, todas as festas móveis (com as regras do Brasil para Epifania e Ascensão), o tempo litúrgico e a semana de qualquer dia, e os ciclos dos domingos (A, B, C) e dos dias de semana (I, II). Aparece numa roda do ano na home, na liturgia e no calendário, que mostra as datas reais do ano corrente. Tudo coberto por testes.
+- **Uma página diferente para cada santo.** Cada santo tem o seu próprio desenho de página (não um molde com cores trocadas), a sua paleta do topo à barra de navegação e uma medalha desenhada em traço fino:
+  - São Francisco: marrom e pergaminho, o Cântico das Criaturas e as histórias dos Fioretti (o lobo de Gubbio, o sermão aos pássaros, o presépio, o Tau);
+  - Santa Teresinha: rosas, a pequena via, o elevador, o Natal de 1886;
+  - Padre Pio: luz de vela, as chagas, o confessionário, os milagres reconhecidos na beatificação e na canonização;
+  - Nossa Senhora: manto azul, as aparições (Aparecida, Guadalupe, Lourdes, Fátima) e um terço interativo com os mistérios do dia.
+- **Aprofundamento em cada santo.** Como reconhecer nas imagens, palavras e escritos com a fonte, frases famosas que não são do santo, lugares para visitar, o que ler e uma novena de nove dias que guarda o progresso no aparelho.
+- **Música de cada santo.** Cantos do Missionário Shalom e da Comunidade Católica Shalom, pelos vídeos oficiais no YouTube: "Nada ter pra tudo dar / Doce é sentir" para Francisco, "O Elevador" para Teresinha, "Fica, Senhor, comigo" para Pio e "Todo Teu, ó Mãe" para Nossa Senhora. O player do YouTube abre pequeno no lugar do botão, só depois de um clique, e repete a música. Cada santo também tem uma gravação em domínio público do Wikimedia Commons, que toca por baixo da página quando não há vídeo (`src/data/musicas.js`).
+- **Laudes, Orações, Calendário e Blog.** As Laudes são um roteiro local, porque não existe API pública do Ofício em português.
+- **Tema claro e escuro.** Segue o sistema e guarda a escolha.
+- **PWA.** O site pode ser instalado no celular e abre as páginas já visitadas sem internet.
+- **Navegação de aplicativo no celular.** Barra inferior com Início, Liturgia, Santos, Orações e Mais.
 
-### 🧹 **Limpeza e Organização**
-- ✅ Removidos arquivos duplicados (HTML/CSS/JS na raiz)
-- ✅ Limpeza de estrutura de pastas vazias
-- ✅ Reorganização de imagens por categoria
-- ✅ Divisão de componentes grandes em módulos menores
+## Tecnologias
 
-### 🔧 **Correções Técnicas**
-- ✅ Corrigidos imports incorretos (useTheme)
-- ✅ Atualizadas dependências para versões mais recentes
-- ✅ Configuração do ESLint e Prettier
-- ✅ Implementação de Error Boundaries
+- React 18 (Create React App), JavaScript e TypeScript
+- styled-components (tema claro e escuro por tokens)
+- React Router 6, com uma cópia do `index.html` por rota para links diretos responderem 200 no GitHub Pages
+- framer-motion e react-icons
+- Áudio HTML5 para a música e Service Worker para o modo offline
+- API pública [liturgia-diaria](https://github.com/Dancrf/liturgia-diaria) (rota v2, com `?dia=&mes=&ano=` e `?periodo=7`)
 
-### 🎨 **Otimizações de Performance**
-- ✅ Lazy loading de componentes React
-- ✅ Componente de imagem otimizada com placeholder
-- ✅ Code splitting automático
-- ✅ Consolidação de estilos duplicados
-
-### 📱 **Melhorias de UX/UI**
-- ✅ Componente Hero refatorado
-- ✅ Seções organizadas em componentes menores
-- ✅ Animações suaves com Framer Motion
-- ✅ Loading states aprimorados
-
-### 🔍 **SEO e Acessibilidade**
-- ✅ Componente SEO com meta tags dinâmicas
-- ✅ Structured data (Schema.org)
-- ✅ Open Graph e Twitter Cards
-- ✅ Alt texts para imagens
-- ✅ URLs canônicas
-
-## 📁 Estrutura do Projeto
-
-```
-Apenas-um-Catolico/
-├── public/
-│   ├── images/
-│   │   ├── heroes/          # Imagens de background
-│   │   ├── logos/           # Logotipos
-│   │   └── santos/          # Imagens dos santos
-│   ├── index.html
-│   └── manifest.json
-├── src/
-│   ├── components/
-│   │   ├── ErrorBoundary.js
-│   │   ├── OptimizedImage.js
-│   │   ├── SEO.js
-│   │   └── ...
-│   ├── pages/
-│   │   ├── Home/
-│   │   │   ├── HeroSection.js
-│   │   │   ├── BiblicalSection.js
-│   │   │   ├── SantosSection.js
-│   │   │   └── ResourcesSection.js
-│   │   └── ...
-│   ├── context/
-│   │   └── ThemeContext.js
-│   └── styles/
-│       ├── GlobalStyles.js
-│       └── theme.js
-├── .eslintrc.js
-├── .prettierrc
-└── package.json
-```
-
-## 🛠️ Tecnologias Utilizadas
-
-- **React 18** - Framework principal
-- **Styled Components** - Estilização
-- **React Router DOM** - Roteamento
-- **Framer Motion** - Animações
-- **React Helmet** - SEO
-- **React Icons** - Ícones
-- **ESLint & Prettier** - Qualidade de código
-
-## 📦 Scripts Disponíveis
+## Como rodar
 
 ```bash
-# Iniciar desenvolvimento
+npm install
 npm start
-
-# Build para produção
-npm run build
-
-# Executar testes
-npm test
-
-# Linting
-npm run lint
-npm run lint:fix
-
-# Formatação de código
-npm run format
 ```
 
-## 🎯 Funcionalidades
+Abre em `http://localhost:3000/Apenas-um-Catolico`.
 
-### Páginas Principais
-- **Início**: Hero section com informações bíblicas e apresentação dos santos
-- **Santos**: Galeria dos santos com biografias detalhadas
-- **São Francisco**: Página dedicada com história, curiosidades e oração
-- **Orações**: Coleção de orações católicas
-- **Blog**: Artigos e reflexões espirituais
-- **Sobre**: Informações sobre o projeto
+Para ver o build do jeito que o GitHub Pages serve:
 
-### Componentes Reutilizáveis
-- **OptimizedImage**: Carregamento otimizado com placeholder
-- **SEO**: Meta tags e structured data automáticos
-- **ErrorBoundary**: Tratamento de erros com interface amigável
-- **LoadingScreen**: Tela de carregamento animada
+```bash
+npm run build
+npm run preview
+```
 
-## 🌟 Destaques Técnicos
+Abre em `http://localhost:3003/Apenas-um-Catolico/`.
 
-### Performance
-- Lazy loading de rotas e componentes
-- Otimização automática de imagens
-- Code splitting por rota
-- Memoização de componentes pesados
+Testes:
 
-### SEO
-- Meta tags dinâmicas por página
-- Structured data (JSON-LD)
-- Open Graph completo
-- Sitemap automático
+```bash
+npm test
+```
 
-### Acessibilidade
-- Navegação por teclado
-- Alt texts descritivos
-- Contraste adequado
-- ARIA labels
+## Publicação
 
-### Manutenibilidade
-- Código organizado em módulos
-- Configuração de linting
-- Error boundaries para robustez
-- Documentação completa
+```bash
+npm run deploy
+```
 
-## 🚀 Deploy
+Gera o build e publica a pasta `build/` no branch `gh-pages`. O `postbuild` (`scripts/rotas-estaticas.js`) cria uma página para cada rota, inclusive as dos santos, que são lidas de `src/data/santos.js`.
 
-O projeto está configurado para deploy automático no Vercel:
+## Estrutura
 
-1. Push para a branch main
-2. Deploy automático no Vercel
-3. URL: https://apenas-um-catolico.vercel.app
+```
+src/
+  pages/        páginas (Home, LiturgiaDiaria, Santos, Laudes, ...)
+  pages/santos/ uma página por santo (PaginaFrancisco, PaginaTeresinha, PaginaPio, PaginaMaria) e o que elas compartilham
+  components/   Header, Footer, Logo, Emblemas (SVG), Folhinha, RodaLiturgica, Terco, Novena, BotaoMusica
+  data/         santos.js: conteúdo, cores e destaque de cada santo
+  services/     liturgia.js: chamadas à API, cache por data e cores litúrgicas
+  styles/       tema claro e escuro
+scripts/        rotas estáticas do build e servidor de prévia
+```
 
-## 📝 Licença
+## Créditos
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-## 🙏 Contribuição
-
-Contribuições são bem-vindas! Por favor, abra uma issue ou pull request para sugestões e melhorias.
-
----
-
-**Desenvolvido com ❤️ para a comunidade católica**
+Textos da liturgia: API [liturgia-diaria](https://github.com/Dancrf/liturgia-diaria). Imagens dos santos: acervo do projeto.
