@@ -66,11 +66,9 @@ npm test
 
 ## Publicação
 
-```bash
-npm run deploy
-```
+Cada push no `main` publica o site sozinho: o workflow `.github/workflows/deploy.yml` instala as dependências, gera o build e publica pela implantação oficial do GitHub Pages (a fonte do Pages no repositório é "GitHub Actions"). Dá para rodar de novo à mão pela aba Actions, em "Publicar no GitHub Pages".
 
-Gera o build e publica a pasta `build/` no branch `gh-pages`. O `postbuild` (`scripts/rotas-estaticas.js`) cria uma página para cada rota, inclusive as dos santos, que são lidas de `src/data/santos.js`.
+O `postbuild` (`scripts/rotas-estaticas.js`) cria uma página para cada rota, inclusive as dos santos, que são lidas de `src/data/santos.js`, para links diretos responderem 200.
 
 ## Estrutura
 
