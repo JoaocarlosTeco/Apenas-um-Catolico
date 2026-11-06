@@ -3,7 +3,7 @@ import styled, { useTheme } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { PiArrowRight } from 'react-icons/pi';
 import SEO from '../components/SEO';
-import Folhinha from '../components/Folhinha';
+import FolhinhaDeArrancar from '../components/FolhinhaDeArrancar';
 import { Emblema } from '../components/Emblemas';
 import SantosSection from './Home/SantosSection';
 import {
@@ -204,41 +204,13 @@ const OndeEstamos = styled.p`
   }
 `;
 
-// a folhinha com duas folhas por baixo, como um bloco de parede
+// o lugar do bloquinho de parede (a folhinha que se arranca)
 const Bloco = styled.div`
   grid-area: folha;
-  position: relative;
   justify-self: center;
   width: 100%;
   max-width: 340px;
   margin-bottom: 10px;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 10px 0 -8px 0;
-    background: #f1eadb;
-    border: 1px solid #e1d7c2;
-  }
-
-  &::before {
-    transform: rotate(2.2deg);
-  }
-
-  &::after {
-    inset: 16px 2px -12px 2px;
-    background: #ebe2cf;
-    transform: rotate(-2.6deg);
-    z-index: -1;
-  }
-
-  > article {
-    position: relative;
-    z-index: 1;
-    max-width: none;
-    outline: 1px solid #e1d7c2;
-  }
 
   @media (min-width: 900px) {
     margin-top: 12px;
@@ -705,8 +677,8 @@ const Home = () => {
           </Topo>
 
           <Bloco>
-            <Folhinha
-              dia={agora}
+            <FolhinhaDeArrancar
+              hoje={hoje}
               liturgia={liturgia}
               cor={cor}
               titulo={infoHoje.titulo}
