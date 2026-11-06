@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { PiArrowRight } from 'react-icons/pi';
 import SEO from '../components/SEO';
 import FolhinhaDeArrancar from '../components/FolhinhaDeArrancar';
+import EnfeiteDoTempo from '../components/EnfeiteDoTempo';
+import FestaDoSanto from '../components/FestaDoSanto';
 import { Emblema } from '../components/Emblemas';
 import SantosSection from './Home/SantosSection';
 import {
@@ -603,9 +605,21 @@ const SUMARIO = [
 ];
 const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 
+// ?dia=AAAA-MM-DD mostra a home como ela fica naquele dia (enfeite do tempo, festa do santo,
+// folhinha), mantendo a hora de agora. Serve para ver o Advento, o Natal ou uma festa antes da data.
+function diaPedido(texto) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(texto || '')) return null;
+  const [a, m, d] = texto.split('-').map(Number);
+  const agora = new Date();
+  const data = new Date(a, m - 1, d, agora.getHours(), agora.getMinutes());
+  return data.getDate() === d ? data : null;
+}
+
 const Home = () => {
   const theme = useTheme();
-  const agora = useMemo(() => new Date(), []);
+  const [params] = useSearchParams();
+  const pedido = params.get('dia');
+  const agora = useMemo(() => diaPedido(pedido) || new Date(), [pedido]);
   const hoje = useMemo(
     () => new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()),
     [agora]
@@ -650,6 +664,7 @@ const Home = () => {
       />
 
       <Pagina>
+        <FestaDoSanto dia={hoje} />
         <Abertura>
           <Topo>
             <DataDeHoje>
@@ -674,6 +689,7 @@ const Home = () => {
               )}
               .
             </OndeEstamos>
+            <EnfeiteDoTempo dia={hoje} />
           </Topo>
 
           <Bloco>
