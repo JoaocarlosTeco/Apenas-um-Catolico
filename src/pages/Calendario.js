@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link, useSearchParams } from 'react-router-dom';
 import { PiArrowRight, PiCaretLeft, PiCaretRight } from 'react-icons/pi';
@@ -290,10 +290,42 @@ const NomesDaFaixa = styled.div`
   }
 `;
 
+// o mês novo entra deslizando do lado para onde a pessoa foi
+const mesDaDireita = keyframes`
+  from { opacity: 0; transform: translateX(36px); }
+  to { opacity: 1; transform: none; }
+`;
+const mesDaEsquerda = keyframes`
+  from { opacity: 0; transform: translateX(-36px); }
+  to { opacity: 1; transform: none; }
+`;
+
+// o anel em volta do dia de hoje se abre e some, devagar
+const pulsoHoje = keyframes`
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+`;
+
+// o número do dia aberto vira como a folha de um bloquinho
+const virarFolha = keyframes`
+  from { opacity: 0; transform: perspective(300px) rotateX(-75deg); }
+  to { opacity: 1; transform: none; }
+`;
+
 const Grade = styled.div`
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 4px;
+  ${({ $direcao }) =>
+    $direcao === 1
+      ? css`
+          animation: ${mesDaDireita} 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        `
+      : $direcao === -1
+        ? css`
+            animation: ${mesDaEsquerda} 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+          `
+        : ''}
 
   @media (min-width: 560px) {
     gap: 6px;
@@ -383,8 +415,19 @@ const Numero = styled.span`
   ${({ $hoje, theme }) =>
     $hoje &&
     css`
+      position: relative;
       background: ${theme.colors.primary};
       color: #fff;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        border: 2px solid ${theme.colors.primary};
+        animation: ${pulsoHoje} 2.4s ease-out infinite;
+        pointer-events: none;
+      }
     `}
 
   @media (min-width: 560px) {
@@ -552,8 +595,11 @@ const CabecaDoDia = styled.div`
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 4.6rem;
     font-weight: 600;
+    font-variant-numeric: lining-nums;
     line-height: 0.95;
     color: #14284b;
+    transform-origin: 50% 0;
+    animation: ${virarFolha} 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 `;
 
@@ -931,6 +977,8 @@ const Calendario = () => {
   const painel = useRef(null);
   const focarDepois = useRef(false);
   const toque = useRef(null);
+  // 1: o mês novo vem da direita (avançou); -1: da esquerda (voltou); 0: sem animação
+  const [direcao, setDirecao] = useState(0);
 
   const semanas = useMemo(() => semanasDoMes(ano, mes), [ano, mes]);
   const diasDoMes = useMemo(
@@ -963,6 +1011,10 @@ const Calendario = () => {
 
   const escolher = (data, { focar = false } = {}) => {
     focarDepois.current = focar;
+    // de que lado o mês novo entra (só quando o mês muda)
+    const novo = data.getFullYear() * 12 + data.getMonth();
+    const atual = ano * 12 + mes;
+    if (novo !== atual) setDirecao(novo > atual ? 1 : -1);
     setParams(mesmoDia(data, hoje) ? {} : { data: chave(data) }, {
       replace: true,
     });
@@ -1117,6 +1169,8 @@ const Calendario = () => {
           </NomesDaFaixa>
 
           <Grade
+            key={`${ano}-${mes}`}
+            $direcao={direcao}
             ref={grade}
             role="grid"
             aria-label={`${MESES[mes]} de ${ano}`}
@@ -1204,7 +1258,12 @@ const Calendario = () => {
           </OcultoNaTela>
         </Folha>
 
-        <DiaAberto ref={painel} info={info} hoje={hoje} />
+        <DiaAberto
+          key={chave(info.data)}
+          ref={painel}
+          info={info}
+          hoje={hoje}
+        />
       </Layout>
 
       <Secao aria-labelledby="neste-mes">
