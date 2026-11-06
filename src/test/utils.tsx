@@ -2,10 +2,8 @@ import { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { I18nProvider } from '../i18n';
-import { AppProvider } from '../context/AppContext';
 import { ThemeContext } from '../context/ThemeContext';
-import { lightTheme } from '../styles/GlobalStyles.js';
+import { lightTheme, darkTheme } from '../styles/GlobalStyles.js';
 
 // Props do wrapper personalizado
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
@@ -33,15 +31,11 @@ const AllTheProviders = ({
 
   return (
     <BrowserRouter>
-      <I18nProvider>
-        <AppProvider>
-          <ThemeProvider theme={lightTheme}>
-            <ThemeContext.Provider value={themeContextValue}>
-              {children}
-            </ThemeContext.Provider>
-          </ThemeProvider>
-        </AppProvider>
-      </I18nProvider>
+      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+        <ThemeContext.Provider value={themeContextValue}>
+          {children}
+        </ThemeContext.Provider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };
