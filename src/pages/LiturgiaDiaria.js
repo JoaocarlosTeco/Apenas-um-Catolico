@@ -258,10 +258,12 @@ const BlocoOracao = styled.section`
 
   h3 {
     color: ${({ theme, $cor }) => tom(theme, $cor)};
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
+    font-family: ${({ theme }) => theme.fonts.heading};
+    font-size: 1.15rem;
+    font-weight: 600;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
   }
 `;
 

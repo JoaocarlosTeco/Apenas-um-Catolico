@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { PiArrowUpRight, PiEnvelopeSimple, PiGithubLogo, PiInstagramLogo } from 'react-icons/pi';
+import {
+  PiArrowUpRight,
+  PiEnvelopeSimple,
+  PiGithubLogo,
+  PiInstagramLogo,
+} from 'react-icons/pi';
 import Logo from './Logo';
 
 const Rodape = styled.footer`
@@ -72,13 +77,15 @@ const Redes = styled.div`
 `;
 
 const Coluna = styled.nav`
+  /* versalete dourado, como os outros rótulos do site */
   h2 {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #9cc4f2;
-    margin-bottom: 14px;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    font-variant: small-caps;
+    letter-spacing: 0.06em;
+    color: #d9bb6a;
+    margin-bottom: 12px;
   }
 
   ul {
@@ -125,9 +132,15 @@ const SANTOS = [
 ];
 
 const IGREJA = [
-  { rotulo: 'Vaticano', href: 'https://www.vatican.va/content/vatican/pt.html' },
+  {
+    rotulo: 'Vaticano',
+    href: 'https://www.vatican.va/content/vatican/pt.html',
+  },
   { rotulo: 'CNBB', href: 'https://www.cnbb.org.br' },
-  { rotulo: 'Catecismo', href: 'https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html' },
+  {
+    rotulo: 'Catecismo',
+    href: 'https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html',
+  },
 ];
 
 const Footer: React.FC = () => (
@@ -136,11 +149,16 @@ const Footer: React.FC = () => (
       <Sobre>
         <Logo tamanho={40} />
         <p>
-          Um espaço para rezar todos os dias: a liturgia de hoje, a vida dos santos e orações para cada
-          momento.
+          Um espaço para rezar todos os dias: a liturgia de hoje, a vida dos
+          santos e orações para cada momento.
         </p>
         <Redes>
-          <a href="https://www.instagram.com/joaotdev/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <a
+            href="https://www.instagram.com/joaotdev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
             <PiInstagramLogo />
           </a>
           <a
@@ -197,7 +215,11 @@ const Footer: React.FC = () => (
       <span>© {new Date().getFullYear()} Apenas um Católico</span>
       <span>
         Liturgia via{' '}
-        <a href="https://github.com/Dancrf/liturgia-diaria" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://github.com/Dancrf/liturgia-diaria"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           API liturgia-diaria
         </a>
       </span>

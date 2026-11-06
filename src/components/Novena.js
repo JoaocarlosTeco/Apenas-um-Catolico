@@ -80,12 +80,13 @@ const Dia = styled.button`
 const DiaAberto = styled.div`
   small {
     display: block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
     color: ${({ $cor }) => $cor};
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   h3 {
