@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import {
   Link,
@@ -8,12 +8,6 @@ import {
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
-import {
-  AnimatePresence,
-  motion,
-  useIsPresent,
-  useReducedMotion,
-} from 'framer-motion';
 import {
   FiArrowLeft,
   FiArrowRight,
@@ -150,46 +144,34 @@ async function copiarTexto(texto) {
   if (!ok) throw new Error('copia indisponivel');
 }
 
-// Acompanha a largura da tela para escolher a animação do leitor
-function useTelaLarga() {
-  const [larga, setLarga] = useState(() =>
-    Boolean(window.matchMedia?.(TELA_LARGA).matches)
-  );
-  useEffect(() => {
-    const consulta = window.matchMedia?.(TELA_LARGA);
-    if (!consulta?.addEventListener) return undefined;
-    const aoMudar = () => setLarga(consulta.matches);
-    consulta.addEventListener('change', aoMudar);
-    return () => consulta.removeEventListener('change', aoMudar);
-  }, []);
-  return larga;
-}
-
-// Celular: folha que sobe de baixo. Computador: painel que aparece no lugar.
-const animacaoDoPainel = (larga, reduzir) => {
-  if (reduzir) {
-    return {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      exit: { opacity: 0 },
-      transition: { duration: 0.15 },
-    };
-  }
-  if (larga) {
-    return {
-      initial: { opacity: 0, y: 16 },
-      animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: 16 },
-      transition: { duration: 0.22, ease: [0.2, 0.8, 0.2, 1] },
-    };
-  }
-  return {
-    initial: { y: '100%' },
-    animate: { y: 0 },
-    exit: { y: '100%' },
-    transition: { type: 'tween', duration: 0.32, ease: [0.22, 1, 0.36, 1] },
-  };
-};
+// Animações do leitor, em CSS. Celular: folha que sobe de baixo. Computador: painel que aparece
+// no lugar. Com movimento reduzido no sistema, só esmaece. Na saída, o leitor fica montado o tempo
+// da animação (SAIDA_MS) e só depois some da página.
+const SAIDA_MS = 330;
+const aparecer = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+const sumir = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`;
+const subir = keyframes`
+  from { transform: translateY(100%); }
+  to { transform: none; }
+`;
+const descer = keyframes`
+  from { transform: none; }
+  to { transform: translateY(100%); }
+`;
+const surgir = keyframes`
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+`;
+const afundar = keyframes`
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(16px); }
+`;
 
 /* ---------- Estilos comuns ---------- */
 
@@ -648,14 +630,53 @@ const Camada = styled.div`
   }
 `;
 
-const Fundo = styled(motion.div)`
+const Fundo = styled.div`
   position: absolute;
   inset: 0;
   background: ${({ theme }) =>
     theme.modo === 'escuro' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(16, 32, 60, 0.5)'};
+  animation: ${({ $saindo }) =>
+    $saindo
+      ? css`
+          ${sumir} 0.2s ease forwards
+        `
+      : css`
+          ${aparecer} 0.2s ease
+        `};
 `;
 
-const Painel = styled(motion.div)`
+const Painel = styled.div`
+  animation: ${({ $saindo }) =>
+    $saindo
+      ? css`
+          ${descer} 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards
+        `
+      : css`
+          ${subir} 0.32s cubic-bezier(0.22, 1, 0.36, 1)
+        `};
+
+  @media ${TELA_LARGA} {
+    animation: ${({ $saindo }) =>
+      $saindo
+        ? css`
+            ${afundar} 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) forwards
+          `
+        : css`
+            ${surgir} 0.22s cubic-bezier(0.2, 0.8, 0.2, 1)
+          `};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: ${({ $saindo }) =>
+      $saindo
+        ? css`
+            ${sumir} 0.15s ease forwards
+          `
+        : css`
+            ${aparecer} 0.15s ease
+          `};
+  }
+
   position: absolute;
   inset: calc(12px + env(safe-area-inset-top)) 0 0;
   display: flex;
@@ -896,6 +917,7 @@ const Leitor = ({
   aoFechar,
   tamanho,
   aoMudarFonte,
+  saindo,
 }) => {
   const idTitulo = useId();
   const painel = useRef(null);
@@ -905,9 +927,7 @@ const Leitor = ({
   const temporizador = useRef(null);
   const [copiada, setCopiada] = useState(false);
   const [aviso, setAviso] = useState('');
-  const presente = useIsPresent();
-  const reduzir = useReducedMotion();
-  const larga = useTelaLarga();
+  const presente = !saindo;
 
   useEffect(() => () => clearTimeout(temporizador.current), []);
 
@@ -970,21 +990,14 @@ const Leitor = ({
 
   return (
     <Camada onKeyDown={teclar} $saindo={!presente}>
-      <Fundo
-        aria-hidden="true"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        onClick={aoFechar}
-      />
+      <Fundo aria-hidden="true" $saindo={saindo} onClick={aoFechar} />
       <Painel
         ref={painel}
         role="dialog"
         aria-modal="true"
         aria-labelledby={idTitulo}
         tabIndex={-1}
-        {...animacaoDoPainel(larga, reduzir)}
+        $saindo={saindo}
       >
         <BarraLeitor>
           <CategoriaLeitor>{categoria?.rotulo}</CategoriaLeitor>
@@ -1093,6 +1106,18 @@ const Oracao = () => {
     : TODAS;
   // ?oracao=angelus abre a oração no leitor; id desconhecido mostra só a lista
   const aberta = porId.get(params.get('oracao')) || null;
+
+  // Ao fechar, o leitor continua na tela com a última oração durante a animação de saída
+  const [ultima, setUltima] = useState(aberta);
+  useEffect(() => {
+    if (aberta) {
+      setUltima(aberta);
+      return undefined;
+    }
+    const espera = setTimeout(() => setUltima(null), SAIDA_MS);
+    return () => clearTimeout(espera);
+  }, [aberta]);
+  const noLeitor = aberta || ultima;
 
   const [busca, setBusca] = useState('');
   const [tamanho, setTamanho] = useState(lerTamanhoFonte);
@@ -1414,21 +1439,19 @@ const Oracao = () => {
       </div>
 
       {createPortal(
-        <AnimatePresence>
-          {aberta && (
-            <Leitor
-              key="leitor"
-              oracao={aberta}
-              padrao={padrao}
-              anterior={indice > 0 ? lista[indice - 1] : null}
-              proxima={indice >= 0 ? lista[indice + 1] || null : null}
-              aoIr={passo => irPara(indice + passo)}
-              aoFechar={fechar}
-              tamanho={tamanho}
-              aoMudarFonte={mudarFonte}
-            />
-          )}
-        </AnimatePresence>,
+        noLeitor ? (
+          <Leitor
+            oracao={noLeitor}
+            padrao={padrao}
+            anterior={indice > 0 ? lista[indice - 1] : null}
+            proxima={indice >= 0 ? lista[indice + 1] || null : null}
+            aoIr={passo => irPara(indice + passo)}
+            aoFechar={fechar}
+            tamanho={tamanho}
+            aoMudarFonte={mudarFonte}
+            saindo={!aberta}
+          />
+        ) : null,
         document.body
       )}
     </Pagina>
