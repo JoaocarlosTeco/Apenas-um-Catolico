@@ -5,6 +5,7 @@ import BotaoMusica from '../../components/BotaoMusica';
 import Terco from '../../components/Terco';
 import Novena from '../../components/Novena';
 import { EmblemaMaria } from '../../components/Emblemas';
+import { Nuvens } from '../../components/Ambiente';
 import { musicas } from '../../data/musicas';
 import {
   CascaDoSanto,
@@ -181,7 +182,11 @@ const Cabecalho = ({ id, children, intro, nota }) => (
 
 /* ---------- Topo: o manto azul, o arco e as doze estrelas ---------- */
 
+// isolation cria um plano próprio: as nuvens (z-index -1) passam atrás do retrato e do texto
 const Topo = styled.section`
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   background: ${AZUL};
   color: ${MARFIM};
   text-align: center;
@@ -1022,6 +1027,7 @@ const Conteudo = ({ santo }) => {
   return (
     <>
       <Topo aria-labelledby="maria-nome">
+        <Nuvens />
         <Retrato>
           <Coroa viewBox="-12 -13 124 56" aria-hidden="true" focusable="false">
             {COROA.map(([x, y], i) => (

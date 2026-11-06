@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
-// Efeitos das páginas dos santos: a chuva de rosas (a pedido) e a vela do Padre Pio. Todos são decorativos (aria-hidden),
+// Efeitos das páginas dos santos: a chuva de rosas (a pedido), a vela do Padre Pio e as nuvens de Nossa Senhora. Todos são decorativos (aria-hidden),
 // não capturam cliques e param sozinhos quando o sistema pede menos movimento.
 
 const semMovimento = css`
@@ -244,5 +244,121 @@ export function Vela({ cor = '#E0B25A' }) {
         <path d="M58 62 Q60 76 57 84 Q55 78 55 64 Z" fill="#F4EDDD" />
       </svg>
     </VelaCaixa>
+  );
+}
+
+/* ---------------- Nuvens (Nossa Senhora) ---------------- */
+
+// Nuvens claras e meio transparentes atravessando o céu azul do topo, cada uma no seu ritmo.
+// Ficam atrás do retrato e do texto (o topo precisa de isolation: isolate). Com menos movimento
+// no sistema, elas ficam paradas em vez de sumir.
+
+const atravessar = keyframes`
+  from { transform: translateX(-45vw); }
+  to { transform: translateX(110vw); }
+`;
+
+const CamadaNuvens = styled.div`
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+`;
+
+const Nuvem = styled.svg`
+  position: absolute;
+  left: 0;
+  top: ${({ $y }) => $y}%;
+  width: clamp(
+    ${({ $min }) => $min}px,
+    ${({ $vw }) => $vw}vw,
+    ${({ $max }) => $max}px
+  );
+  height: auto;
+  opacity: ${({ $opacidade }) => $opacidade};
+  filter: blur(${({ $desfoque }) => $desfoque}px);
+  animation: ${atravessar} ${({ $duracao }) => $duracao}s linear
+    ${({ $atraso }) => $atraso}s infinite;
+  will-change: transform;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    transform: translateX(${({ $parada }) => $parada}vw);
+  }
+`;
+
+const FORMA_NUVEM =
+  'M30 70 C10 70 6 48 24 42 C22 24 44 16 56 28 C64 10 94 12 98 32 C116 26 132 40 124 56 C140 58 140 78 122 78 L34 78 C31 78 30 74 30 70 Z';
+
+const NUVENS = [
+  {
+    y: 4,
+    vw: 34,
+    min: 150,
+    max: 300,
+    opacidade: 0.2,
+    desfoque: 3,
+    duracao: 75,
+    atraso: -12,
+    parada: 4,
+  },
+  {
+    y: 22,
+    vw: 24,
+    min: 110,
+    max: 210,
+    opacidade: 0.14,
+    desfoque: 4,
+    duracao: 100,
+    atraso: -62,
+    parada: 68,
+  },
+  {
+    y: 48,
+    vw: 40,
+    min: 170,
+    max: 360,
+    opacidade: 0.12,
+    desfoque: 6,
+    duracao: 125,
+    atraso: -38,
+    parada: -8,
+  },
+  {
+    y: 70,
+    vw: 28,
+    min: 130,
+    max: 250,
+    opacidade: 0.16,
+    desfoque: 3.5,
+    duracao: 90,
+    atraso: -80,
+    parada: 72,
+  },
+];
+
+export function Nuvens({ cor = '#FFFFFF' }) {
+  return (
+    <CamadaNuvens aria-hidden="true">
+      {NUVENS.map((n, i) => (
+        <Nuvem
+          key={i}
+          viewBox="0 0 144 90"
+          focusable="false"
+          $y={n.y}
+          $vw={n.vw}
+          $min={n.min}
+          $max={n.max}
+          $opacidade={n.opacidade}
+          $desfoque={n.desfoque}
+          $duracao={n.duracao}
+          $atraso={n.atraso}
+          $parada={n.parada}
+        >
+          <path d={FORMA_NUVEM} fill={cor} />
+        </Nuvem>
+      ))}
+    </CamadaNuvens>
   );
 }
