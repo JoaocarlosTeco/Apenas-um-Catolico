@@ -1,460 +1,652 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
-import { FiPlus, FiMinus, FiShare2 } from 'react-icons/fi';
+import { useSearchParams } from 'react-router-dom';
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiMinus,
+  FiPlus,
+  FiShare2,
+} from 'react-icons/fi';
+import {
+  buscarLiturgia,
+  chaveDaData,
+  corLiturgica,
+  dataDaChave,
+  separarVersiculos,
+} from '../services/liturgia';
+import { tempoLiturgico, TEMPOS } from '../services/anoLiturgico';
 
-const LiturgiaContainer = styled.div`
-  max-width: 1000px;
+// Tempo, ciclo dos domingos (A, B, C) e ciclo dos dias de semana (I, II) da data aberta
+const Ciclos = styled.p`
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
+
+const CHAVE_FONTE = 'tamanhoFonte';
+
+// No tema escuro a cor litúrgica clareia quando vira cor de texto
+const tom = (theme, cor) =>
+  theme.modo === 'escuro' ? `color-mix(in srgb, ${cor} 55%, white)` : cor;
+const FONTE_MIN = 15;
+const FONTE_MAX = 26;
+
+const Container = styled.div`
+  max-width: 720px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 104px 16px 72px;
 
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 20px 10px;
+  @media (min-width: 768px) {
+    padding-top: 128px;
   }
 `;
 
-const Header = styled.div`
+const Topo = styled.header`
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderColor};
 `;
 
-const DateInfo = styled.div`
-  color: ${props => props.theme.colors.textLight};
-  font-size: 1rem;
-  margin-bottom: 8px;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.9rem;
-  }
-`;
-
-const LiturgicalPeriod = styled.h2`
-  color: ${props => props.theme.colors.secondary};
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 1.2rem;
-  }
-`;
-
-const TabContainer = styled.div`
-  background: ${props => props.theme.colors.cardBackground};
-  border-radius: 12px;
-  box-shadow: ${props => props.theme.shadows.medium};
-  overflow: hidden;
-  margin-bottom: 24px;
-`;
-
-const TabHeader = styled.div`
-  display: flex;
-  background: ${props => props.theme.colors.background};
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-const TabButton = styled.button`
-  flex: 1;
-  padding: 16px 24px;
-  background: ${props => props.active ? props.theme.colors.primary : 'transparent'};
-  color: ${props => props.active ? props.theme.colors.white : props.theme.colors.text};
-  border: none;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-
-  &:hover {
-    background: ${props => props.active ? props.theme.colors.primary : 'rgba(27, 51, 88, 0.1)'};
-  }
-
-  &:not(:last-child) {
-    border-right: 1px solid ${props => props.theme.colors.borderColor};
-    
-    @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-      border-right: none;
-      border-bottom: 1px solid ${props => props.theme.colors.borderColor};
-    }
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 12px 16px;
-    font-size: 0.9rem;
-  }
-`;
-
-const TabContent = styled(motion.div)`
-  padding: 32px;
-  min-height: 400px;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 20px;
-    min-height: 300px;
-  }
-`;
-
-const ReadingTitle = styled.h3`
-  color: ${props => props.theme.colors.primary};
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  font-weight: 600;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 1.1rem;
-    margin-bottom: 16px;
-  }
-`;
-
-const ReadingText = styled.div`
-  color: ${props => props.theme.colors.text};
-  line-height: 1.8;
-  font-size: ${props => props.fontSize}px;
-  margin-bottom: 24px;
-
-  p {
-    margin-bottom: 16px;
-  }
-
-  strong {
-    color: ${props => props.theme.colors.primary};
-    font-weight: 700;
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    line-height: 1.6;
-    font-size: ${props => Math.max(props.fontSize * 0.9, 14)}px;
-  }
-`;
-
-const ReadingReference = styled.div`
-  color: ${props => props.theme.colors.textLight};
-  font-style: italic;
-  font-size: ${props => Math.max(props.fontSize - 2, 12)}px;
-  text-align: right;
-  padding-top: 16px;
-  border-top: 1px solid ${props => props.theme.colors.borderColor};
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: ${props => Math.max((props.fontSize - 2) * 0.9, 11)}px;
-  }
-`;
-
-const Controls = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding: 16px;
-  background: ${props => props.theme.colors.cardBackground};
-  border-radius: 8px;
-  box-shadow: ${props => props.theme.shadows.soft};
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex-direction: column;
-    gap: 12px;
-    padding: 12px;
-  }
-`;
-
-const FontControls = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`;
-
-const FontLabel = styled.span`
-  color: ${props => props.theme.colors.textLight};
-  font-size: 0.9rem;
-  margin-right: 8px;
-`;
-
-const FontButton = styled.button`
-  background: ${props => props.theme.colors.background};
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  color: ${props => props.theme.colors.text};
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
+const NavegaData = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  gap: 4px;
+  margin-bottom: 14px;
+`;
+
+const BotaoData = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 0 10px;
+  font-size: 0.88rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
 
   &:hover {
-    background: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.white};
-    border-color: ${props => props.theme.colors.primary};
+    color: ${({ theme }) => theme.colors.titleColor};
   }
 
-  svg {
-    width: 16px;
-    height: 16px;
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
   }
 `;
 
-const ShareButton = styled.button`
-  background: ${props => props.theme.colors.secondary};
-  color: ${props => props.theme.colors.white};
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  display: flex;
+const DataExtenso = styled.p`
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  margin-bottom: 6px;
+`;
+
+const Titulo = styled.h1`
+  color: ${({ theme }) => theme.colors.titleColor};
+  font-size: clamp(1.9rem, 7vw, 2.7rem);
+  line-height: 1.12;
+  margin-bottom: 12px;
+`;
+
+const Cor = styled.span`
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.textSecondary};
+
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: ${({ $cor }) => $cor};
+  }
+`;
+
+const Ferramentas = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+`;
+
+const Fonte = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 0.85rem;
+`;
+
+const BotaoIcone = styled.button`
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  border: 1px solid ${({ theme }) => theme.colors.borderColor};
+  color: ${({ theme }) => theme.colors.text};
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+`;
+
+const BotaoCompartilhar = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 3px;
+  border: 1px solid ${({ theme }) => theme.colors.borderColor};
+  color: ${({ theme }) => theme.colors.titleColor};
+  font-size: 0.88rem;
+  font-weight: 600;
 
   &:hover {
-    background: ${props => props.theme.colors.primary};
-    transform: translateY(-1px);
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
+    border-color: currentColor;
   }
 `;
 
-const LoadingSpinner = styled(motion.div)`
-  width: 50px;
-  height: 50px;
-  border: 3px solid ${props => props.theme.colors.background};
-  border-top: 3px solid ${props => props.theme.colors.secondary};
-  border-radius: 50%;
-  margin: 40px auto;
+const Abas = styled.div`
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  margin-bottom: 26px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderColor};
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
-const ErrorMessage = styled.div`
+const Aba = styled.button`
+  flex: 0 0 auto;
+  padding: 12px 0;
+  margin-bottom: -1px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: ${({ $ativa, theme }) =>
+    $ativa ? theme.colors.titleColor : theme.colors.textSecondary};
+  border-bottom: 2px solid
+    ${({ $ativa, $cor }) => ($ativa ? $cor : 'transparent')};
+`;
+
+const Cartao = styled.article`
+  padding: 4px 0 8px;
+`;
+
+const Referencia = styled.p`
+  color: ${({ theme, $cor }) => tom(theme, $cor)};
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+`;
+
+const TituloLeitura = styled.h2`
+  color: ${({ theme }) => theme.colors.titleColor};
+  font-size: clamp(1.45rem, 5vw, 1.8rem);
+  line-height: 1.25;
+  margin-bottom: 22px;
+`;
+
+const Opcoes = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+`;
+
+const Opcao = styled.button`
+  min-height: 34px;
+  padding: 0 4px;
+  font-size: 0.85rem;
+  border-bottom: 2px solid
+    ${({ $ativa, $cor }) => ($ativa ? $cor : 'transparent')};
+  color: ${({ $ativa, theme }) =>
+    $ativa ? theme.colors.titleColor : theme.colors.textSecondary};
+`;
+
+const Texto = styled.div`
+  color: ${({ theme }) => theme.colors.text};
+  font-size: ${({ $tamanho }) => $tamanho}px;
+  line-height: 1.8;
+
+  p + p {
+    margin-top: 12px;
+  }
+
+  sup {
+    color: ${({ theme, $cor }) => tom(theme, $cor)};
+    font-size: 0.65em;
+    font-weight: 700;
+    margin-right: 2px;
+  }
+`;
+
+const Refrao = styled.p`
+  font-style: italic;
+  font-size: 1.15em;
+  color: ${({ theme }) => theme.colors.titleColor};
+  padding-left: 16px;
+  margin-bottom: 18px;
+  border-left: 2px solid ${({ $cor }) => $cor};
+`;
+
+const BlocoOracao = styled.section`
+  & + & {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid ${({ theme }) => theme.colors.borderColor};
+  }
+
+  h3 {
+    color: ${({ theme, $cor }) => tom(theme, $cor)};
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+`;
+
+const Esqueleto = styled.div`
+  height: ${({ $altura }) => $altura}px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background: ${({ theme }) => theme.colors.borderColor};
+  opacity: 0.6;
+  margin-bottom: 12px;
+`;
+
+const Erro = styled.div`
   text-align: center;
-  color: ${props => props.theme.colors.error};
-  padding: 32px;
-  background: ${props => props.theme.colors.cardBackground};
-  border-radius: 12px;
-  margin: 20px 0;
-  box-shadow: ${props => props.theme.shadows.soft};
+  padding: 32px 16px;
+  color: ${({ theme }) => theme.colors.text};
+
+  button {
+    margin-top: 16px;
+    min-height: 40px;
+    padding: 0 20px;
+    border-radius: ${({ theme }) => theme.borderRadius.md};
+    background: ${({ theme }) => theme.colors.primary};
+    color: #fff;
+    font-weight: 600;
+  }
 `;
 
-const formatarTextoComNumeros = (texto) => {
-  if (!texto) return '';
-  return texto.replace(/(\d+)/g, '<strong>$1</strong>');
-};
+const Credito = styled.p`
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
 
-const LiturgiaDiaria = () => {
-  const [liturgia, setLiturgia] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState(0);
-  const [fontSize, setFontSize] = useState(16);
+function lerTamanhoFonte() {
+  try {
+    const salvo = Number(window.localStorage.getItem(CHAVE_FONTE));
+    if (salvo >= FONTE_MIN && salvo <= FONTE_MAX) return salvo;
+  } catch {
+    // sem localStorage, fica o padrão
+  }
+  return 19;
+}
 
-  useEffect(() => {
-    const fetchLiturgia = async () => {
-      try {
-        const response = await fetch('https://liturgia.up.railway.app/');
-        if (!response.ok) {
-          throw new Error('Erro ao carregar a liturgia');
-        }
-        const data = await response.json();
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Dados da API:', data);
-        }
-        setLiturgia(data);
-        setLoading(false);
-      } catch (err) {
-        if (process.env.NODE_ENV === 'development') {
-          console.error('Erro ao buscar liturgia:', err);
-        }
-        setError('Não foi possível carregar a liturgia. Por favor, tente novamente mais tarde.');
-        setLoading(false);
-      }
-    };
-
-    fetchLiturgia();
-  }, []);
-
-  const handleFontSizeChange = (delta) => {
-    setFontSize(prevSize => {
-      const newSize = prevSize + delta;
-      return Math.min(Math.max(newSize, 12), 24);
-    });
-  };
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'Liturgia Diária',
-        text: 'Confira a liturgia de hoje',
-        url: window.location.href,
-      }).catch((error) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Erro ao compartilhar', error);
-        }
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copiado para a área de transferência!');
-    }
-  };
-
-  if (loading) {
-    return (
-      <LiturgiaContainer>
-        <Header>
-          <DateInfo>Carregando...</DateInfo>
-          <LiturgicalPeriod>Liturgia Diária</LiturgicalPeriod>
-        </Header>
-        <LoadingSpinner
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
-      </LiturgiaContainer>
+const TextoComVersiculos = ({ texto }) =>
+  texto
+    .split('\n')
+    .map((paragrafo, i) =>
+      paragrafo.trim() ? (
+        <p key={i}>
+          {separarVersiculos(paragrafo).map((parte, j) =>
+            parte.versiculo ? (
+              <sup key={j}>{parte.texto}</sup>
+            ) : (
+              <React.Fragment key={j}>{parte.texto}</React.Fragment>
+            )
+          )}
+        </p>
+      ) : null
     );
-  }
 
-  if (error) {
-    return (
-      <LiturgiaContainer>
-        <Header>
-          <DateInfo>
-            {new Date().toLocaleDateString('pt-BR', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </DateInfo>
-          <LiturgicalPeriod>Liturgia Diária</LiturgicalPeriod>
-        </Header>
-        <ErrorMessage>{error}</ErrorMessage>
-      </LiturgiaContainer>
-    );
-  }
-
-  // Preparar as leituras para as abas
-  const tabs = [
-    {
-      title: '1ª Leitura',
-      content: {
-        title: liturgia?.primeiraLeitura?.titulo || 'Primeira Leitura',
-        text: liturgia?.primeiraLeitura?.texto,
-        reference: liturgia?.primeiraLeitura?.referencia
-      }
-    },
-    {
-      title: 'Salmo',
-      content: {
-        title: liturgia?.salmo?.titulo || 'Salmo Responsorial',
-        text: liturgia?.salmo?.texto,
-        reference: liturgia?.salmo?.referencia
-      }
-    },
-    {
-      title: 'Evangelho',
-      content: {
-        title: liturgia?.evangelho?.titulo || 'Evangelho',
-        text: liturgia?.evangelho?.texto,
-        reference: liturgia?.evangelho?.referencia
-      }
-    }
-  ].filter(tab => tab.content.text && tab.content.reference);
-
-  // Se houver segunda leitura, inserir antes do evangelho
-  if (liturgia?.segundaLeitura?.texto && liturgia?.segundaLeitura?.referencia) {
-    tabs.splice(2, 0, {
-      title: '2ª Leitura',
-      content: {
-        title: liturgia?.segundaLeitura?.titulo || 'Segunda Leitura',
-        text: liturgia?.segundaLeitura?.texto,
-        reference: liturgia?.segundaLeitura?.referencia
-      }
-    });
-  }
+const Leitura = ({ itens, cor, tamanho, rotuloPadrao }) => {
+  const [escolhida, setEscolhida] = useState(0);
+  const item = itens[Math.min(escolhida, itens.length - 1)];
 
   return (
-    <LiturgiaContainer>
-      <Helmet>
-        <title>Liturgia Diária - Apenas um Católico</title>
-        <meta name="description" content="Acompanhe a liturgia diária da Igreja Católica com as leituras de hoje" />
-      </Helmet>
-
-      <Header>
-        <DateInfo>
-          {new Date().toLocaleDateString('pt-BR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </DateInfo>
-        <LiturgicalPeriod>
-          {liturgia?.tempo || '11ª Semana do Tempo Comum | Sexta-feira'}
-        </LiturgicalPeriod>
-      </Header>
-
-      <Controls>
-        <FontControls>
-          <FontLabel>Tamanho da fonte:</FontLabel>
-          <FontButton onClick={() => handleFontSizeChange(-1)} aria-label="Diminuir fonte">
-            <FiMinus />
-          </FontButton>
-          <FontButton onClick={() => handleFontSizeChange(1)} aria-label="Aumentar fonte">
-            <FiPlus />
-          </FontButton>
-        </FontControls>
-        <ShareButton onClick={handleShare}>
-          <FiShare2 />
-          Compartilhar
-        </ShareButton>
-      </Controls>
-
-      {tabs.length > 0 && (
-        <TabContainer>
-          <TabHeader>
-            {tabs.map((tab, index) => (
-              <TabButton
-                key={index}
-                active={activeTab === index}
-                onClick={() => setActiveTab(index)}
-              >
-                {tab.title}
-              </TabButton>
-            ))}
-          </TabHeader>
-
-          <TabContent
-            key={activeTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ReadingTitle>{tabs[activeTab]?.content.title}</ReadingTitle>
-            <ReadingText 
-              fontSize={fontSize}
-              dangerouslySetInnerHTML={{ 
-                __html: formatarTextoComNumeros(tabs[activeTab]?.content.text || '') 
-              }} 
-            />
-            <ReadingReference fontSize={fontSize}>
-              {tabs[activeTab]?.content.reference}
-            </ReadingReference>
-          </TabContent>
-        </TabContainer>
+    <>
+      {itens.length > 1 && (
+        <Opcoes role="group" aria-label="Leituras à escolha">
+          {itens.map((_, i) => (
+            <Opcao
+              key={i}
+              type="button"
+              $cor={cor}
+              $ativa={i === escolhida}
+              onClick={() => setEscolhida(i)}
+            >
+              Opção {i + 1}
+            </Opcao>
+          ))}
+        </Opcoes>
       )}
-
-      {tabs.length === 0 && (
-        <ErrorMessage>
-          Não há leituras disponíveis para hoje. Por favor, tente novamente mais tarde.
-        </ErrorMessage>
-      )}
-    </LiturgiaContainer>
+      {item.referencia && <Referencia $cor={cor}>{item.referencia}</Referencia>}
+      <TituloLeitura>{item.titulo || rotuloPadrao}</TituloLeitura>
+      {item.refrao && <Refrao $cor={cor}>R. {item.refrao}</Refrao>}
+      <Texto $cor={cor} $tamanho={tamanho}>
+        <TextoComVersiculos texto={item.texto} />
+      </Texto>
+    </>
   );
 };
 
-export default LiturgiaDiaria; 
+const Oracoes = ({ liturgia, cor, tamanho }) => {
+  const blocos = [
+    ['Antífona de entrada', liturgia.antifonas.entrada],
+    ['Oração do dia', liturgia.oracoes.coleta],
+    ['Sobre as oferendas', liturgia.oracoes.oferendas],
+    ['Antífona da comunhão', liturgia.antifonas.comunhao],
+    ['Depois da comunhão', liturgia.oracoes.comunhao],
+  ].filter(([, texto]) => texto);
+
+  return blocos.map(([titulo, texto]) => (
+    <BlocoOracao key={titulo} $cor={cor}>
+      <h3>{titulo}</h3>
+      <Texto $cor={cor} $tamanho={tamanho}>
+        <p>{texto}</p>
+      </Texto>
+    </BlocoOracao>
+  ));
+};
+
+const LiturgiaDiaria = () => {
+  const [params, setParams] = useSearchParams();
+  const hoje = chaveDaData(new Date());
+  const chave = /^\d{4}-\d{2}-\d{2}$/.test(params.get('data') || '')
+    ? params.get('data')
+    : hoje;
+
+  const [liturgia, setLiturgia] = useState(null);
+  const [erro, setErro] = useState(false);
+  const [tentativa, setTentativa] = useState(0);
+  // ?aba=evangelho abre direto na aba pedida (a home usa isso)
+  const [abaAtiva, setAbaAtiva] = useState(
+    () => params.get('aba') || 'primeira'
+  );
+  const [tamanho, setTamanho] = useState(lerTamanhoFonte);
+  const [copiado, setCopiado] = useState(false);
+
+  useEffect(() => {
+    const controle = new AbortController();
+    setLiturgia(null);
+    setErro(false);
+    buscarLiturgia(dataDaChave(chave), { signal: controle.signal })
+      .then(dados => {
+        setLiturgia(dados);
+        setAbaAtiva(atual =>
+          atual === 'segunda' && !dados.leituras.segunda.length
+            ? 'evangelho'
+            : atual
+        );
+      })
+      .catch(() => {
+        if (!controle.signal.aborted) setErro(true);
+      });
+    return () => controle.abort();
+  }, [chave, tentativa]);
+
+  const mudarFonte = delta => {
+    setTamanho(atual => {
+      const novo = Math.min(FONTE_MAX, Math.max(FONTE_MIN, atual + delta));
+      try {
+        window.localStorage.setItem(CHAVE_FONTE, String(novo));
+      } catch {
+        // ignora
+      }
+      return novo;
+    });
+  };
+
+  const irPara = useCallback(
+    deslocamento => {
+      const data = dataDaChave(chave);
+      data.setDate(data.getDate() + deslocamento);
+      const nova = chaveDaData(data);
+      setParams(nova === hoje ? {} : { data: nova });
+    },
+    [chave, hoje, setParams]
+  );
+
+  const compartilhar = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: liturgia?.titulo || 'Liturgia Diária',
+          url,
+        });
+      } catch {
+        // pessoa cancelou o compartilhamento
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      // sem acesso à área de transferência
+    }
+  };
+
+  const cor = corLiturgica(liturgia?.cor);
+  const dataExtenso = dataDaChave(chave).toLocaleDateString('pt-BR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  const abas = useMemo(() => {
+    if (!liturgia) return [];
+    const { leituras } = liturgia;
+    return [
+      {
+        id: 'primeira',
+        rotulo: '1ª Leitura',
+        itens: leituras.primeira,
+        padrao: 'Primeira Leitura',
+      },
+      {
+        id: 'salmo',
+        rotulo: 'Salmo',
+        itens: leituras.salmo,
+        padrao: 'Salmo Responsorial',
+      },
+      {
+        id: 'segunda',
+        rotulo: '2ª Leitura',
+        itens: leituras.segunda,
+        padrao: 'Segunda Leitura',
+      },
+      {
+        id: 'evangelho',
+        rotulo: 'Evangelho',
+        itens: leituras.evangelho,
+        padrao: 'Evangelho',
+      },
+      { id: 'oracoes', rotulo: 'Orações', itens: [] },
+    ].filter(aba => aba.id === 'oracoes' || aba.itens.length);
+  }, [liturgia]);
+
+  const aba = abas.find(a => a.id === abaAtiva) || abas[0];
+
+  return (
+    <Container>
+      <Helmet>
+        <title>
+          {liturgia
+            ? `${liturgia.titulo} - Liturgia Diária`
+            : 'Liturgia Diária'}{' '}
+          - Apenas um Católico
+        </title>
+        <meta
+          name="description"
+          content="Leituras, salmo, evangelho e orações da Missa de cada dia."
+        />
+      </Helmet>
+
+      <Topo>
+        <NavegaData>
+          <BotaoData
+            type="button"
+            $cor={cor.hex}
+            onClick={() => irPara(-1)}
+            aria-label="Dia anterior"
+          >
+            <FiChevronLeft /> Anterior
+          </BotaoData>
+          <BotaoData
+            type="button"
+            $cor={cor.hex}
+            onClick={() => setParams({})}
+            disabled={chave === hoje}
+          >
+            Hoje
+          </BotaoData>
+          <BotaoData
+            type="button"
+            $cor={cor.hex}
+            onClick={() => irPara(1)}
+            aria-label="Próximo dia"
+          >
+            Próximo <FiChevronRight />
+          </BotaoData>
+        </NavegaData>
+        <DataExtenso>
+          {dataExtenso.charAt(0).toUpperCase() + dataExtenso.slice(1)}
+        </DataExtenso>
+        <Titulo>{liturgia ? liturgia.titulo : 'Liturgia Diária'}</Titulo>
+        {liturgia?.cor && <Cor $cor={cor.hex}>Cor litúrgica: {cor.nome}</Cor>}
+        {(() => {
+          const t = tempoLiturgico(dataDaChave(chave));
+          return (
+            <Ciclos>
+              {TEMPOS[t.tempo].nome} · Domingos: ano {t.ciclo} · Dias de semana:
+              ano {t.ferial}
+            </Ciclos>
+          );
+        })()}
+      </Topo>
+
+      {erro && (
+        <Erro role="alert">
+          <p>
+            Não foi possível carregar a liturgia agora. Confira sua conexão e
+            tente de novo.
+          </p>
+          <button type="button" onClick={() => setTentativa(t => t + 1)}>
+            Tentar de novo
+          </button>
+        </Erro>
+      )}
+
+      {!erro && !liturgia && (
+        <div aria-busy="true" aria-label="Carregando a liturgia">
+          <Esqueleto $altura={40} />
+          <Esqueleto $altura={320} />
+        </div>
+      )}
+
+      {liturgia && aba && (
+        <>
+          <Ferramentas>
+            <Fonte>
+              <span>Texto</span>
+              <BotaoIcone
+                type="button"
+                onClick={() => mudarFonte(-1)}
+                disabled={tamanho <= FONTE_MIN}
+                aria-label="Diminuir texto"
+              >
+                <FiMinus />
+              </BotaoIcone>
+              <BotaoIcone
+                type="button"
+                onClick={() => mudarFonte(1)}
+                disabled={tamanho >= FONTE_MAX}
+                aria-label="Aumentar texto"
+              >
+                <FiPlus />
+              </BotaoIcone>
+            </Fonte>
+            <BotaoCompartilhar
+              type="button"
+              $cor={cor.hex}
+              onClick={compartilhar}
+            >
+              <FiShare2 /> {copiado ? 'Link copiado' : 'Compartilhar'}
+            </BotaoCompartilhar>
+          </Ferramentas>
+
+          <Abas role="tablist" aria-label="Partes da liturgia">
+            {abas.map(item => (
+              <Aba
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={item.id === aba.id}
+                $ativa={item.id === aba.id}
+                $cor={cor.hex}
+                onClick={() => setAbaAtiva(item.id)}
+              >
+                {item.rotulo}
+              </Aba>
+            ))}
+          </Abas>
+
+          <Cartao $cor={cor.hex} role="tabpanel">
+            {aba.id === 'oracoes' ? (
+              <Oracoes liturgia={liturgia} cor={cor.hex} tamanho={tamanho} />
+            ) : (
+              <Leitura
+                key={`${chave}-${aba.id}`}
+                itens={aba.itens}
+                cor={cor.hex}
+                tamanho={tamanho}
+                rotuloPadrao={aba.padrao}
+              />
+            )}
+          </Cartao>
+
+          <Credito>
+            Textos da liturgia:{' '}
+            <a
+              href="https://github.com/Dancrf/liturgia-diaria"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              API liturgia-diaria
+            </a>
+          </Credito>
+        </>
+      )}
+    </Container>
+  );
+};
+
+export default LiturgiaDiaria;

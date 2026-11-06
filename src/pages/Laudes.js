@@ -1,294 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
-import { FiPlus, FiMinus, FiShare2 } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { FiChevronLeft, FiChevronRight, FiMinus, FiPlus, FiShare2 } from 'react-icons/fi';
 
-const LaudesContainer = styled.div`
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 40px 20px;
+// Mesma preferência de tamanho da Liturgia Diária
+const CHAVE_FONTE = 'tamanhoFonte';
+const FONTE_MIN = 14;
+const FONTE_MAX = 24;
 
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 20px 10px;
-  }
-`;
-
-const Header = styled.div`
-  text-align: center;
-  margin-bottom: 32px;
-`;
-
-const DateInfo = styled.div`
-  color: ${props => props.theme.colors.textLight};
-  font-size: 1rem;
-  margin-bottom: 8px;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.9rem;
-  }
-`;
-
-const LaudesTitle = styled.h2`
-  color: ${props => props.theme.colors.secondary};
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin: 0;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 1.4rem;
-  }
-`;
-
-const Subtitle = styled.p`
-  color: ${props => props.theme.colors.textLight};
-  font-size: 1rem;
-  margin-top: 8px;
-  font-style: italic;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.9rem;
-  }
-`;
-
-const TabContainer = styled.div`
-  background: ${props => props.theme.colors.cardBackground};
-  border-radius: 12px;
-  box-shadow: ${props => props.theme.shadows.medium};
-  overflow: hidden;
-  margin-bottom: 24px;
-`;
-
-const TabHeader = styled.div`
-  display: flex;
-  background: ${props => props.theme.colors.background};
-  border-bottom: 1px solid ${props => props.theme.colors.borderColor};
-  overflow-x: auto;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex-wrap: wrap;
-  }
-`;
-
-const TabButton = styled.button`
-  flex: 1;
-  min-width: 120px;
-  padding: 16px 20px;
-  background: ${props => props.active ? props.theme.colors.primary : 'transparent'};
-  color: ${props => props.active ? props.theme.colors.white : props.theme.colors.text};
-  border: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-
-  &:hover {
-    background: ${props => props.active ? props.theme.colors.primary : 'rgba(27, 51, 88, 0.1)'};
-  }
-
-  &:not(:last-child) {
-    border-right: 1px solid ${props => props.theme.colors.borderColor};
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex: 1 1 50%;
-    min-width: auto;
-    padding: 12px 16px;
-    font-size: 0.8rem;
-    border-right: none;
-    border-bottom: 1px solid ${props => props.theme.colors.borderColor};
-    
-    &:nth-child(odd) {
-      border-right: 1px solid ${props => props.theme.colors.borderColor};
-    }
-  }
-`;
-
-const TabContent = styled(motion.div)`
-  padding: 32px;
-  min-height: 400px;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 20px;
-    min-height: 300px;
-  }
-`;
-
-const SectionTitle = styled.h3`
-  color: ${props => props.theme.colors.primary};
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  font-weight: 600;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 1.1rem;
-    margin-bottom: 16px;
-  }
-`;
-
-const ContentText = styled.div`
-  color: ${props => props.theme.colors.text};
-  line-height: 1.8;
-  font-size: ${props => props.fontSize}px;
-  margin-bottom: 24px;
-
-  p {
-    margin-bottom: 16px;
-  }
-
-  .antiphon {
-    color: ${props => props.theme.colors.secondary};
-    font-style: italic;
-    font-weight: 500;
-    margin-bottom: 12px;
-    padding: 8px 12px;
-    background: rgba(192, 149, 83, 0.1);
-    border-left: 3px solid ${props => props.theme.colors.secondary};
-    border-radius: 0 4px 4px 0;
-  }
-
-  .psalm-verse {
-    margin-bottom: 8px;
-    text-indent: 20px;
-  }
-
-  .response {
-    color: ${props => props.theme.colors.primary};
-    font-weight: 600;
-    text-align: center;
-    margin: 16px 0;
-    padding: 8px;
-    background: rgba(27, 51, 88, 0.1);
-    border-radius: 4px;
-  }
-
-  strong {
-    color: ${props => props.theme.colors.primary};
-    font-weight: 700;
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    line-height: 1.6;
-    font-size: ${props => Math.max(props.fontSize * 0.9, 14)}px;
-  }
-`;
-
-const ContentReference = styled.div`
-  color: ${props => props.theme.colors.textLight};
-  font-style: italic;
-  font-size: ${props => Math.max(props.fontSize - 2, 12)}px;
-  text-align: right;
-  padding-top: 16px;
-  border-top: 1px solid ${props => props.theme.colors.borderColor};
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: ${props => Math.max((props.fontSize - 2) * 0.9, 11)}px;
-  }
-`;
-
-const Controls = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding: 16px;
-  background: ${props => props.theme.colors.cardBackground};
-  border-radius: 8px;
-  box-shadow: ${props => props.theme.shadows.soft};
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex-direction: column;
-    gap: 12px;
-    padding: 12px;
-  }
-`;
-
-const FontControls = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`;
-
-const FontLabel = styled.span`
-  color: ${props => props.theme.colors.textLight};
-  font-size: 0.9rem;
-  margin-right: 8px;
-`;
-
-const FontButton = styled.button`
-  background: ${props => props.theme.colors.background};
-  border: 1px solid ${props => props.theme.colors.borderColor};
-  color: ${props => props.theme.colors.text};
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.white};
-    border-color: ${props => props.theme.colors.primary};
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-`;
-
-const ShareButton = styled.button`
-  background: ${props => props.theme.colors.secondary};
-  color: ${props => props.theme.colors.white};
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-
-  &:hover {
-    background: ${props => props.theme.colors.primary};
-    transform: translateY(-1px);
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-`;
-
-const LoadingSpinner = styled(motion.div)`
-  width: 50px;
-  height: 50px;
-  border: 3px solid ${props => props.theme.colors.background};
-  border-top: 3px solid ${props => props.theme.colors.secondary};
-  border-radius: 50%;
-  margin: 40px auto;
-`;
-
-const ErrorMessage = styled.div`
-  text-align: center;
-  color: ${props => props.theme.colors.error};
-  padding: 32px;
-  background: ${props => props.theme.colors.cardBackground};
-  border-radius: 12px;
-  margin: 20px 0;
-  box-shadow: ${props => props.theme.shadows.soft};
-`;
-
-// Função para gerar conteúdo dinâmico baseado no dia
+// Roteiro local: alterna salmos, leituras e hinos conforme o dia
 const generateDynamicLaudes = (dayOfWeek, dayOfMonth) => {
   const salmos = [
     {
-      title: "Salmo 63 (62) - Sede de Deus",
+      title: "Salmo 42 (41) - Sede de Deus",
       ant: "Cantai ao Senhor um cântico novo, porque Ele fez maravilhas.",
       psalm: `Minha alma tem sede de Deus, do Deus vivo:
       quando irei contemplar a face de Deus?
@@ -378,292 +103,548 @@ const generateDynamicLaudes = (dayOfWeek, dayOfMonth) => {
   };
 };
 
+// Os versos vêm de template strings indentadas: tira o recuo de cada linha
+const versos = texto =>
+  texto
+    .split('\n')
+    .map(linha => linha.trim())
+    .filter(Boolean)
+    .join('\n');
+
+const montarPartes = laudes => [
+  {
+    id: 'invitatorio',
+    rotulo: 'Invitatório',
+    titulo: 'Invitatório',
+    referencia: 'Salmo 95 (94)',
+    antifona: laudes.invitatorium.ant,
+    versos: versos(laudes.invitatorium.psalm)
+  },
+  { id: 'hino', rotulo: 'Hino', titulo: 'Hino', versos: versos(laudes.hymn) },
+  ...laudes.psalms.map((salmo, indice) => ({
+    id: `salmo-${indice + 1}`,
+    rotulo: `Salmo ${indice + 1}`,
+    titulo: salmo.title || `Salmo ${indice + 1}`,
+    antifona: salmo.ant,
+    versos: versos(salmo.psalm)
+  })),
+  {
+    id: 'leitura-breve',
+    rotulo: 'Leitura Breve',
+    titulo: 'Leitura Breve',
+    referencia: laudes.lectioBrevis.reference,
+    texto: laudes.lectioBrevis.reading
+  },
+  {
+    id: 'benedictus',
+    rotulo: 'Benedictus',
+    titulo: 'Cântico de Zacarias',
+    referencia: 'Lc 1, 68-79',
+    antifona: laudes.benedictus.ant,
+    versos: versos(laudes.benedictus.psalm)
+  },
+  {
+    id: 'preces',
+    rotulo: 'Preces',
+    titulo: 'Preces',
+    resposta: 'R. Senhor, tende piedade de nós.',
+    preces: laudes.preces
+  },
+  { id: 'oracao', rotulo: 'Oração', titulo: 'Oração Conclusiva', texto: laudes.oratio }
+];
+
+function lerTamanhoFonte() {
+  try {
+    const salvo = Number(window.localStorage.getItem(CHAVE_FONTE));
+    if (salvo >= FONTE_MIN && salvo <= FONTE_MAX) return salvo;
+  } catch {
+    // sem localStorage, fica o padrão
+  }
+  return 17;
+}
+
+const preferePoucoMovimento = () => Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
+
+const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+
+/* ---------- Página e cabeçalho ---------- */
+
+const Pagina = styled.div`
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 104px 16px 72px;
+
+  @media (min-width: 768px) {
+    padding-top: 128px;
+  }
+`;
+
+const Topo = styled.header`
+  text-align: center;
+  margin-bottom: 36px;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 44px;
+    height: 1px;
+    margin: 24px auto 0;
+    background: ${({ theme }) => theme.colors.gold};
+  }
+`;
+
+const Sobretitulo = styled.p`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: ${({ theme }) => theme.colors.accent};
+  margin-bottom: 6px;
+`;
+
+const Titulo = styled.h1`
+  font-size: clamp(2.4rem, 8vw, 3.2rem);
+  line-height: 1.05;
+  color: ${({ theme }) => theme.colors.titleColor};
+  margin-bottom: 14px;
+`;
+
+const Subtitulo = styled.p`
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
+
+// Rubrica: a observação vem em itálico, presa a um filete dourado
+const Aviso = styled.p`
+  margin-bottom: 28px;
+  padding: 2px 0 2px 16px;
+  border-left: 2px solid ${({ theme }) => theme.colors.gold};
+  font-size: 1.02rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.textSecondary};
+
+  a {
+    color: ${({ theme }) => theme.colors.accent};
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: ${({ theme }) => theme.colors.borderColor};
+  }
+
+  a:hover {
+    color: ${({ theme }) => theme.colors.titleColor};
+    text-decoration-color: currentColor;
+  }
+`;
+
+/* ---------- Ferramentas e abas ---------- */
+
+const Ferramentas = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+`;
+
+const Fonte = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+
+  span {
+    margin-right: 4px;
+  }
+`;
+
+const BotaoIcone = styled.button`
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  border: 1px solid ${({ theme }) => theme.colors.borderColor};
+  color: ${({ theme }) => theme.colors.titleColor};
+  transition: border-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    border-color: currentColor;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+`;
+
+const BotaoCompartilhar = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 3px;
+  border: 1px solid ${({ theme }) => theme.colors.borderColor};
+  color: ${({ theme }) => theme.colors.titleColor};
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: currentColor;
+  }
+`;
+
+// Faixa de abas sobre um filete; no celular rola de lado sem alargar a página
+const Abas = styled.div`
+  position: relative;
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  margin: 0 -16px;
+  padding: 0 16px;
+  scroll-margin-top: 88px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderColor};
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    flex-wrap: wrap;
+    gap: 0 24px;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+  }
+`;
+
+const Aba = styled.button`
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 2px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid
+    ${({ $ativa, theme }) => ($ativa ? theme.colors.titleColor : 'transparent')};
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: ${({ $ativa, theme }) =>
+    $ativa ? theme.colors.titleColor : theme.colors.textSecondary};
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.titleColor};
+  }
+`;
+
+/* ---------- A parte da oração ---------- */
+
+const Painel = styled.article`
+  padding-top: 36px;
+
+  @media (min-width: 768px) {
+    padding-top: 44px;
+  }
+`;
+
+const CabecalhoParte = styled.header`
+  margin-bottom: 26px;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 44px;
+    height: 1px;
+    margin-top: 16px;
+    background: ${({ theme }) => theme.colors.titleColor};
+    opacity: 0.4;
+  }
+`;
+
+const TituloParte = styled.h2`
+  font-size: clamp(1.8rem, 6vw, 2.3rem);
+  line-height: 1.1;
+  color: ${({ theme }) => theme.colors.titleColor};
+
+  span {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    margin-bottom: 6px;
+    color: ${({ theme }) => theme.colors.accent};
+  }
+`;
+
+const Referencia = styled.p`
+  margin-top: 6px;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
+
+// Antífona e resposta: itálico, com a rubrica em versalete
+const Refrao = styled.p`
+  margin-bottom: 20px;
+  font-size: ${({ $tamanho }) => $tamanho}px;
+  font-style: italic;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.titleColor};
+
+  span {
+    font-style: normal;
+    font-weight: 600;
+    font-variant: small-caps;
+    letter-spacing: 0.04em;
+    color: ${({ theme }) => theme.colors.accent};
+    margin-right: 6px;
+  }
+`;
+
+const Texto = styled.div`
+  color: ${({ theme }) => theme.colors.text};
+  font-size: ${({ $tamanho }) => $tamanho}px;
+  line-height: 1.8;
+  hyphens: auto;
+
+  p + p {
+    margin-top: 14px;
+  }
+`;
+
+const Versos = styled.p`
+  white-space: pre-line;
+`;
+
+// Cada prece com recuo pendente, o travessão fica para fora da margem do texto
+const Prece = styled.p`
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+`;
+
+const Passos = styled.nav`
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid ${({ theme }) => theme.colors.borderColor};
+`;
+
+const BotaoPasso = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 3px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid
+    ${({ $principal, theme }) =>
+      $principal ? theme.colors.primary : theme.colors.borderColor};
+  background: ${({ $principal, theme }) =>
+    $principal ? theme.colors.primary : 'transparent'};
+  color: ${({ $principal, theme }) =>
+    $principal ? theme.colors.white : theme.colors.titleColor};
+  margin-left: ${({ $principal }) => ($principal ? 'auto' : '0')};
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: ${({ $principal, theme }) =>
+      $principal ? theme.colors.primary : theme.colors.titleColor};
+  }
+`;
+
+const ConteudoParte = ({ parte, numero, tamanho }) => (
+  <>
+    <CabecalhoParte>
+      <TituloParte>
+        <span aria-hidden="true">{ROMANOS[numero]}</span>
+        {parte.titulo}
+      </TituloParte>
+      {parte.referencia && <Referencia>{parte.referencia}</Referencia>}
+    </CabecalhoParte>
+    {parte.antifona && (
+      <Refrao $tamanho={tamanho}>
+        <span>Ant.</span> {parte.antifona}
+      </Refrao>
+    )}
+    {parte.resposta && <Refrao $tamanho={tamanho}>{parte.resposta}</Refrao>}
+    <Texto $tamanho={tamanho}>
+      {parte.versos && <Versos>{parte.versos}</Versos>}
+      {parte.texto && <p>{parte.texto}</p>}
+      {parte.preces && parte.preces.map(prece => <Prece key={prece}>— {prece}</Prece>)}
+    </Texto>
+  </>
+);
+
 const Laudes = () => {
-  const [laudes, setLaudes] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState(0);
-  const [fontSize, setFontSize] = useState(16);
+  // Não existe API pública das Laudes em português. O roteiro abaixo é local
+  // e alterna salmos e leituras conforme o dia, sem fingir ser o ofício do dia.
+  const [hoje] = useState(() => new Date());
+  const partes = useMemo(() => montarPartes(generateDynamicLaudes(hoje.getDay(), hoje.getDate())), [hoje]);
+  const [abaAtiva, setAbaAtiva] = useState(partes[0].id);
+  const [tamanho, setTamanho] = useState(lerTamanhoFonte);
+  const [copiado, setCopiado] = useState(false);
+  const abasRef = useRef(null);
+  const temporizador = useRef(null);
 
+  useEffect(() => () => clearTimeout(temporizador.current), []);
+
+  // Mantém a aba ativa visível na faixa que rola na horizontal
   useEffect(() => {
-    const fetchLaudes = async () => {
+    const faixa = abasRef.current;
+    const ativa = faixa?.querySelector('[aria-selected="true"]');
+    if (!faixa || !ativa || faixa.scrollWidth <= faixa.clientWidth) return;
+    faixa.scrollTo({
+      left: ativa.offsetLeft - (faixa.clientWidth - ativa.offsetWidth) / 2,
+      behavior: preferePoucoMovimento() ? 'auto' : 'smooth'
+    });
+  }, [abaAtiva]);
+
+  const indice = Math.max(0, partes.findIndex(parte => parte.id === abaAtiva));
+  const parte = partes[indice];
+  const anterior = partes[indice - 1];
+  const proxima = partes[indice + 1];
+
+  const mudarFonte = delta => {
+    setTamanho(atual => {
+      const novo = Math.min(FONTE_MAX, Math.max(FONTE_MIN, atual + delta));
       try {
-        const today = new Date();
-        const dateString = today.toISOString().split('T')[0]; // formato YYYY-MM-DD
-        
-        // Tentativa 1: API de Liturgia das Horas
-        try {
-          const response = await fetch(`https://api-liturgia-diaria.vercel.app/laudes?date=${dateString}`);
-          if (response.ok) {
-            const data = await response.json();
-            if (data && data.laudes) {
-              setLaudes(data.laudes);
-              setLoading(false);
-              return;
-            }
-          }
-        } catch (apiError) {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('API principal falhou, tentando alternativa...');
-          }
-        }
-
-        // Tentativa 2: API alternativa com liturgia.up.railway.app
-        try {
-          const response = await fetch(`https://liturgia.up.railway.app/laudes/${dateString}`);
-          if (response.ok) {
-            const data = await response.json();
-            if (data) {
-              setLaudes(data);
-              setLoading(false);
-              return;
-            }
-          }
-        } catch (apiError) {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('API alternativa falhou, usando conteúdo dinâmico...');
-          }
-        }
-
-        // Fallback: Conteúdo que varia por dia da semana e data
-        const dayOfWeek = today.getDay(); // 0 = domingo, 1 = segunda, etc.
-        const dayOfMonth = today.getDate();
-        
-        // Variação de conteúdo baseada no dia
-        const dynamicLaudes = generateDynamicLaudes(dayOfWeek, dayOfMonth);
-        
-        setLaudes(dynamicLaudes);
-        setLoading(false);
-      } catch (err) {
-        setError('Não foi possível carregar as Laudes. Por favor, tente novamente mais tarde.');
-        setLoading(false);
+        window.localStorage.setItem(CHAVE_FONTE, String(novo));
+      } catch {
+        // ignora
       }
-    };
-
-    fetchLaudes();
-  }, []);
-
-  const handleFontSizeChange = (delta) => {
-    setFontSize(prevSize => {
-      const newSize = prevSize + delta;
-      return Math.min(Math.max(newSize, 12), 24);
+      return novo;
     });
   };
 
-  const handleShare = () => {
+  // Pelos botões do fim do cartão: troca a parte e sobe até as abas se elas saíram da tela
+  const irParaParte = id => {
+    setAbaAtiva(id);
+    const faixa = abasRef.current;
+    if (faixa && faixa.getBoundingClientRect().top < 72) {
+      faixa.scrollIntoView({ block: 'start', behavior: preferePoucoMovimento() ? 'auto' : 'smooth' });
+    }
+  };
+
+  const compartilhar = async () => {
+    const url = window.location.href;
     if (navigator.share) {
-      navigator.share({
-        title: 'Laudes - Oração da Manhã',
-        text: 'Reze as Laudes de hoje',
-        url: window.location.href,
-      }).catch((error) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Erro ao compartilhar', error);
-        }
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copiado para a área de transferência!');
+      try {
+        await navigator.share({ title: 'Laudes - Oração da Manhã', text: 'Reze as Laudes de hoje', url });
+      } catch {
+        // pessoa cancelou o compartilhamento
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiado(true);
+      clearTimeout(temporizador.current);
+      temporizador.current = setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      // sem acesso à área de transferência
     }
   };
 
-  if (loading) {
-    return (
-      <LaudesContainer>
-        <Header>
-          <DateInfo>Carregando...</DateInfo>
-          <LaudesTitle>Laudes</LaudesTitle>
-          <Subtitle>Oração da Manhã</Subtitle>
-        </Header>
-        <LoadingSpinner
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
-      </LaudesContainer>
-    );
-  }
-
-  if (error) {
-    return (
-      <LaudesContainer>
-        <Header>
-          <DateInfo>
-            {new Date().toLocaleDateString('pt-BR', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </DateInfo>
-          <LaudesTitle>Laudes</LaudesTitle>
-          <Subtitle>Oração da Manhã</Subtitle>
-        </Header>
-        <ErrorMessage>{error}</ErrorMessage>
-      </LaudesContainer>
-    );
-  }
-
-  // Preparar as abas das Laudes
-  const tabs = [
-    {
-      title: 'Invitátorio',
-      content: {
-        title: 'Invitátorio',
-        text: `<div class="antiphon">Ant. ${laudes?.invitatorium?.ant}</div>
-               <div class="psalm-verse">${laudes?.invitatorium?.psalm?.replace(/\n/g, '<br/>')}</div>`,
-        reference: 'Salmo 95 (94)'
-      }
-    },
-    {
-      title: 'Hino',
-      content: {
-        title: 'Hino',
-        text: laudes?.hymn?.replace(/\n/g, '<br/>'),
-        reference: ''
-      }
-    }
-  ];
-
-  // Adicionar salmos
-  if (laudes?.psalms) {
-    laudes.psalms.forEach((psalm, index) => {
-      tabs.push({
-        title: `Salmo ${index + 1}`,
-        content: {
-          title: psalm.title || `Salmo ${index + 1}`,
-          text: `<div class="antiphon">Ant. ${psalm.ant}</div>
-                 <div class="psalm-verse">${psalm.psalm?.replace(/\n/g, '<br/>')}</div>`,
-          reference: ''
-        }
-      });
-    });
-  }
-
-  // Adicionar outras partes
-  if (laudes?.lectioBrevis) {
-    tabs.push({
-      title: 'Leitura Breve',
-      content: {
-        title: 'Leitura Breve',
-        text: laudes.lectioBrevis.reading,
-        reference: laudes.lectioBrevis.reference
-      }
-    });
-  }
-
-  if (laudes?.benedictus) {
-    tabs.push({
-      title: 'Benedictus',
-      content: {
-        title: 'Cântico de Zacarias',
-        text: `<div class="antiphon">Ant. ${laudes.benedictus.ant}</div>
-               <div class="psalm-verse">${laudes.benedictus.psalm?.replace(/\n/g, '<br/>')}</div>`,
-        reference: 'Lc 1, 68-79'
-      }
-    });
-  }
-
-  if (laudes?.preces && laudes.preces.length > 0) {
-    tabs.push({
-      title: 'Preces',
-      content: {
-        title: 'Preces',
-        text: `<div class="response">R. Senhor, tende piedade de nós.</div>
-               ${laudes.preces.map(prece => `<p>— ${prece}</p>`).join('')}`,
-        reference: ''
-      }
-    });
-  }
-
-  if (laudes?.oratio) {
-    tabs.push({
-      title: 'Oração',
-      content: {
-        title: 'Oração Conclusiva',
-        text: laudes.oratio,
-        reference: ''
-      }
-    });
-  }
+  const dataExtenso = hoje.toLocaleDateString('pt-BR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 
   return (
-    <LaudesContainer>
+    <Pagina>
       <Helmet>
         <title>Laudes - Apenas um Católico</title>
         <meta name="description" content="Reze as Laudes, a oração da manhã da Liturgia das Horas" />
       </Helmet>
 
-      <Header>
-        <DateInfo>
-          {new Date().toLocaleDateString('pt-BR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </DateInfo>
-        <LaudesTitle>Laudes</LaudesTitle>
-        <Subtitle>Oração da Manhã - Liturgia das Horas</Subtitle>
-      </Header>
+      <Topo>
+        <Sobretitulo>Liturgia das Horas</Sobretitulo>
+        <Titulo>Laudes</Titulo>
+        <Subtitulo>
+          Oração da manhã · {dataExtenso.charAt(0).toUpperCase() + dataExtenso.slice(1)}
+        </Subtitulo>
+      </Topo>
 
-      <Controls>
-        <FontControls>
-          <FontLabel>Tamanho da fonte:</FontLabel>
-          <FontButton onClick={() => handleFontSizeChange(-1)} aria-label="Diminuir fonte">
-            <FiMinus />
-          </FontButton>
-          <FontButton onClick={() => handleFontSizeChange(1)} aria-label="Aumentar fonte">
-            <FiPlus />
-          </FontButton>
-        </FontControls>
-        <ShareButton onClick={handleShare}>
-          <FiShare2 />
-          Compartilhar
-        </ShareButton>
-      </Controls>
+      <Aviso>
+        Este é um roteiro para rezar as Laudes. Os salmos, a leitura breve e as preces próprios de
+        cada dia estão no livro da Liturgia das Horas. As leituras da Missa de hoje ficam na{' '}
+        <Link to="/liturgia-diaria">Liturgia Diária</Link>.
+      </Aviso>
 
-      {tabs.length > 0 && (
-        <TabContainer>
-          <TabHeader>
-            {tabs.map((tab, index) => (
-              <TabButton
-                key={index}
-                active={activeTab === index}
-                onClick={() => setActiveTab(index)}
-              >
-                {tab.title}
-              </TabButton>
-            ))}
-          </TabHeader>
+      <Ferramentas>
+        <Fonte>
+          <span>Texto</span>
+          <BotaoIcone type="button" onClick={() => mudarFonte(-1)} disabled={tamanho <= FONTE_MIN} aria-label="Diminuir texto">
+            <FiMinus aria-hidden="true" />
+          </BotaoIcone>
+          <BotaoIcone type="button" onClick={() => mudarFonte(1)} disabled={tamanho >= FONTE_MAX} aria-label="Aumentar texto">
+            <FiPlus aria-hidden="true" />
+          </BotaoIcone>
+        </Fonte>
+        <BotaoCompartilhar type="button" onClick={compartilhar}>
+          <FiShare2 aria-hidden="true" /> {copiado ? 'Link copiado' : 'Compartilhar'}
+        </BotaoCompartilhar>
+      </Ferramentas>
 
-          <TabContent
-            key={activeTab}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+      <Abas ref={abasRef} role="tablist" aria-label="Partes das Laudes">
+        {partes.map(item => (
+          <Aba
+            key={item.id}
+            id={`aba-${item.id}`}
+            type="button"
+            role="tab"
+            aria-selected={item.id === parte.id}
+            aria-controls="laudes-parte"
+            $ativa={item.id === parte.id}
+            onClick={() => setAbaAtiva(item.id)}
           >
-            <SectionTitle>{tabs[activeTab]?.content.title}</SectionTitle>
-            <ContentText 
-              fontSize={fontSize}
-              dangerouslySetInnerHTML={{ 
-                __html: tabs[activeTab]?.content.text || '' 
-              }} 
-            />
-            {tabs[activeTab]?.content.reference && (
-              <ContentReference fontSize={fontSize}>
-                {tabs[activeTab]?.content.reference}
-              </ContentReference>
-            )}
-          </TabContent>
-        </TabContainer>
-      )}
+            {item.rotulo}
+          </Aba>
+        ))}
+      </Abas>
 
-      {tabs.length === 0 && (
-        <ErrorMessage>
-          Não há Laudes disponíveis para hoje. Por favor, tente novamente mais tarde.
-        </ErrorMessage>
-      )}
-    </LaudesContainer>
+      <Painel id="laudes-parte" role="tabpanel" aria-labelledby={`aba-${parte.id}`}>
+        <ConteudoParte parte={parte} numero={indice} tamanho={tamanho} />
+
+        <Passos aria-label="Navegar entre as partes">
+          {anterior && (
+            <BotaoPasso type="button" onClick={() => irParaParte(anterior.id)} aria-label={`Parte anterior: ${anterior.rotulo}`}>
+              <FiChevronLeft aria-hidden="true" /> {anterior.rotulo}
+            </BotaoPasso>
+          )}
+          {proxima && (
+            <BotaoPasso
+              type="button"
+              $principal
+              onClick={() => irParaParte(proxima.id)}
+              aria-label={`Próxima parte: ${proxima.rotulo}`}
+            >
+              {proxima.rotulo} <FiChevronRight aria-hidden="true" />
+            </BotaoPasso>
+          )}
+        </Passos>
+      </Painel>
+    </Pagina>
   );
 };
 
