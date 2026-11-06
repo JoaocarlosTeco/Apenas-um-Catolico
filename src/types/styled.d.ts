@@ -54,14 +54,6 @@ declare module 'styled-components' {
       xl: string;
       xxl: string;
     };
-    shadows: {
-      none: string;
-      subtle: string;
-      soft: string;
-      medium: string;
-      strong: string;
-      float: string;
-    };
     borderRadius: {
       sm: string;
       md: string;
@@ -98,4 +90,4 @@ declare module 'styled-components' {
       slow: string;
     };
   }
-} 
+}

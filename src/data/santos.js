@@ -14,7 +14,6 @@ const basicos = [
     festa: '4 de outubro',
     padroeiro: ['Itália', 'Ecologia', 'Animais'],
     imagem: getSantoImagePath('sao-francisco-jovem.webp'),
-    imagemCard: getSantoImagePath('São franciso.jpg'),
     posicaoImagem: 'center 20%',
     estilo: 'sol',
     cores: { principal: '#6B4A2E', secundaria: '#4E7A3A', brilho: '#D9A441' },

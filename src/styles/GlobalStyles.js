@@ -47,16 +47,6 @@ const transitions = {
   slow: '0.5s ease',
 };
 
-// sem sombras: a separação é feita por filetes
-const shadows = {
-  none: 'none',
-  subtle: 'none',
-  soft: 'none',
-  medium: 'none',
-  strong: 'none',
-  float: 'none',
-};
-
 const zIndex = {
   dropdown: 1000,
   sticky: 1020,
@@ -107,7 +97,6 @@ export const lightTheme = {
     warning: '#8A6116',
     info: '#24467A',
   },
-  shadows,
   zIndex,
   borderRadius,
   fontSize,
@@ -141,7 +130,6 @@ export const darkTheme = {
     warning: '#D9B56A',
     info: '#9DB7DB',
   },
-  shadows,
   zIndex,
   borderRadius,
   fontSize,
