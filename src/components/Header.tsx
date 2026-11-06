@@ -377,7 +377,7 @@ const Header: React.FC = () => {
       <Barra>
         <Conteudo>
           <Marca to="/" aria-label="Apenas um Católico, página inicial">
-            <Logo tamanho={36} />
+            <Logo tamanho={36} animar />
           </Marca>
 
           <NavTopo aria-label="Navegação principal">
