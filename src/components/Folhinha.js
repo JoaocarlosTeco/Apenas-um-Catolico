@@ -46,11 +46,14 @@ const Mes = styled.p`
   color: #6a5a3a;
 `;
 
+// algarismos alinhados: os de estilo antigo do Cormorant (3, 4, 5, 7, 9) desciam sobre o dia da semana
 const Numero = styled.p`
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-weight: 600;
   font-size: clamp(5.5rem, 26vw, 7.5rem);
+  font-variant-numeric: lining-nums;
   line-height: 0.95;
+  margin-bottom: 6px;
   color: #14284b;
 `;
 
