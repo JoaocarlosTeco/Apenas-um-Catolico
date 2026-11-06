@@ -152,6 +152,12 @@ const pulsar = keyframes`
   50% { opacity: 0.8; transform: scale(1.08); }
 `;
 
+const subirFumaca = keyframes`
+  0% { opacity: 0; transform: translateY(14px) scaleX(0.6); }
+  20% { opacity: 0.45; }
+  100% { opacity: 0; transform: translateY(-26px) scaleX(1.4); }
+`;
+
 const VelaCaixa = styled.div`
   position: absolute;
   right: 6%;
@@ -190,9 +196,37 @@ const VelaCaixa = styled.div`
     animation: ${tremular} 1.6s ease-in-out infinite;
   }
 
+  /* fios de fumaça subindo da chama, como de vela de igreja */
+  .fumaca {
+    position: absolute;
+    left: 50%;
+    top: -46px;
+    width: 30px;
+    height: 56px;
+    margin-left: -15px;
+  }
+
+  .fumaca path {
+    fill: none;
+    stroke: #ede3d6;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    opacity: 0;
+    animation: ${subirFumaca} 5.5s ease-out infinite;
+  }
+
+  .fumaca path:nth-child(2) {
+    animation-delay: 1.8s;
+  }
+
+  .fumaca path:nth-child(3) {
+    animation-delay: 3.6s;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .brilho,
-    .chama {
+    .chama,
+    .fumaca path {
       animation: none;
     }
   }
@@ -202,6 +236,11 @@ export function Vela({ cor = '#E0B25A' }) {
   return (
     <VelaCaixa aria-hidden="true" $cor={cor}>
       <span className="brilho" />
+      <svg className="fumaca" viewBox="0 0 30 56">
+        <path d="M15 56 C10 46 20 40 14 30 C9 22 18 14 15 4" />
+        <path d="M15 56 C20 47 10 40 16 31 C21 23 12 15 16 5" />
+        <path d="M15 56 C12 48 18 42 15 33 C12 25 17 18 14 8" />
+      </svg>
       <svg
         viewBox="0 0 90 220"
         width="100%"
@@ -360,5 +399,135 @@ export function Nuvens({ cor = '#FFFFFF' }) {
         </Nuvem>
       ))}
     </CamadaNuvens>
+  );
+}
+
+/* ---------------- Pássaros (São Francisco) ---------------- */
+
+// Um bando pequeno cruzando o céu de tempos em tempos, batendo as asas,
+// lembrando o sermão aos pássaros. Cada pássaro tem seu ritmo e sua altura.
+
+const atravessarCeu = keyframes`
+  0% { left: -8%; transform: translateY(0); }
+  25% { transform: translateY(-10px); }
+  50% { transform: translateY(4px); }
+  75% { transform: translateY(-6px); }
+  100% { left: 108%; transform: translateY(0); }
+`;
+
+const baterAsas = keyframes`
+  from { transform: scaleY(1); }
+  to { transform: scaleY(0.35); }
+`;
+
+const Passaro = styled.svg`
+  position: absolute;
+  left: -8%;
+  top: ${({ $y }) => $y}%;
+  width: ${({ $tamanho }) => $tamanho}px;
+  height: auto;
+  overflow: visible;
+  animation: ${atravessarCeu} ${({ $duracao }) => $duracao}s linear
+    ${({ $atraso }) => $atraso}s infinite;
+
+  path {
+    transform-origin: center;
+    animation: ${baterAsas} ${({ $asas }) => $asas}s ease-in-out infinite
+      alternate;
+  }
+`;
+
+export function Passaros({
+  cor = '#6B4A2E',
+  quantidade = 7,
+  semente = 4,
+  faixa = 46,
+}) {
+  const bando = useMemo(() => {
+    const r = sorteio(semente);
+    // o bando sai junto (atrasos próximos) e volta a cada ~26 segundos
+    return Array.from({ length: quantidade }, (_, i) => ({
+      id: i,
+      y: 6 + r() * faixa,
+      tamanho: 14 + r() * 12,
+      duracao: 16 + r() * 5,
+      atraso: -2 + i * 0.7 + r() * 0.8,
+      asas: 0.32 + r() * 0.2,
+    }));
+  }, [quantidade, semente, faixa]);
+  return (
+    <Camada aria-hidden="true">
+      {bando.map(p => (
+        <Passaro
+          key={p.id}
+          viewBox="0 0 24 10"
+          $y={p.y}
+          $tamanho={p.tamanho}
+          $duracao={p.duracao + 10}
+          $atraso={p.atraso}
+          $asas={p.asas}
+        >
+          <path
+            d="M1 7 Q6 0 12 6 Q18 0 23 7"
+            stroke={cor}
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            fill="none"
+          />
+        </Passaro>
+      ))}
+    </Camada>
+  );
+}
+
+/* ---------------- Estrelas (Nossa Senhora) ---------------- */
+
+const cintilar = keyframes`
+  0%, 100% { opacity: 0.25; transform: scale(0.75); }
+  50% { opacity: 1; transform: scale(1.1); }
+`;
+
+const Estrela = styled.svg`
+  position: absolute;
+  left: ${({ $x }) => $x}%;
+  top: ${({ $y }) => $y}%;
+  width: ${({ $tamanho }) => $tamanho}px;
+  height: auto;
+  animation: ${cintilar} ${({ $duracao }) => $duracao}s ease-in-out
+    ${({ $atraso }) => $atraso}s infinite;
+`;
+
+/** Doze estrelinhas piscando devagar (a coroa de doze estrelas, Apocalipse 12,1) */
+export function Estrelas({ cor = '#E3C77A', semente = 12, quantidade = 12 }) {
+  const estrelas = useMemo(() => {
+    const r = sorteio(semente);
+    return Array.from({ length: quantidade }, (_, i) => ({
+      id: i,
+      x: r() * 94 + 3,
+      y: r() * 80 + 4,
+      tamanho: 7 + r() * 8,
+      duracao: 2.4 + r() * 3,
+      atraso: -r() * 4,
+    }));
+  }, [semente, quantidade]);
+  return (
+    <Camada aria-hidden="true">
+      {estrelas.map(e => (
+        <Estrela
+          key={e.id}
+          viewBox="0 0 24 24"
+          $x={e.x}
+          $y={e.y}
+          $tamanho={e.tamanho}
+          $duracao={e.duracao}
+          $atraso={e.atraso}
+        >
+          <path
+            d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z"
+            fill={cor}
+          />
+        </Estrela>
+      ))}
+    </Camada>
   );
 }

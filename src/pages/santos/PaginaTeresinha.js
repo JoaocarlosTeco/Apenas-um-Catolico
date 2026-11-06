@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { PiFlower } from 'react-icons/pi';
 import BotaoMusica, { BotaoAmbiente } from '../../components/BotaoMusica';
@@ -154,7 +154,11 @@ const Ornamento = styled(Florao)`
 
 /* ---------- Capa: o retrato oval, como um santinho grande ---------- */
 
+// isolation: as pétalas (z-index -1) caem atrás do retrato e do texto
 const Capa = styled.header`
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   padding: 104px 16px 72px;
   text-align: center;
 
@@ -166,6 +170,15 @@ const Capa = styled.header`
 const CapaConteudo = styled.div`
   max-width: 640px;
   margin: 0 auto;
+`;
+
+// algumas pétalas caindo devagar o tempo todo na capa, mais discretas que a chuva de rosas
+const PetalasDaCapa = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+  pointer-events: none;
 `;
 
 const Oval = styled.figure`
@@ -455,6 +468,7 @@ const Caderno = styled.div`
 
 /* ---------- A pequena via: uma escada ---------- */
 
+// os degraus se acendem um depois do outro quando a escada aparece na tela (data-subiu)
 const Escada = styled.ol`
   list-style: none;
 
@@ -464,6 +478,21 @@ const Escada = styled.ol`
     background: ${({ theme }) => theme.colors.cardBackground};
     border-top: 1px solid ${rosa};
     border-left: 1px solid ${rosaClara(40)};
+    transition:
+      opacity 0.6s ease,
+      transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+      background 0.8s ease;
+    transition-delay: calc(var(--i) * 260ms);
+  }
+
+  &[data-subiu='nao'] li {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  &[data-subiu='sim'] li {
+    background: ${({ theme }) =>
+      `color-mix(in srgb, ${rosa} ${theme.modo === 'escuro' ? 10 : 5}%, ${theme.colors.cardBackground})`};
   }
 
   li > span {
@@ -516,7 +545,7 @@ const Elevador = styled.figure`
   margin: 0 auto;
   text-align: center;
 
-  /* o cabo do elevador, saindo do alto da escada */
+  /* o cabo do elevador, saindo do alto da escada: desce depois que os degraus acendem */
   &::before {
     content: '';
     display: block;
@@ -524,6 +553,12 @@ const Elevador = styled.figure`
     height: 48px;
     margin: 0 auto 18px;
     background: ${rosaClara(50)};
+    transform-origin: top;
+    transition: transform 0.9s ease ${({ $atraso }) => $atraso || 0}ms;
+  }
+
+  &[data-subiu='nao']::before {
+    transform: scaleY(0);
   }
 
   > p {
@@ -936,6 +971,28 @@ const Renda = styled.div`
 
 const PaginaTeresinha = ({ santo }) => {
   const [chuva, setChuva] = useState(0);
+  const escada = useRef(null);
+  // sem IntersectionObserver ou com menos movimento, a escada já aparece pronta
+  const [subiu, setSubiu] = useState(
+    () =>
+      typeof IntersectionObserver === 'undefined' ||
+      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
+  );
+
+  useEffect(() => {
+    if (subiu || !escada.current) return undefined;
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (entrada.isIntersecting) {
+          setSubiu(true);
+          observador.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observador.observe(escada.current);
+    return () => observador.disconnect();
+  }, [subiu]);
 
   // a chuva de rosas cobre a tela por alguns segundos e some; outro pedido recomeça
   useEffect(() => {
@@ -964,6 +1021,9 @@ const PaginaTeresinha = ({ santo }) => {
 
       <article aria-labelledby="teresinha-nome">
         <Capa>
+          <PetalasDaCapa aria-hidden="true">
+            <ChuvaDeRosas quantidade={8} semente={5} />
+          </PetalasDaCapa>
           <CapaConteudo>
             <Oval $posicao={santo.posicaoImagem}>
               <div>
@@ -1030,7 +1090,11 @@ const PaginaTeresinha = ({ santo }) => {
             <Secao aria-labelledby="teresinha-via">
               <Titulo id="teresinha-via">{santo.destaque.titulo}</Titulo>
               <Introducao>{santo.destaque.introducao}</Introducao>
-              <Escada style={{ '--total': santo.destaque.itens.length }}>
+              <Escada
+                ref={escada}
+                data-subiu={subiu ? 'sim' : 'nao'}
+                style={{ '--total': santo.destaque.itens.length }}
+              >
                 {santo.destaque.itens.map((passo, i) => (
                   <li key={passo.titulo} style={{ '--i': i }}>
                     <span>{DEGRAUS[i] || `${i + 1}º degrau`}</span>
@@ -1040,7 +1104,10 @@ const PaginaTeresinha = ({ santo }) => {
                 ))}
               </Escada>
               {elevador && (
-                <Elevador>
+                <Elevador
+                  data-subiu={subiu ? 'sim' : 'nao'}
+                  $atraso={santo.destaque.itens.length * 260 + 300}
+                >
                   {elevador.contexto && <p>{elevador.contexto}</p>}
                   <blockquote>“{elevador.fala}”</blockquote>
                   <figcaption>

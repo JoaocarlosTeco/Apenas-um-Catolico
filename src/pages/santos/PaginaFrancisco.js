@@ -4,6 +4,7 @@ import { PiArrowUpRight } from 'react-icons/pi';
 import BotaoMusica from '../../components/BotaoMusica';
 import Novena from '../../components/Novena';
 import { Emblema } from '../../components/Emblemas';
+import { Passaros } from '../../components/Ambiente';
 import { musicas } from '../../data/musicas';
 import {
   CascaDoSanto,
@@ -43,7 +44,10 @@ const Folha = styled.div`
   padding: 0 18px;
 `;
 
+// isolation: o bando de pássaros voa por cima, só na faixa de cima (o céu da pintura)
 const Topo = styled.header`
+  position: relative;
+  isolation: isolate;
   padding: 104px 0 56px;
   display: grid;
   gap: 40px;
@@ -55,6 +59,17 @@ const Topo = styled.header`
     gap: 64px;
     padding: 136px 0 72px;
   }
+`;
+
+// o céu do topo onde voam os pássaros (sermão aos pássaros), em marrom de tinta, por cima do quadro
+const Ceu = styled.div`
+  position: absolute;
+  inset: 0 -16px;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  color: ${({ theme }) => (theme.modo === 'escuro' ? '#c9a27a' : '#6b4a2e')};
+  opacity: 0.75;
 `;
 
 const Quadro = styled.figure`
@@ -623,6 +638,9 @@ const PaginaFrancisco = ({ santo }) => {
     <CascaDoSanto santo={santo}>
       <Folha>
         <Topo>
+          <Ceu aria-hidden="true">
+            <Passaros cor="currentColor" faixa={16} />
+          </Ceu>
           <Quadro $posicao={santo.posicaoImagem}>
             <img
               src={santo.imagem}

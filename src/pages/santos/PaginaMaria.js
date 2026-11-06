@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css, useTheme } from 'styled-components';
+import styled, { css, keyframes, useTheme } from 'styled-components';
 import { PiArrowRight } from 'react-icons/pi';
 import BotaoMusica from '../../components/BotaoMusica';
 import Terco from '../../components/Terco';
@@ -208,6 +208,12 @@ const Retrato = styled.figure`
   }
 `;
 
+// as doze estrelas brilham uma depois da outra, devagar, como uma onda passando pela coroa
+const brilharEstrela = keyframes`
+  0%, 100% { opacity: 0.55; transform: scale(0.85); }
+  45% { opacity: 1; transform: scale(1.18); }
+`;
+
 // a coroa fica fora do arco: margens em % contam a partir da largura do retrato
 const Coroa = styled.svg`
   position: absolute;
@@ -219,6 +225,18 @@ const Coroa = styled.svg`
   margin: -13% 0 0 -12%;
   color: ${OURO};
   pointer-events: none;
+
+  polygon {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ${brilharEstrela} 3.6s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    polygon {
+      animation: none;
+    }
+  }
 `;
 
 const Arco = styled.div`
@@ -1035,6 +1053,7 @@ const Conteudo = ({ santo }) => {
                 key={i}
                 points={cincoPontas(x, y, 2.3)}
                 fill="currentColor"
+                style={{ animationDelay: `${i * 0.3}s` }}
               />
             ))}
           </Coroa>
