@@ -84,18 +84,27 @@ const Santo = styled(Link)`
     color: ${({ theme }) => theme.colors.text};
   }
 
+  /* a medalha gira como moeda ao passar o mouse, tocar ou focar pelo teclado */
   svg {
     width: 104px;
     height: 104px;
-    transition: transform 0.3s ease;
+    transition: transform 0.9s cubic-bezier(0.3, 1.4, 0.5, 1);
   }
 
-  &:hover svg {
-    transform: rotate(-4deg);
+  &:hover svg,
+  &:focus-visible svg,
+  &:active svg {
+    transform: perspective(400px) rotateY(360deg);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    &:hover svg {
+    svg {
+      transition: none;
+    }
+
+    &:hover svg,
+    &:focus-visible svg,
+    &:active svg {
       transform: none;
     }
   }

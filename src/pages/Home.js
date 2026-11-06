@@ -6,6 +6,7 @@ import SEO from '../components/SEO';
 import FolhinhaDeArrancar from '../components/FolhinhaDeArrancar';
 import EnfeiteDoTempo from '../components/EnfeiteDoTempo';
 import FestaDoSanto from '../components/FestaDoSanto';
+import IconeDaHora from '../components/IconeDaHora';
 import { Emblema } from '../components/Emblemas';
 import SantosSection from './Home/SantosSection';
 import {
@@ -52,6 +53,7 @@ function oracaoDaHora(agora) {
   if (hora >= 5 && hora < 11)
     return {
       quando: 'Para começar o dia',
+      icone: 'sol',
       titulo: 'Entregue o dia a Deus',
       texto:
         'Antes do celular e das tarefas: o sinal da cruz, o Santo Anjo e, se der tempo, as Laudes.',
@@ -63,6 +65,7 @@ function oracaoDaHora(agora) {
   if (hora >= 11 && hora < 15)
     return {
       quando: 'Ao meio-dia',
+      icone: 'sino',
       titulo: 'O Angelus',
       texto:
         'Uma pausa no meio do dia para lembrar que Deus se fez homem. Leva dois minutos.',
@@ -71,6 +74,7 @@ function oracaoDaHora(agora) {
   if (hora >= 15 && hora < 18)
     return {
       quando: 'À tarde',
+      icone: 'terco',
       titulo: 'Um mistério do terço',
       texto: `Hoje são os mistérios ${MISTERIOS[agora.getDay()]}. Uma dezena já é um bom começo.`,
       links: [{ to: '/santos/nossa-senhora', rotulo: 'Abrir o terço' }],
@@ -78,6 +82,7 @@ function oracaoDaHora(agora) {
   if (hora === 18)
     return {
       quando: 'Às seis da tarde',
+      icone: 'sino',
       titulo: 'O Angelus da tarde',
       texto:
         'O sino das seis chamava para a mesma oração do meio-dia. Ainda dá tempo.',
@@ -85,6 +90,7 @@ function oracaoDaHora(agora) {
     };
   return {
     quando: 'Antes de dormir',
+    icone: 'lua',
     titulo: 'Reveja o dia',
     texto:
       'Agradeça o bem recebido, reconheça as faltas e entregue a noite a Deus.',
@@ -322,6 +328,9 @@ const Agora = styled.section`
   }
 
   > p:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-family: ${({ theme }) => theme.fonts.heading};
     font-size: 1.12rem;
     font-weight: 600;
@@ -730,6 +739,7 @@ const Home = () => {
 
         <Agora aria-labelledby="titulo-agora">
           <p>
+            <IconeDaHora tipo={oracao.icone} />
             {oracao.quando} · {agora.getHours()}h
           </p>
           <div>

@@ -109,6 +109,13 @@ const Santinho = styled(Link)`
     text-underline-offset: 4px;
   }
 
+  /* a medalha gira como moeda ao passar o mouse, tocar ou focar pelo teclado */
+  &:hover svg,
+  &:focus-visible svg,
+  &:active svg {
+    transform: perspective(400px) rotateY(360deg);
+  }
+
   @media (min-width: 560px) {
     grid-template-columns: 148px minmax(0, 1fr);
     gap: 24px;
@@ -132,6 +139,14 @@ const Placa = styled.div`
   svg {
     width: 82%;
     height: auto;
+    transition: transform 0.9s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg {
+      transition: none;
+      transform: none !important;
+    }
   }
 `;
 
