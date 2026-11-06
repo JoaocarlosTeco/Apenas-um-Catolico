@@ -9,6 +9,7 @@ import LoadingScreen from './components/LoadingScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import GlobalStyles, { lightTheme, darkTheme } from './styles/GlobalStyles.js';
 import { ThemeModeProvider, useTheme } from './context/ThemeContext';
+import useRevelarAoRolar from './efeitos/useRevelarAoRolar';
 
 // Cada página só é baixada quando alguém abre a rota
 const Home = React.lazy(() => import('./pages/Home'));
@@ -64,6 +65,9 @@ const ThemedApp: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  // as seções de cada página surgem de leve ao entrar na tela
+  useRevelarAoRolar(location.pathname);
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>

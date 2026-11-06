@@ -224,6 +224,20 @@ const GlobalStyles = createGlobalStyle`
     scrollbar-color: ${props => props.theme.colors.borderColor} transparent;
   }
 
+  /* Seções que surgem ao rolar (src/efeitos/useRevelarAoRolar.js) */
+  .revelar {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.7s ease,
+      transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .revelar.revelar-visivel {
+    opacity: 1;
+    transform: none;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
