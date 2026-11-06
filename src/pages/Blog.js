@@ -2,8 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Card, CardGrid, CardTitle, CardText } from '../components/Card';
+import { FiArrowRight } from 'react-icons/fi';
 
 const posts = [
   {
@@ -40,277 +39,186 @@ const posts = [
   }
 ];
 
-const BlogContainer = styled.div`
-  max-width: 1200px;
+// Textos publicados primeiro; os que ainda estão em preparo vêm depois
+const postsOrdenados = [...posts].sort((a, b) => Number(Boolean(b.path)) - Number(Boolean(a.path)));
+
+// "15/03/2024" -> "2024-03-15" para o atributo dateTime
+const dataIso = data => data.split('/').reverse().join('-');
+
+const Pagina = styled.div`
+  max-width: 720px;
   margin: 0 auto;
-  padding: 80px 20px 40px;
+  padding: 104px 16px 72px;
 
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 60px 10px 20px;
+  @media (min-width: 768px) {
+    padding-top: 128px;
   }
 `;
 
-const BlogHeader = styled.div`
+const Topo = styled.header`
   text-align: center;
-  margin-bottom: 4rem;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    margin-bottom: 2.5rem;
-  }
-`;
-
-const BlogTitle = styled.h1`
-  color: ${props => props.theme.colors.primary};
-  font-size: clamp(2rem, 5vw, 3rem);
-  margin-bottom: 1rem;
-  font-weight: 700;
-  position: relative;
+  margin-bottom: 40px;
 
   &::after {
     content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(135deg, ${props => props.theme.colors.primary}, ${props => props.theme.colors.secondary});
-    border-radius: 2px;
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    margin-bottom: 0.5rem;
-    
-    &::after {
-      width: 60px;
-      height: 3px;
-      bottom: -10px;
-    }
+    display: block;
+    width: 44px;
+    height: 1px;
+    margin: 24px auto 0;
+    background: ${({ theme }) => theme.colors.gold};
   }
 `;
 
-const BlogSubtitle = styled.p`
-  color: ${props => props.theme.colors.textSecondary};
+const Sobretitulo = styled.p`
+  font-family: ${({ theme }) => theme.fonts.heading};
   font-size: 1.1rem;
-  max-width: 600px;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  color: ${({ theme }) => theme.colors.accent};
+  margin-bottom: 6px;
+`;
+
+const Titulo = styled.h1`
+  font-size: clamp(2.4rem, 8vw, 3.2rem);
+  line-height: 1.05;
+  color: ${({ theme }) => theme.colors.titleColor};
+  margin-bottom: 14px;
+`;
+
+const Subtitulo = styled.p`
+  max-width: 32em;
   margin: 0 auto;
+  font-size: 1.15rem;
+  font-style: italic;
   line-height: 1.6;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 1rem;
-    padding: 0 10px;
-  }
+  color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
-const BlogGrid = styled(CardGrid)`
-  gap: 2rem;
-  margin-top: 2rem;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    gap: 1.5rem;
-  }
+// Índice de textos, como o sumário de um livro: entradas separadas por filetes
+const Lista = styled.ul`
+  list-style: none;
+  border-top: 1px solid ${({ theme }) => theme.colors.borderColor};
 `;
 
-const BlogPostCard = styled(motion.div)`
-  background: ${props => props.theme.colors.surface || props.theme.colors.cardBackground || 'white'};
-  border-radius: ${props => props.theme.borderRadius?.lg || '16px'};
-  overflow: hidden;
-  box-shadow: ${props => props.theme.shadows?.light || '0 2px 8px rgba(0, 0, 0, 0.1)'};
-  border: 1px solid ${props => props.theme.colors.borderColor || 'rgba(0, 0, 0, 0.1)'};
-  transition: all 0.3s ease;
+const Entrada = styled.article`
   position: relative;
-  cursor: ${props => props.clickable ? 'pointer' : 'default'};
+  padding: ${({ $destaque }) => ($destaque ? '30px 0 32px' : '24px 0 26px')};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.borderColor};
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(135deg, ${props => props.theme.colors.primary}, ${props => props.theme.colors.secondary});
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
+  @media (min-width: 768px) {
+    padding: ${({ $destaque }) => ($destaque ? '40px 0 42px' : '28px 0 30px')};
   }
+`;
+
+const Meta = styled.p`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+
+  time::before {
+    content: '·';
+    margin-right: 10px;
+    color: ${({ theme }) => theme.colors.borderColor};
+  }
+`;
+
+const Categoria = styled.span`
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: 1.08rem;
+  font-weight: 600;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  color: ${({ theme }) => theme.colors.accent};
+`;
+
+const TituloPost = styled.h2`
+  font-size: ${({ $destaque }) =>
+    $destaque ? 'clamp(1.75rem, 5.5vw, 2.3rem)' : 'clamp(1.4rem, 4.5vw, 1.6rem)'};
+  line-height: 1.15;
+  color: ${({ theme }) => theme.colors.titleColor};
+  margin-bottom: 8px;
+`;
+
+// O link cobre a entrada inteira, mas só o título é lido como texto do link
+const LinkPost = styled(Link)`
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: ${props => props.theme.shadows?.medium || '0 8px 25px rgba(0, 0, 0, 0.15)'};
-
-    &::before {
-      transform: scaleX(1);
-    }
+    color: inherit;
+    text-decoration-color: currentColor;
   }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    &:hover {
-      transform: translateY(-2px);
-    }
-  }
-`;
-
-const CardContent = styled.div`
-  padding: 2rem;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 1.5rem;
-  }
-`;
-
-const CategoryTag = styled.span`
-  display: inline-block;
-  background: ${props => props.theme.colors.primary};
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
-  }
-`;
-
-const PostTitle = styled(CardTitle)`
-  margin-bottom: 1rem;
-  transition: color 0.3s ease;
-  font-size: 1.4rem;
-  line-height: 1.3;
-
-  ${BlogPostCard}:hover & {
-    color: ${props => props.clickable ? props.theme.colors.secondary : 'inherit'};
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
-  }
-`;
-
-const PostExcerpt = styled(CardText)`
-  margin-bottom: 1.5rem;
-  line-height: 1.7;
-  font-size: 1rem;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-`;
-
-const PostMeta = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid ${props => props.theme.colors.borderColor || 'rgba(0, 0, 0, 0.1)'};
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-`;
-
-const PostDate = styled.span`
-  color: ${props => props.theme.colors.textSecondary};
-  font-size: 0.9rem;
-  font-weight: 500;
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.8rem;
-  }
-`;
-
-const ReadMore = styled.span`
-  color: ${props => props.theme.colors.primary};
-  font-weight: 600;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 
   &::after {
-    content: '→';
-    transition: transform 0.3s ease;
-  }
-
-  ${BlogPostCard}:hover & {
-    color: ${props => props.theme.colors.secondary};
-    
-    &::after {
-      transform: translateX(4px);
-    }
-  }
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.8rem;
+    content: '';
+    position: absolute;
+    inset: 0;
   }
 `;
 
-const PlaceholderText = styled.p`
-  color: ${props => props.theme.colors.textSecondary};
+const Resumo = styled.p`
+  max-width: 34em;
+  font-size: ${({ $destaque }) => ($destaque ? '1.15rem' : '1.08rem')};
+  line-height: 1.7;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+const EmPreparo = styled.p`
+  margin-top: 8px;
+  font-size: 0.98rem;
   font-style: italic;
-  text-align: center;
-  margin: 1rem 0;
-  font-size: 0.9rem;
-  background: ${props => props.theme.colors.background || '#f8f9fa'};
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px dashed ${props => props.theme.colors.borderColor || 'rgba(0, 0, 0, 0.1)'};
-
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    font-size: 0.8rem;
-    padding: 0.75rem;
-  }
+  line-height: 1.55;
+  color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
-const PostCard = ({ post }) => {
-  const content = (
-    <BlogPostCard
-      clickable={!!post.path}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <CardContent>
-        <CategoryTag>{post.categoria}</CategoryTag>
-        <PostTitle clickable={!!post.path}>{post.titulo}</PostTitle>
-        <PostExcerpt>{post.resumo}</PostExcerpt>
-        
-        {!post.path && (
-          <PlaceholderText>
-            📝 Nosso querido católico está preparando este conteúdo especial para você. Em breve!
-          </PlaceholderText>
+const LerMais = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.accent};
+`;
+
+const CartaoPost = ({ post, emDestaque }) => {
+  const publicado = Boolean(post.path);
+
+  return (
+    <li>
+      <Entrada $destaque={emDestaque}>
+        <Meta>
+          <Categoria>{post.categoria}</Categoria>
+          <time dateTime={dataIso(post.data)}>{post.data}</time>
+        </Meta>
+        <TituloPost $destaque={emDestaque}>
+          {publicado ? <LinkPost to={post.path}>{post.titulo}</LinkPost> : post.titulo}
+        </TituloPost>
+        <Resumo $destaque={emDestaque}>{post.resumo}</Resumo>
+        {!publicado && (
+          <EmPreparo>Nosso querido católico está preparando este conteúdo especial para você. Em breve!</EmPreparo>
         )}
-        
-        <PostMeta>
-          <PostDate>{post.data}</PostDate>
-          {post.path && <ReadMore>Ler mais</ReadMore>}
-        </PostMeta>
-      </CardContent>
-    </BlogPostCard>
+        {publicado && (
+          <LerMais aria-hidden="true">
+            Ler mais <FiArrowRight />
+          </LerMais>
+        )}
+      </Entrada>
+    </li>
   );
-
-  if (post.path) {
-    return (
-      <Link to={post.path} style={{ textDecoration: 'none' }}>
-        {content}
-      </Link>
-    );
-  }
-
-  return content;
 };
 
 const Blog = () => (
-  <BlogContainer>
+  <Pagina>
     <Helmet>
       <title>Blog Católico - Apenas um Católico</title>
       <meta name="description" content="Reflexões, dicas e artigos católicos para sua vida espiritual. Conteúdo autêntico sobre fé, santos e crescimento espiritual." />
@@ -320,20 +228,20 @@ const Blog = () => (
       <meta property="og:type" content="website" />
     </Helmet>
 
-    <BlogHeader>
-      <BlogTitle>Blog Católico</BlogTitle>
-      <BlogSubtitle>
-        Reflexões, dicas práticas e artigos para fortalecer sua fé e crescimento espiritual. 
-        Conteúdo autêntico para católicos que buscam viver sua fé no dia a dia.
-      </BlogSubtitle>
-    </BlogHeader>
+    <Topo>
+      <Sobretitulo>Reflexões</Sobretitulo>
+      <Titulo>Blog Católico</Titulo>
+      <Subtitulo>
+        Reflexões, dicas práticas e artigos para fortalecer sua fé e crescimento espiritual.
+      </Subtitulo>
+    </Topo>
 
-    <BlogGrid>
-      {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+    <Lista>
+      {postsOrdenados.map((post, indice) => (
+        <CartaoPost key={post.id} post={post} emDestaque={indice === 0 && Boolean(post.path)} />
       ))}
-    </BlogGrid>
-  </BlogContainer>
+    </Lista>
+  </Pagina>
 );
 
-export default Blog; 
+export default Blog;
