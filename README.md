@@ -27,6 +27,16 @@ Site católico para rezar todos os dias: a liturgia de hoje, a vida dos santos, 
 - **Música de cada santo.** Cantos do Missionário Shalom e da Comunidade Católica Shalom pelos vídeos oficiais no YouTube: "Nada ter pra tudo dar / Doce é sentir" para Francisco, "O Elevador" para Teresinha, "Fica, Senhor, comigo" para Pio e "Todo Teu, ó Mãe" para Nossa Senhora. O player abre pequeno no lugar do botão, só depois de um clique, e repete a música. Cada santo também tem uma gravação livre do Wikimedia Commons cadastrada como alternativa (`src/data/musicas.js`).
 - **Orações.** Lista compacta por momento do dia e por categoria, busca sem acento e um leitor que abre a oração inteira, com link próprio (`/oracao?oracao=angelus`).
 - **Laudes e Blog.** As Laudes são um roteiro local, porque não existe API pública do Ofício em português.
+- **Efeitos que contam alguma coisa.** Tudo em CSS, decorativo e parado para quem pede menos movimento no sistema:
+  - a cruz da logo se desenha ao abrir o site e as seções surgem ao rolar;
+  - a folhinha da home se arranca para ver os próximos dias;
+  - a home se enfeita com o tempo litúrgico: a coroa do Advento acende uma vela por semana, a estrela de Belém no Natal, o pano roxo na Quaresma, o círio na Páscoa, as chamas em Pentecostes e um ramo verde no Tempo Comum;
+  - no dia da festa de um dos santos, uma faixa de festa com o efeito dele (no dia de Santa Teresinha, chuva de rosas); `?dia=AAAA-MM-DD` mostra a home como ela fica em outro dia;
+  - o sino do Angelus balança ao meio-dia e às seis, e cada hora tem o seu ícone;
+  - pássaros cruzando a pintura de São Francisco, pétalas caindo e a escada da pequena via que se acende para Teresinha, fumaça nas velas do Padre Pio, nuvens e as doze estrelas brilhando em onda para Nossa Senhora;
+  - o terço acende as contas e vibra no celular, e a novena comemora cada dia rezado;
+  - uma vela por intenção, acesa por 24 horas, com a intenção guardada só no aparelho;
+  - no calendário, o mês desliza ao trocar e o dia de hoje pulsa; na liturgia, deslizar o dedo troca de dia.
 - **Tema claro e escuro**, que segue o sistema e guarda a escolha.
 - **PWA.** Pode ser instalado no celular e abre sem internet as páginas já visitadas.
 - **Navegação de aplicativo no celular**, com barra inferior: Início, Liturgia, Santos, Orações e Mais.
