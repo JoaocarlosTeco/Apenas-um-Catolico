@@ -1,319 +1,480 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { FiMenu, FiX } from 'react-icons/fi';
-import useDeviceType from './useDeviceType';
-import { useAccessibility } from '../hooks/useAccessibility';
-import { getLogoPath } from '../utils/imageUtils';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import type { IconType } from 'react-icons';
+import {
+  PiArticle,
+  PiBookOpenText,
+  PiBookOpenTextFill,
+  PiCalendarBlank,
+  PiCaretRight,
+  PiDotsThreeOutline,
+  PiDotsThreeOutlineFill,
+  PiHandsPraying,
+  PiHandsPrayingFill,
+  PiHouse,
+  PiHouseFill,
+  PiInfo,
+  PiList,
+  PiMoon,
+  PiStarFour,
+  PiStarFourFill,
+  PiSunDim,
+  PiSunHorizon,
+  PiX,
+} from 'react-icons/pi';
+import Logo from './Logo';
+import { useTheme } from '../context/ThemeContext';
 
-import { BaseComponentProps } from '../types';
-
-interface StyledProps {
-  isMobile?: boolean;
-  isOpen?: boolean;
-  theme: any;
+interface Destino {
+  to: string;
+  rotulo: string;
+  descricao: string;
+  Icone: IconType;
 }
 
-const HeaderContainer = styled.header<StyledProps>`
-  background-color: ${props => props.theme.colors?.primary || '#1B3358'};
-  padding: ${props => props.isMobile ? '0.5rem 1rem' : '0.75rem 2rem'};
+const DESTINOS: Destino[] = [
+  { to: '/liturgia-diaria', rotulo: 'Liturgia', descricao: 'Leituras e orações da Missa de hoje', Icone: PiBookOpenText },
+  { to: '/laudes', rotulo: 'Laudes', descricao: 'Roteiro da oração da manhã', Icone: PiSunHorizon },
+  { to: '/santos', rotulo: 'Santos', descricao: 'Vida, linha do tempo e oração', Icone: PiStarFour },
+  { to: '/oracao', rotulo: 'Orações', descricao: 'Orações tradicionais para cada momento', Icone: PiHandsPraying },
+  { to: '/calendario', rotulo: 'Calendário', descricao: 'Festas e tempos do ano litúrgico', Icone: PiCalendarBlank },
+  { to: '/blog', rotulo: 'Blog', descricao: 'Reflexões e textos', Icone: PiArticle },
+  { to: '/sobre', rotulo: 'Sobre', descricao: 'Quem faz o Apenas um Católico', Icone: PiInfo },
+];
+
+/* ---------- Barra do topo ---------- */
+
+const Barra = styled.header`
   position: fixed;
-  width: 100%;
-  top: 0;
+  inset: 0 0 auto 0;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  /* as páginas dos santos trocam a cor do topo por --topo-fundo */
+  background: var(--topo-fundo, ${({ theme }) => theme.colors.headerBg});
+  transition: background 0.3s ease;
+  backdrop-filter: saturate(160%) blur(12px);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 `;
 
-const HeaderContent = styled.div<StyledProps>`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: ${props => props.isMobile ? '100%' : '1400px'};
+const Conteudo = styled.div`
+  max-width: 1200px;
+  height: 64px;
   margin: 0 auto;
-  height: ${props => props.isMobile ? '50px' : '60px'};
-`;
-
-const Logo = styled(Link)<StyledProps>`
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  
-  img {
-    height: ${props => props.isMobile ? '32px' : '45px'};
-    width: auto;
-    margin-right: ${props => props.isMobile ? '0' : '1rem'};
-    transition: transform 0.3s ease;
-    object-fit: contain;
-    object-position: center;
+  gap: 16px;
+
+  @media (min-width: 768px) {
+    padding: 0 24px;
+  }
+`;
+
+const Marca = styled(Link)`
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+  color: #fff;
+
+  &:hover {
+    color: #fff;
+  }
+`;
+
+const NavTopo = styled.nav`
+  display: none;
+  align-items: center;
+  gap: 4px;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+
+  a {
+    position: relative;
+    padding: 8px 12px;
+    border-radius: 3px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease, background 0.2s ease;
 
     &:hover {
-      transform: scale(1.05);
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &.active {
+      color: #fff;
+    }
+
+    &.active::after {
+      content: '';
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 2px;
+      height: 2px;
+      border-radius: 2px;
+      background: #7fb2ee;
     }
   }
 `;
 
-const Nav = styled.nav<StyledProps>`
-  display: flex;
+const BotaoIcone = styled.button`
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
   align-items: center;
-  gap: ${props => props.isMobile ? '1rem' : '1.5rem'};
-  margin-left: auto;
-  
-  @media (max-width: 768px) {
-    display: ${props => props.isOpen ? 'flex' : 'none'};
-    position: fixed;
-    top: 50px;
-    left: 0;
-    right: 0;
-    background: ${props => props.theme.colors?.primary || '#1B3358'};
-    flex-direction: column;
-    padding: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 1.35rem;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
   }
 `;
 
-const NavLink = styled(Link)<StyledProps>`
-  color: white;
-  text-decoration: none;
-  font-size: ${props => props.isMobile ? '1rem' : '1.1rem'};
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  display: block;
-  border: 2px solid transparent;
+const BotaoMenu = styled(BotaoIcone)`
+  display: none;
 
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+  @media (min-width: 769px) and (max-width: 1023px) {
+    display: inline-flex;
   }
+`;
 
-  &:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.8);
-    background-color: rgba(255, 255, 255, 0.1);
+/* ---------- Barra inferior (celular) ---------- */
+
+const BarraInferior = styled.nav`
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  background: var(--barra-fundo, ${({ theme }) => (theme.modo === 'escuro' ? 'rgba(6, 14, 28, 0.94)' : 'rgba(255, 255, 255, 0.94)')});
+  backdrop-filter: saturate(160%) blur(12px);
+  -webkit-backdrop-filter: saturate(160%) blur(12px);
+  border-top: 1px solid ${({ theme }) => theme.colors.borderColor};
+
+  @media (min-width: 769px) {
+    display: none;
   }
+`;
 
-  &[aria-current="page"] {
-    background-color: ${props => props.theme.colors?.secondary || '#C09553'};
-    font-weight: 700;
+const itemInferior = `
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 48px;
+  justify-content: center;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+const ItemInferior = styled(NavLink)`
+  ${itemInferior}
+  color: var(--barra-texto, ${({ theme }) => theme.colors.textSecondary});
+
+  .cheio {
+    display: none;
   }
 
   &.active {
-    background-color: ${props => props.theme.colors?.secondary || '#C09553'};
-  }
+    color: var(--barra-destaque, ${({ theme }) => theme.colors.secondary});
 
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-    
-    &:hover {
-      transform: none;
+    .cheio {
+      display: block;
+    }
+
+    .vazio {
+      display: none;
     }
   }
 `;
 
-const SkipLinks = styled.div`
-  position: absolute;
-  top: -40px;
-  left: 6px;
-  z-index: 2000;
+const BotaoInferior = styled.button<{ $ativo: boolean }>`
+  ${itemInferior}
+  color: ${({ theme, $ativo }) =>
+    $ativo ? `var(--barra-destaque, ${theme.colors.secondary})` : `var(--barra-texto, ${theme.colors.textSecondary})`};
+`;
 
-  &:focus-within {
-    top: 6px;
+/* ---------- Menu completo ---------- */
+
+const Folha = styled.div<{ $aberta: boolean }>`
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  background: #10203c;
+  color: #fff;
+  padding: 0 16px calc(24px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  opacity: ${({ $aberta }) => ($aberta ? 1 : 0)};
+  visibility: ${({ $aberta }) => ($aberta ? 'visible' : 'hidden')};
+  transform: translateY(${({ $aberta }) => ($aberta ? '0' : '12px')});
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+`;
+
+const FolhaTopo = styled.div`
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+`;
+
+const ListaMenu = styled.ul`
+  list-style: none;
+  max-width: 640px;
+  width: 100%;
+  margin: 8px auto 0;
+  border-top: 1px solid rgba(244, 239, 228, 0.16);
+
+  li {
+    border-bottom: 1px solid rgba(244, 239, 228, 0.16);
+  }
+
+  /* índice de livro: título em serifa, descrição em itálico, sem caixas */
+  a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 4px;
+    color: #f4efe4;
+    font-family: 'EB Garamond', Georgia, serif;
+
+    &:hover,
+    &.active {
+      color: #fff;
+    }
+
+    &.active strong::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: 4px;
+      background: #d9bb6a;
+    }
+
+    > svg:first-child {
+      width: 22px;
+      height: 22px;
+      color: #d9bb6a;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    > svg:last-child {
+      margin-left: auto;
+      opacity: 0.4;
+    }
+  }
+
+  strong {
+    display: block;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  small {
+    display: block;
+    font-size: 0.98rem;
+    font-style: italic;
+    opacity: 0.7;
   }
 `;
 
-const SkipLink = styled.a`
-  position: absolute;
-  left: -10000px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  background: ${props => props.theme.colors.primary};
-  color: white;
-  padding: 8px 16px;
-  text-decoration: none;
+const TrocaTema = styled.button`
+  max-width: 640px;
+  width: 100%;
+  margin: 16px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
   border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+`;
+
+const SaltarParaConteudo = styled.a`
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 2000;
+  padding: 8px 16px;
+  border-radius: 3px;
+  background: #fff;
+  color: #122b52;
   font-weight: 600;
 
   &:focus {
-    position: static;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    left: auto;
-    top: auto;
+    top: 8px;
   }
 `;
 
-const MenuButton = styled.button<StyledProps>`
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+const Header: React.FC = () => {
+  const [menuAberto, setMenuAberto] = useState(false);
+  const { isDarkMode, toggleTheme } = useTheme();
+  const location = useLocation();
 
-  &:hover, &:focus {
-    background-color: rgba(255, 255, 255, 0.1);
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-  }
+  // fecha o menu ao trocar de página
+  useEffect(() => {
+    setMenuAberto(false);
+  }, [location.pathname]);
 
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
+  // Esc fecha o menu e a página de trás não rola enquanto ele está aberto
+  useEffect(() => {
+    if (!menuAberto) return undefined;
+    const aoTeclar = (evento: KeyboardEvent) => {
+      if (evento.key === 'Escape') setMenuAberto(false);
+    };
+    const overflowAntes = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', aoTeclar);
+    return () => {
+      document.body.style.overflow = overflowAntes;
+      window.removeEventListener('keydown', aoTeclar);
+    };
+  }, [menuAberto]);
 
-  @media (max-width: 768px) {
-    display: block;
-  }
-`;
-
-interface HeaderProps extends BaseComponentProps {}
-
-const Header: React.FC<HeaderProps> = ({ className, ...rest }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const { isMobile } = useDeviceType();
-  const { 
-    saveFocus, 
-    restoreFocus, 
-    useKeyboardNavigation,
-    announce 
-  } = useAccessibility();
-
-  const toggleMenu = (): void => {
-    const newState = !isMenuOpen;
-    setIsMenuOpen(newState);
-    
-    if (newState) {
-      saveFocus();
-      announce('Menu principal aberto');
-    } else {
-      restoreFocus();
-      announce('Menu principal fechado');
-    }
-  };
-
-  // Navegação por teclado para o menu
-  useKeyboardNavigation();
-
-  const handleKeyDown = (event: React.KeyboardEvent): void => {
-    if (event.key === 'Escape' && isMenuOpen) {
-      setIsMenuOpen(false);
-      restoreFocus();
-      announce('Menu principal fechado');
-    }
-  };
+  const IconeTema = isDarkMode ? PiSunDim : PiMoon;
+  const rotuloTema = isDarkMode ? 'Usar tema claro' : 'Usar tema escuro';
+  const noMenuMais = !['/', '/liturgia-diaria', '/santos', '/oracao'].some(rota =>
+    rota === '/' ? location.pathname === '/' : location.pathname.startsWith(rota)
+  );
 
   return (
-    <HeaderContainer 
-      isMobile={isMobile} 
-      className={className}
-      onKeyDown={handleKeyDown}
-      {...rest}
-    >
-      <SkipLinks>
-        <SkipLink href="#main-content">
-          Pular para o conteúdo principal
-        </SkipLink>
-        <SkipLink href="#navigation">
-          Pular para a navegação
-        </SkipLink>
-      </SkipLinks>
+    <>
+      <SaltarParaConteudo href="#main-content">Pular para o conteúdo</SaltarParaConteudo>
 
-      <HeaderContent isMobile={isMobile}>
-        <Logo to="/" isMobile={isMobile} aria-label="Apenas um Católico - Página inicial">
-          <img 
-            src={getLogoPath("Logo tipo apenas um catolico.png")} 
-            alt="Logo Apenas um Católico"
-            loading="eager"
-          />
-        </Logo>
+      <Barra>
+        <Conteudo>
+          <Marca to="/" aria-label="Apenas um Católico, página inicial">
+            <Logo tamanho={36} />
+          </Marca>
 
-        <MenuButton
+          <NavTopo aria-label="Navegação principal">
+            {DESTINOS.map(({ to, rotulo }) => (
+              <NavLink key={to} to={to}>
+                {rotulo}
+              </NavLink>
+            ))}
+          </NavTopo>
+
+          <BotaoIcone type="button" onClick={toggleTheme} aria-label={rotuloTema} title={rotuloTema}>
+            <IconeTema />
+          </BotaoIcone>
+          <BotaoMenu type="button" onClick={() => setMenuAberto(true)} aria-label="Abrir menu" aria-expanded={menuAberto}>
+            <PiList />
+          </BotaoMenu>
+        </Conteudo>
+      </Barra>
+
+      <BarraInferior aria-label="Navegação">
+        <ItemInferior to="/" end>
+          <PiHouse className="vazio" aria-hidden="true" />
+          <PiHouseFill className="cheio" aria-hidden="true" />
+          Início
+        </ItemInferior>
+        <ItemInferior to="/liturgia-diaria">
+          <PiBookOpenText className="vazio" aria-hidden="true" />
+          <PiBookOpenTextFill className="cheio" aria-hidden="true" />
+          Liturgia
+        </ItemInferior>
+        <ItemInferior to="/santos">
+          <PiStarFour className="vazio" aria-hidden="true" />
+          <PiStarFourFill className="cheio" aria-hidden="true" />
+          Santos
+        </ItemInferior>
+        <ItemInferior to="/oracao">
+          <PiHandsPraying className="vazio" aria-hidden="true" />
+          <PiHandsPrayingFill className="cheio" aria-hidden="true" />
+          Orações
+        </ItemInferior>
+        <BotaoInferior
           type="button"
-          onClick={toggleMenu}
-          aria-expanded={isMenuOpen}
-          aria-controls="main-navigation"
-          aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+          $ativo={noMenuMais}
+          onClick={() => setMenuAberto(true)}
+          aria-expanded={menuAberto}
+          aria-controls="menu-completo"
         >
-          {isMenuOpen ? <FiX /> : <FiMenu />}
-          <span className="sr-only">
-            {isMenuOpen ? 'Fechar' : 'Abrir'} menu de navegação
-          </span>
-        </MenuButton>
+          {noMenuMais ? <PiDotsThreeOutlineFill aria-hidden="true" /> : <PiDotsThreeOutline aria-hidden="true" />}
+          Mais
+        </BotaoInferior>
+      </BarraInferior>
 
-        <Nav 
-          id="main-navigation"
-          role="navigation"
-          aria-label="Navegação principal"
-          isOpen={isMenuOpen}
-          isMobile={isMobile}
-        >
-          <NavLink 
-            to="/santos" 
-            isMobile={isMobile}
-            onClick={() => isMobile && setIsMenuOpen(false)}
-          >
-            Santos
-          </NavLink>
-          <NavLink 
-            to="/laudes" 
-            isMobile={isMobile}
-            onClick={() => isMobile && setIsMenuOpen(false)}
-          >
-            Laudes
-          </NavLink>
-          <NavLink 
-            to="/calendario" 
-            isMobile={isMobile}
-            onClick={() => isMobile && setIsMenuOpen(false)}
-          >
-            Calendário
-          </NavLink>
-          <NavLink 
-            to="/liturgia-diaria" 
-            isMobile={isMobile}
-            onClick={() => isMobile && setIsMenuOpen(false)}
-          >
-            Liturgia Diária
-          </NavLink>
-          <NavLink 
-            to="/oracao" 
-            isMobile={isMobile}
-            onClick={() => isMobile && setIsMenuOpen(false)}
-          >
-            Orações
-          </NavLink>
-          <NavLink 
-            to="/blog" 
-            isMobile={isMobile}
-            onClick={() => isMobile && setIsMenuOpen(false)}
-          >
-            Blog
-          </NavLink>
-          <NavLink 
-            to="/sobre" 
-            isMobile={isMobile}
-            onClick={() => isMobile && setIsMenuOpen(false)}
-          >
-            Sobre
-          </NavLink>
-        </Nav>
-      </HeaderContent>
-    </HeaderContainer>
+      <Folha
+        id="menu-completo"
+        $aberta={menuAberto}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        aria-hidden={!menuAberto}
+      >
+        <FolhaTopo>
+          <Logo tamanho={36} />
+          <BotaoIcone type="button" onClick={() => setMenuAberto(false)} aria-label="Fechar menu">
+            <PiX />
+          </BotaoIcone>
+        </FolhaTopo>
+        <ListaMenu>
+          <li>
+            <NavLink to="/" end tabIndex={menuAberto ? 0 : -1}>
+              <PiHouse aria-hidden="true" />
+              <span>
+                <strong>Início</strong>
+                <small>O dia de hoje na liturgia</small>
+              </span>
+              <PiCaretRight aria-hidden="true" />
+            </NavLink>
+          </li>
+          {DESTINOS.map(({ to, rotulo, descricao, Icone }) => (
+            <li key={to}>
+              <NavLink to={to} tabIndex={menuAberto ? 0 : -1}>
+                <Icone aria-hidden="true" />
+                <span>
+                  <strong>{rotulo}</strong>
+                  <small>{descricao}</small>
+                </span>
+                <PiCaretRight aria-hidden="true" />
+              </NavLink>
+            </li>
+          ))}
+        </ListaMenu>
+        <TrocaTema type="button" onClick={toggleTheme} tabIndex={menuAberto ? 0 : -1}>
+          <IconeTema aria-hidden="true" />
+          {rotuloTema}
+        </TrocaTema>
+      </Folha>
+    </>
   );
 };
 
-export default Header; 
+export default Header;

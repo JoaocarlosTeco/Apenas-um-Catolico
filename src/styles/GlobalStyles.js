@@ -1,15 +1,19 @@
 import { createGlobalStyle } from 'styled-components';
 
+// Visual de missal: papel marfim, azul-marinho, ouro velho só em detalhes,
+// texto longo em serifa de livro e cantos quase retos. Sem sombras nem gradientes.
+
 const breakpoints = {
   mobile: '768px',
   tablet: '1024px',
   desktop: '1200px',
-  large: '1440px'
+  large: '1440px',
 };
 
 const fonts = {
-  heading: "'Inter', sans-serif",
-  body: "'Inter', sans-serif",
+  heading: "'Cormorant Garamond', Georgia, serif",
+  body: "'EB Garamond', Georgia, serif",
+  ui: "'Inter', -apple-system, 'Segoe UI', sans-serif",
   sizes: {
     xs: '0.75rem',
     sm: '0.875rem',
@@ -19,7 +23,7 @@ const fonts = {
     '2xl': '1.5rem',
     '3xl': '1.875rem',
     '4xl': '2.25rem',
-  }
+  },
 };
 
 const spacing = {
@@ -40,123 +44,111 @@ const spacing = {
 const transitions = {
   fast: '0.2s ease',
   normal: '0.3s ease',
-  slow: '0.5s ease'
+  slow: '0.5s ease',
+};
+
+// sem sombras: a separação é feita por filetes
+const shadows = {
+  none: 'none',
+  subtle: 'none',
+  soft: 'none',
+  medium: 'none',
+  strong: 'none',
+  float: 'none',
+};
+
+const zIndex = {
+  dropdown: 1000,
+  sticky: 1020,
+  fixed: 1030,
+  modal: 1040,
+  tooltip: 1050,
+};
+
+const borderRadius = {
+  sm: '2px',
+  md: '3px',
+  lg: '4px',
+  xl: '4px',
+  xxl: '6px',
+  pill: '3px',
+};
+
+const fontSize = {
+  xs: '0.75rem',
+  sm: '0.875rem',
+  md: '1rem',
+  lg: '1.25rem',
+  xl: '1.5rem',
+  xxl: '2rem',
 };
 
 export const lightTheme = {
+  modo: 'claro',
   colors: {
-    primary: '#1B3358',
-    secondary: '#C09553',
-    background: '#F5F7FA',
-    cardBackground: '#FFFFFF',
-    surface: '#FFFFFF',
-    text: '#2D3748',
-    textLight: '#718096',
-    textSecondary: '#718096',
+    primary: '#16325C',
+    secondary: '#24467A',
+    background: '#F6F2EA',
+    cardBackground: '#FFFDF8',
+    surface: '#FFFDF8',
+    text: '#1F2430',
+    textLight: '#5E6370',
+    textSecondary: '#5E6370',
     white: '#FFFFFF',
-    error: '#E53E3E',
-    borderColor: '#E2E8F0',
-    headerBg: 'rgba(255, 255, 255, 0.9)',
-    footerBg: '#1B3358',
-    accent: '#4B7BE5',
-    titleColor: '#1B3358',
-    success: '#28A745',
-    warning: '#FFC107',
-    info: '#17A2B8'
+    error: '#9B2C2C',
+    borderColor: '#DDD5C4',
+    headerBg: 'rgba(16, 32, 60, 0.97)',
+    footerBg: '#10203C',
+    accent: '#24467A',
+    gold: '#9C7C38',
+    sky: '#ECE6DA',
+    titleColor: '#14284B',
+    success: '#2E6B45',
+    warning: '#8A6116',
+    info: '#24467A',
   },
-  shadows: {
-    none: 'none',
-    subtle: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)',
-    soft: '0 4px 8px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02)',
-    medium: '0 8px 16px rgba(0, 0, 0, 0.06), 0 4px 6px rgba(0, 0, 0, 0.04)',
-    strong: '0 16px 32px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.06)',
-    float: '0 20px 40px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06)',
-  },
-  zIndex: {
-    dropdown: 1000,
-    sticky: 1020,
-    fixed: 1030,
-    modal: 1040,
-    tooltip: 1050
-  },
-  borderRadius: {
-    sm: '4px',
-    md: '8px',
-    lg: '12px',
-    xl: '16px',
-    xxl: '20px',
-    pill: '50px'
-  },
-  fontSize: {
-    xs: '0.75rem',
-    sm: '0.875rem',
-    md: '1rem',
-    lg: '1.25rem',
-    xl: '1.5rem',
-    xxl: '2rem'
-  },
+  shadows,
+  zIndex,
+  borderRadius,
+  fontSize,
   breakpoints,
   fonts,
   spacing,
-  transitions
+  transitions,
 };
 
 export const darkTheme = {
+  modo: 'escuro',
   colors: {
-    primary: '#1B3358',
-    secondary: '#C09553',
-    background: '#1A202C',
-    cardBackground: '#2D3748',
-    surface: '#2D3748',
-    text: '#E2E8F0',
-    textLight: '#A0AEC0',
-    textSecondary: '#A0AEC0',
+    primary: '#2C4C7E',
+    secondary: '#9DB7DB',
+    background: '#0F1520',
+    cardBackground: '#161D2A',
+    surface: '#161D2A',
+    text: '#E8E2D5',
+    textLight: '#A8A396',
+    textSecondary: '#A8A396',
     white: '#FFFFFF',
-    error: '#FC8181',
-    borderColor: '#4A5568',
-    headerBg: 'rgba(26, 32, 44, 0.9)',
-    footerBg: '#1A202C',
-    accent: '#4B7BE5',
-    titleColor: '#C09553',
-    success: '#28A745',
-    warning: '#FFC107',
-    info: '#17A2B8'
+    error: '#E59A9A',
+    borderColor: '#2A3240',
+    headerBg: 'rgba(10, 14, 22, 0.97)',
+    footerBg: '#0A0E16',
+    accent: '#9DB7DB',
+    gold: '#C8A963',
+    sky: '#1C2433',
+    titleColor: '#EFE8D8',
+    success: '#7FB892',
+    warning: '#D9B56A',
+    info: '#9DB7DB',
   },
-  shadows: {
-    none: 'none',
-    subtle: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08)',
-    soft: '0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08)',
-    medium: '0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.12)',
-    strong: '0 16px 32px rgba(0, 0, 0, 0.18), 0 8px 16px rgba(0, 0, 0, 0.15)',
-    float: '0 20px 40px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.15)',
-  },
-  zIndex: {
-    dropdown: 1000,
-    sticky: 1020,
-    fixed: 1030,
-    modal: 1040,
-    tooltip: 1050
-  },
-  borderRadius: {
-    sm: '4px',
-    md: '8px',
-    lg: '12px',
-    xl: '16px',
-    xxl: '20px',
-    pill: '50px'
-  },
-  fontSize: {
-    xs: '0.75rem',
-    sm: '0.875rem',
-    md: '1rem',
-    lg: '1.25rem',
-    xl: '1.5rem',
-    xxl: '2rem'
-  },
+  shadows,
+  zIndex,
+  borderRadius,
+  fontSize,
   breakpoints,
   fonts,
   spacing,
-  transitions
+  transitions,
 };
 
 const GlobalStyles = createGlobalStyle`
@@ -171,13 +163,33 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: ${props => props.theme.colors.background};
+    font-family: ${props => props.theme.fonts.body};
+    font-size: 1.08rem;
+    background-color: var(--fundo-pagina, ${props => props.theme.colors.background});
     color: ${props => props.theme.colors.text};
-    line-height: 1.6;
+    line-height: 1.65;
     height: 100%;
     overflow-x: hidden;
-    letter-spacing: 0.01em;
+    font-feature-settings: 'kern', 'liga', 'onum';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: ${props => props.theme.fonts.heading};
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  /* controles e navegação em sans, o resto é livro */
+  button, input, select, textarea, nav, label {
+    font-family: ${props => props.theme.fonts.ui};
+  }
+
+  /* espaço para a barra de navegação de baixo no celular */
+  @media (max-width: 768px) {
+    body {
+      padding-bottom: calc(64px + env(safe-area-inset-bottom));
+    }
   }
 
   #root {
@@ -187,131 +199,43 @@ const GlobalStyles = createGlobalStyle`
     overflow-x: hidden;
   }
 
-  /* Otimizações globais para imagens */
   img {
     max-width: 100%;
     height: auto;
     display: block;
-    
-    /* Melhor renderização de imagens */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    image-rendering: crisp-edges;
   }
 
-  /* Imagens responsivas */
-  .responsive-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
+  ::selection {
+    background: ${props => props.theme.colors.gold};
+    color: #fff;
   }
 
-  .responsive-image:hover {
-    transform: scale(1.02);
-  }
-
-  /* Loading placeholder para imagens */
-  .image-placeholder {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading-shimmer 2s infinite;
-  }
-
-  @keyframes loading-shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* Scrollbar customizada */
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: ${props => props.theme.colors.background};
-    border-radius: 6px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${props => props.theme.colors.secondary};
-    border-radius: 6px;
-    border: 1px solid ${props => props.theme.colors.background};
-    transition: background 0.3s ease;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: ${props => props.theme.colors.accent};
-  }
-
-  ::-webkit-scrollbar-corner {
-    background: ${props => props.theme.colors.background};
-  }
-
-  /* Scrollbar para Firefox */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: ${props => props.theme.colors.secondary} ${props => props.theme.colors.background};
-  }
-
-  /* Animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  /* Utility classes */
-  .fade-in-up {
-    animation: fadeInUp 0.6s ease forwards;
-  }
-
-  .fade-in {
-    animation: fadeIn 0.6s ease forwards;
-  }
-
-  /* Link styles */
   a {
     color: ${props => props.theme.colors.accent};
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
   }
 
   a:hover {
-    color: ${props => props.theme.colors.secondary};
+    color: ${props => props.theme.colors.titleColor};
   }
 
-  /* Better focus styles */
-  *:focus {
+  *:focus-visible {
     outline: 2px solid ${props => props.theme.colors.accent};
     outline-offset: 2px;
   }
 
-  /* Button reset */
   button {
     border: none;
     background: none;
     cursor: pointer;
-    font-family: inherit;
   }
 
-  /* Accessibility improvements */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: ${props => props.theme.colors.borderColor} transparent;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -323,4 +247,4 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-export default GlobalStyles; 
+export default GlobalStyles;

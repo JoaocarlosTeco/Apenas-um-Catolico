@@ -1,5 +1,5 @@
 import React from 'react';
-import { getLogoPath } from '../utils/imageUtils';
+import { getImagePath } from '../utils/imageUtils';
 import { Helmet } from 'react-helmet';
 import { BaseComponentProps, BreadcrumbItem } from '../types';
 
@@ -57,12 +57,17 @@ interface SEOProps extends BaseComponentProps {
   tags?: string[];
 }
 
+// Imagens chegam como caminho do site (/Apenas-um-Catolico/...); redes sociais precisam da URL completa
+const ORIGEM = 'https://joaocarlosteco.github.io';
+const absoluto = (caminho: string): string =>
+  caminho.startsWith('http') ? caminho : `${ORIGEM}${caminho}`;
+
 const SEO: React.FC<SEOProps> = ({ 
   title = "Apenas um Católico - Evangelização e Devoção",
   description = "Site católico dedicado à evangelização e devoção aos santos. Conheça a história dos santos, orações e reflexões espirituais.",
   keywords = "católico, santos, orações, evangelização, fé, devoção, religião, cristianismo",
-  image = getLogoPath("Logo tipo apenas um catolico.png"),
-  url = "https://apenas-um-catolico.vercel.app",
+  image = getImagePath("icons/compartilhar.png"),
+  url = "https://joaocarlosteco.github.io/Apenas-um-Catolico",
   type = "website",
   author = "Apenas um Católico",
   structuredData = null,
@@ -91,19 +96,10 @@ const SEO: React.FC<SEOProps> = ({
       "url": url,
       "logo": {
         "@type": "ImageObject",
-        "url": `${url}${image}`,
+        "url": absoluto(image),
         "width": 512,
         "height": 512
-      },
-      "sameAs": [
-        "https://www.facebook.com/apenasumcatolico",
-        "https://www.instagram.com/apenasumcatolico"
-      ]
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": `${url}/buscar?q={search_term_string}`,
-      "query-input": "required name=search_term_string"
+      }
     }
   };
 
@@ -147,7 +143,7 @@ const SEO: React.FC<SEOProps> = ({
     "@type": "Article",
     "headline": article.title,
     "description": article.description,
-    "image": `${url}${article.image || image}`,
+    "image": absoluto(article.image || image),
     "author": {
       "@type": "Person",
       "name": article.author || author
@@ -157,7 +153,7 @@ const SEO: React.FC<SEOProps> = ({
       "name": siteTitle,
       "logo": {
         "@type": "ImageObject",
-        "url": `${url}${image}`
+        "url": absoluto(image)
       }
     },
     "datePublished": publishedTime,
@@ -186,7 +182,7 @@ const SEO: React.FC<SEOProps> = ({
     "canonizationDate": saint.canonizationDate,
     "feastDay": saint.feastDay,
     "patronOf": saint.patronOf,
-    "image": `${url}${saint.image || image}`,
+    "image": absoluto(saint.image || image),
     "sameAs": saint.externalLinks || [],
     "knowsAbout": saint.attributes || [],
     "worksFor": {
@@ -273,7 +269,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="og:url" content={url} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={`${url}${image}`} />
+      <meta property="og:image" content={absoluto(image)} />
       <meta property="og:site_name" content={siteTitle} />
       <meta property="og:locale" content="pt_BR" />
       
@@ -282,7 +278,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="twitter:url" content={url} />
       <meta property="twitter:title" content={fullTitle} />
       <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={`${url}${image}`} />
+      <meta property="twitter:image" content={absoluto(image)} />
       
       {/* Article specific meta tags */}
       {article && (

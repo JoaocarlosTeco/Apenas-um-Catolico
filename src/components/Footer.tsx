@@ -1,346 +1,208 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { BaseComponentProps } from '../types';
-import { InstagramIcon, GitHubIcon, EmailIcon } from './Icons/SocialIcons';
+import { Link } from 'react-router-dom';
+import { PiArrowUpRight, PiEnvelopeSimple, PiGithubLogo, PiInstagramLogo } from 'react-icons/pi';
+import Logo from './Logo';
 
-interface FooterProps extends BaseComponentProps {}
-
-interface SocialLinkData {
-  name: string;
-  url: string;
-  icon: React.ComponentType<any>;
-  color: string;
-}
-
-interface FooterLinkData {
-  label: string;
-  to: string;
-  external?: boolean;
-}
-
-interface FooterSectionData {
-  title: string;
-  links: FooterLinkData[];
-}
-
-// Styled Components
-const FooterContainer = styled.footer`
-  background: linear-gradient(135deg, ${props => props.theme.colors.primary} 0%, ${props => props.theme.colors.secondary} 100%);
-  color: white;
-  padding: 3rem 0 1.5rem;
-  margin-top: auto;
-  flex: 0 0 auto;
+const Rodape = styled.footer`
   position: relative;
-`;
+  overflow: hidden;
+  background: ${({ theme }) => theme.colors.footerBg};
+  color: rgba(255, 255, 255, 0.82);
+  padding: 56px 16px 32px;
 
-const FooterContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    padding: 0 1rem;
-  }
-`;
-
-const FooterGrid = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  
-  @media (max-width: ${props => props.theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-  
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    text-align: center;
-  }
-`;
-
-const FooterSectionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const FooterTitle = styled.h3`
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: white;
-`;
-
-const FooterDescription = styled.p`
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  opacity: 0.9;
-  font-size: 0.95rem;
-`;
-
-const FooterLinks = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const FooterLinkItem = styled.li`
-  margin-bottom: 0.75rem;
-`;
-
-const FooterLinkStyled = styled(Link)`
-  color: white;
-  text-decoration: none;
-  opacity: 0.8;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-  
-  &:hover {
-    opacity: 1;
-    color: ${props => props.theme.colors.accent || '#FFD700'};
-    transform: translateX(4px);
-  }
-`;
-
-const ExternalLink = styled.a`
-  color: white;
-  text-decoration: none;
-  opacity: 0.8;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-  
-  &:hover {
-    opacity: 1;
-    color: ${props => props.theme.colors.accent || '#FFD700'};
-    transform: translateX(4px);
-  }
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-  
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    justify-content: center;
-    gap: 1rem;
-  }
-`;
-
-const SocialLinkStyled = styled(motion.a)<{ color: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  text-decoration: none;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  
-  &:hover {
-    background: ${props => props.color};
-    transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    border-color: ${props => props.color};
-  }
-  
-  &:active {
-    transform: translateY(-2px) scale(1.02);
-  }
-  
+  /* filete dourado no alto do rodapé */
   &::before {
     content: '';
     position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: #b8924a;
   }
-  
-  &:hover::before {
-    opacity: 1;
+
+  a {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  a:hover {
+    color: #fff;
   }
 `;
 
-const FooterDivider = styled.hr`
-  border: none;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 2rem 0 1rem;
+const Grade = styled.div`
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  gap: 32px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  }
 `;
 
-const FooterBottom = styled.div`
+const Sobre = styled.div`
+  p {
+    margin-top: 16px;
+    max-width: 340px;
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+`;
+
+const Redes = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+
+  a {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 1.25rem;
+    transition: background 0.2s ease;
+  }
+
+  a:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+`;
+
+const Coluna = styled.nav`
+  h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9cc4f2;
+    margin-bottom: 14px;
+  }
+
+  ul {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.95rem;
+  }
+`;
+
+const Base = styled.div`
+  max-width: 1120px;
+  margin: 40px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex-direction: column;
-    text-align: center;
-  }
-`;
-
-const Copyright = styled.p`
-  margin: 0;
-  opacity: 0.8;
+  justify-content: space-between;
+  gap: 8px;
   font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
 `;
 
-const FooterCredits = styled.div`
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  font-size: 0.85rem;
-  opacity: 0.8;
-  
-  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-`;
+const NAVEGAR = [
+  { rotulo: 'Liturgia Diária', to: '/liturgia-diaria' },
+  { rotulo: 'Laudes', to: '/laudes' },
+  { rotulo: 'Orações', to: '/oracao' },
+  { rotulo: 'Calendário', to: '/calendario' },
+  { rotulo: 'Blog', to: '/blog' },
+  { rotulo: 'Sobre', to: '/sobre' },
+];
 
-const Footer: React.FC<FooterProps> = ({ className, ...props }) => {
-  const currentYear = new Date().getFullYear();
+const SANTOS = [
+  { rotulo: 'São Francisco de Assis', to: '/santos/sao-francisco' },
+  { rotulo: 'Santa Teresinha', to: '/santos/santa-teresinha' },
+  { rotulo: 'São Padre Pio', to: '/santos/padre-pio' },
+  { rotulo: 'Nossa Senhora', to: '/santos/nossa-senhora' },
+];
 
-  const socialLinks: SocialLinkData[] = [
-    {
-      name: 'Instagram',
-      url: 'https://www.instagram.com/joaotdev/',
-      icon: InstagramIcon,
-      color: '#E4405F'
-    },
-    {
-      name: 'GitHub',
-      url: 'https://github.com/joaocarlosteco',
-      icon: GitHubIcon,
-      color: '#333'
-    },
-    {
-      name: 'Email',
-      url: 'mailto:joao.carlosdev23@gmail.com',
-      icon: EmailIcon,
-      color: '#EA4335'
-    }
-  ];
+const IGREJA = [
+  { rotulo: 'Vaticano', href: 'https://www.vatican.va/content/vatican/pt.html' },
+  { rotulo: 'CNBB', href: 'https://www.cnbb.org.br' },
+  { rotulo: 'Catecismo', href: 'https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html' },
+];
 
-  const footerSections: FooterSectionData[] = [
-    {
-      title: 'Navegação',
-      links: [
-        { label: 'Início', to: '/' },
-        { label: 'Santos', to: '/santos' },
-        { label: 'Orações', to: '/oracao' },
-        { label: 'Blog', to: '/blog' },
-        { label: 'Sobre', to: '/sobre' }
-      ]
-    },
-    {
-      title: 'Recursos',
-      links: [
-        { label: 'Laudes', to: '/laudes' },
-        { label: 'Liturgia Diária', to: '/liturgia-diaria' },
-        { label: 'Calendário Litúrgico', to: '/calendario' },
-        { label: 'São Francisco', to: '/santos/sao-francisco' }
-      ]
-    },
-    {
-      title: 'Links Úteis',
-      links: [
-        { label: 'Vaticano', to: 'https://vatican.va', external: true },
-        { label: 'CNBB', to: 'https://cnbb.org.br', external: true },
-        { label: 'Canção Nova', to: 'https://cancaonova.com', external: true },
-        { label: 'Catecismo', to: 'https://catecismo.org', external: true }
-      ]
-    }
-  ];
+const Footer: React.FC = () => (
+  <Rodape>
+    <Grade>
+      <Sobre>
+        <Logo tamanho={40} />
+        <p>
+          Um espaço para rezar todos os dias: a liturgia de hoje, a vida dos santos e orações para cada
+          momento.
+        </p>
+        <Redes>
+          <a href="https://www.instagram.com/joaotdev/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <PiInstagramLogo />
+          </a>
+          <a
+            href="https://github.com/JoaocarlosTeco/Apenas-um-Catolico"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Código no GitHub"
+          >
+            <PiGithubLogo />
+          </a>
+          <a href="mailto:joao.carlosdev23@gmail.com" aria-label="E-mail">
+            <PiEnvelopeSimple />
+          </a>
+        </Redes>
+      </Sobre>
 
-  return (
-    <FooterContainer className={className} {...props}>
-      <FooterContent>
-        <FooterGrid>
-          <FooterSectionContainer>
-            <FooterTitle>Apenas um Católico</FooterTitle>
-            <FooterDescription>
-              Um espaço dedicado à evangelização e crescimento espiritual católico. 
-              Aqui você encontra histórias de santos, orações poderosas e conteúdo 
-              para fortalecer sua fé e aproximar-se de Deus.
-            </FooterDescription>
-            
-            <SocialLinks>
-              {socialLinks.map((social) => {
-                const IconComponent = social.icon;
-                return (
-                  <SocialLinkStyled
-                    key={social.name}
-                    href={social.url}
-                    color={social.color}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    title={social.name}
-                  >
-                    <IconComponent size={24} />
-                  </SocialLinkStyled>
-                );
-              })}
-            </SocialLinks>
-          </FooterSectionContainer>
-
-          {footerSections.map((section) => (
-            <FooterSectionContainer key={section.title}>
-              <FooterTitle>{section.title}</FooterTitle>
-              <FooterLinks>
-                {section.links.map((link) => (
-                  <FooterLinkItem key={link.label}>
-                    {link.external ? (
-                      <ExternalLink
-                        href={link.to}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {link.label}
-                      </ExternalLink>
-                    ) : (
-                      <FooterLinkStyled to={link.to}>
-                        {link.label}
-                      </FooterLinkStyled>
-                    )}
-                  </FooterLinkItem>
-                ))}
-              </FooterLinks>
-            </FooterSectionContainer>
+      <Coluna aria-label="Páginas">
+        <h2>Navegar</h2>
+        <ul>
+          {NAVEGAR.map(item => (
+            <li key={item.to}>
+              <Link to={item.to}>{item.rotulo}</Link>
+            </li>
           ))}
-        </FooterGrid>
+        </ul>
+      </Coluna>
 
-        <FooterDivider />
+      <Coluna aria-label="Santos">
+        <h2>Santos</h2>
+        <ul>
+          {SANTOS.map(item => (
+            <li key={item.to}>
+              <Link to={item.to}>{item.rotulo}</Link>
+            </li>
+          ))}
+        </ul>
+      </Coluna>
 
-        <FooterBottom>
-          <Copyright>
-            © {currentYear} Apenas um Católico. Todos os direitos reservados.
-          </Copyright>
-          
-          <FooterCredits>
-            <span>Feito com ❤️ para a evangelização</span>
-            <span>•</span>
-            <span>Ad Majorem Dei Gloriam</span>
-          </FooterCredits>
-        </FooterBottom>
-      </FooterContent>
-    </FooterContainer>
-  );
-};
+      <Coluna aria-label="Links da Igreja">
+        <h2>Igreja</h2>
+        <ul>
+          {IGREJA.map(item => (
+            <li key={item.href}>
+              <a href={item.href} target="_blank" rel="noopener noreferrer">
+                {item.rotulo} <PiArrowUpRight aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Coluna>
+    </Grade>
 
-export default Footer; 
+    <Base>
+      <span>© {new Date().getFullYear()} Apenas um Católico</span>
+      <span>
+        Liturgia via{' '}
+        <a href="https://github.com/Dancrf/liturgia-diaria" target="_blank" rel="noopener noreferrer">
+          API liturgia-diaria
+        </a>
+      </span>
+    </Base>
+  </Rodape>
+);
+
+export default Footer;

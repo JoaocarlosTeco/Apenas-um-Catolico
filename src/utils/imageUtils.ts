@@ -6,14 +6,10 @@
 export const getImagePath = (imagePath: string): string => {
   // Remove barra inicial se existir
   const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
-  
-  // Em produção (GitHub Pages), usa o PUBLIC_URL
-  if (process.env.NODE_ENV === 'production') {
-    return `${process.env.PUBLIC_URL}/${cleanPath}`;
-  }
-  
-  // Em desenvolvimento, usa o caminho normal
-  return `/${cleanPath}`;
+
+  // O site fica em /Apenas-um-Catolico/ tanto no GitHub Pages quanto no `npm start`
+  // (o CRA usa o "homepage" do package.json nos dois), então o prefixo vale sempre.
+  return `${process.env.PUBLIC_URL || ''}/${cleanPath}`;
 };
 
 /**
@@ -33,12 +29,3 @@ export const getSantoImagePath = (filename: string): string => {
 export const getLogoPath = (filename: string): string => {
   return getImagePath(`images/logos/${filename}`);
 };
-
-/**
- * Resolve o caminho para imagens de heróis
- * @param filename - Nome do arquivo (ex: 'hero-jesus.png')
- * @returns Caminho completo da imagem
- */
-export const getHeroImagePath = (filename: string): string => {
-  return getImagePath(`images/heroes/${filename}`);
-}; 

@@ -2,6 +2,8 @@ import 'styled-components';
 
 declare module 'styled-components' {
   export interface DefaultTheme {
+    /** 'claro' ou 'escuro' (o tema vem de um arquivo .js, por isso string) */
+    modo: string;
     colors: {
       primary: string;
       secondary: string;
@@ -18,6 +20,8 @@ declare module 'styled-components' {
       footerBg: string;
       accent: string;
       titleColor: string;
+      gold: string;
+      sky: string;
       success: string;
       warning: string;
       info: string;
@@ -76,6 +80,7 @@ declare module 'styled-components' {
     fonts: {
       heading: string;
       body: string;
+      ui: string;
       sizes: {
         xs: string;
         sm: string;
