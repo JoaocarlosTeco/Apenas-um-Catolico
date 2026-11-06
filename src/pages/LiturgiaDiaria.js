@@ -1,14 +1,22 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { useSearchParams } from 'react-router-dom';
 import {
+  FiCalendar,
   FiChevronLeft,
   FiChevronRight,
   FiMinus,
   FiPlus,
   FiShare2,
 } from 'react-icons/fi';
+import { CORES, diaLiturgico } from '../services/calendarioLiturgico';
 import {
   buscarLiturgia,
   chaveDaData,
@@ -50,32 +58,182 @@ const Topo = styled.header`
   border-bottom: 1px solid ${({ theme }) => theme.colors.borderColor};
 `;
 
-const NavegaData = styled.div`
-  display: flex;
+/* ---------- Seletor de dias ---------- */
+
+const DIAS_CURTOS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+// setas grandes nas pontas e a faixa de dias no meio, cada um na sua cor litúrgica
+const SeletorDia = styled.nav`
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
-  margin-bottom: 14px;
+  gap: 6px;
+  margin-bottom: 12px;
 `;
 
-const BotaoData = styled.button`
+const Seta = styled.button`
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  min-height: 40px;
-  padding: 0 10px;
-  font-size: 0.88rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid ${({ theme }) => theme.colors.borderColor};
+  background: ${({ theme }) => theme.colors.cardBackground};
+  color: ${({ theme }) => theme.colors.titleColor};
+  transition:
+    border-color 0.2s ease,
+    transform 0.15s ease;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 
   &:hover {
-    color: ${({ theme }) => theme.colors.titleColor};
+    border-color: currentColor;
   }
 
-  &:disabled {
-    opacity: 0.35;
-    cursor: default;
+  &:active {
+    transform: scale(0.92);
   }
 `;
+
+// no celular cabem cinco dias; do tablet em diante, a semana inteira
+const Dias = styled.ol`
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+
+  li:first-child,
+  li:last-child {
+    display: none;
+  }
+
+  @media (min-width: 520px) {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+
+    li:first-child,
+    li:last-child {
+      display: block;
+    }
+  }
+`;
+
+const BotaoDia = styled.button`
+  width: 100%;
+  min-height: 62px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 10px;
+  background: ${({ $cor, $escolhido, theme }) =>
+    $escolhido
+      ? theme.colors.primary
+      : `color-mix(in srgb, ${$cor} ${theme.modo === 'escuro' ? 22 : 14}%, ${theme.colors.cardBackground})`};
+  color: ${({ $escolhido, theme }) =>
+    $escolhido ? '#fff' : theme.colors.text};
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+
+  span {
+    font-family: ${({ theme }) => theme.fonts.ui};
+    font-size: 0.68rem;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  strong {
+    font-family: ${({ theme }) => theme.fonts.heading};
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: ${({ $cor, $escolhido }) => ($escolhido ? '#fff' : $cor)};
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+`;
+
+const Atalhos = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  margin-bottom: 16px;
+`;
+
+const BotaoAtalho = styled.button`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid ${({ theme }) => theme.colors.borderColor};
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.titleColor};
+
+  &:hover {
+    border-color: currentColor;
+  }
+`;
+
+// a data escondida que abre o calendário do próprio aparelho
+const DataEscondida = styled.input`
+  position: absolute;
+  inset: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+`;
+
+const DicaDeslizar = styled.p`
+  display: none;
+  width: 100%;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.textSecondary};
+
+  @media (hover: none) and (max-width: 767px) {
+    display: block;
+  }
+`;
+
+// ao trocar de dia, a leitura entra pelo lado de onde a pessoa veio
+const entrarDaDireita = keyframes`
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: none; }
+`;
+const entrarDaEsquerda = keyframes`
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: none; }
+`;
+const animacaoDeEntrada = direcao =>
+  direcao === 1
+    ? css`
+        animation: ${entrarDaDireita} 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      `
+    : direcao === -1
+      ? css`
+          animation: ${entrarDaEsquerda} 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+        `
+      : '';
 
 const DataExtenso = styled.p`
   font-family: 'Cormorant Garamond', Georgia, serif;
@@ -188,6 +346,7 @@ const Aba = styled.button`
 
 const Cartao = styled.article`
   padding: 4px 0 8px;
+  ${({ $direcao }) => animacaoDeEntrada($direcao)}
 `;
 
 const Referencia = styled.p`
@@ -423,15 +582,65 @@ const LiturgiaDiaria = () => {
     });
   };
 
-  const irPara = useCallback(
-    deslocamento => {
-      const data = dataDaChave(chave);
-      data.setDate(data.getDate() + deslocamento);
-      const nova = chaveDaData(data);
+  // de que lado a leitura nova entra: 1 = veio do dia seguinte, -1 = do anterior
+  const [direcao, setDirecao] = useState(0);
+  const seletorData = useRef(null);
+  const toque = useRef(null);
+
+  const abrirDia = useCallback(
+    nova => {
+      if (nova === chave) return;
+      setDirecao(nova > chave ? 1 : -1);
       setParams(nova === hoje ? {} : { data: nova });
     },
     [chave, hoje, setParams]
   );
+
+  const irPara = useCallback(
+    deslocamento => {
+      const data = dataDaChave(chave);
+      data.setDate(data.getDate() + deslocamento);
+      abrirDia(chaveDaData(data));
+    },
+    [chave, abrirDia]
+  );
+
+  // a faixa mostra três dias antes e três depois do dia aberto, na cor litúrgica de cada um
+  const diasDaFaixa = useMemo(
+    () =>
+      [-3, -2, -1, 0, 1, 2, 3].map(n => {
+        const data = dataDaChave(chave);
+        data.setDate(data.getDate() + n);
+        return { chave: chaveDaData(data), data, info: diaLiturgico(data) };
+      }),
+    [chave]
+  );
+
+  const escolherData = () => {
+    const campo = seletorData.current;
+    if (!campo) return;
+    try {
+      campo.showPicker();
+    } catch {
+      campo.focus();
+      campo.click();
+    }
+  };
+
+  // no celular, deslizar o dedo sobre a leitura troca de dia
+  const inicioDoToque = evento => {
+    const t = evento.touches[0];
+    toque.current = { x: t.clientX, y: t.clientY };
+  };
+  const fimDoToque = evento => {
+    if (!toque.current) return;
+    const t = evento.changedTouches[0];
+    const dx = t.clientX - toque.current.x;
+    const dy = t.clientY - toque.current.y;
+    toque.current = null;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8)
+      irPara(dx < 0 ? 1 : -1);
+  };
 
   const compartilhar = async () => {
     const url = window.location.href;
@@ -513,32 +722,77 @@ const LiturgiaDiaria = () => {
       </Helmet>
 
       <Topo>
-        <NavegaData>
-          <BotaoData
+        <SeletorDia aria-label="Escolher o dia">
+          <Seta
             type="button"
-            $cor={cor.hex}
             onClick={() => irPara(-1)}
             aria-label="Dia anterior"
           >
-            <FiChevronLeft /> Anterior
-          </BotaoData>
-          <BotaoData
+            <FiChevronLeft aria-hidden="true" />
+          </Seta>
+          <Dias>
+            {diasDaFaixa.map(d => {
+              const escolhido = d.chave === chave;
+              const ehHoje = d.chave === hoje;
+              return (
+                <li key={d.chave}>
+                  <BotaoDia
+                    type="button"
+                    $cor={CORES[d.info.cor].hex}
+                    $escolhido={escolhido}
+                    aria-current={escolhido ? 'date' : undefined}
+                    aria-label={`${ehHoje ? 'Hoje, ' : ''}${d.data.toLocaleDateString(
+                      'pt-BR',
+                      {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                      }
+                    )}: ${d.info.titulo}`}
+                    onClick={() => abrirDia(d.chave)}
+                  >
+                    <span aria-hidden="true">
+                      {ehHoje ? 'Hoje' : DIAS_CURTOS[d.data.getDay()]}
+                    </span>
+                    <strong aria-hidden="true">{d.data.getDate()}</strong>
+                    <i aria-hidden="true" />
+                  </BotaoDia>
+                </li>
+              );
+            })}
+          </Dias>
+          <Seta
             type="button"
-            $cor={cor.hex}
-            onClick={() => setParams({})}
-            disabled={chave === hoje}
-          >
-            Hoje
-          </BotaoData>
-          <BotaoData
-            type="button"
-            $cor={cor.hex}
             onClick={() => irPara(1)}
             aria-label="Próximo dia"
           >
-            Próximo <FiChevronRight />
-          </BotaoData>
-        </NavegaData>
+            <FiChevronRight aria-hidden="true" />
+          </Seta>
+        </SeletorDia>
+        <Atalhos>
+          {chave !== hoje && (
+            <BotaoAtalho type="button" onClick={() => abrirDia(hoje)}>
+              Voltar para hoje
+            </BotaoAtalho>
+          )}
+          <BotaoAtalho type="button" onClick={escolherData}>
+            <FiCalendar aria-hidden="true" /> Escolher data
+            <DataEscondida
+              ref={seletorData}
+              type="date"
+              tabIndex={-1}
+              aria-hidden="true"
+              value={chave}
+              onChange={evento => {
+                if (/^\d{4}-\d{2}-\d{2}$/.test(evento.target.value))
+                  abrirDia(evento.target.value);
+              }}
+            />
+          </BotaoAtalho>
+          <DicaDeslizar>
+            Deslize o dedo sobre a leitura para trocar de dia.
+          </DicaDeslizar>
+        </Atalhos>
         <DataExtenso>
           {dataExtenso.charAt(0).toUpperCase() + dataExtenso.slice(1)}
         </DataExtenso>
@@ -621,7 +875,14 @@ const LiturgiaDiaria = () => {
             ))}
           </Abas>
 
-          <Cartao $cor={cor.hex} role="tabpanel">
+          <Cartao
+            key={chave}
+            $cor={cor.hex}
+            $direcao={direcao}
+            role="tabpanel"
+            onTouchStart={inicioDoToque}
+            onTouchEnd={fimDoToque}
+          >
             {aba.id === 'oracoes' ? (
               <Oracoes liturgia={liturgia} cor={cor.hex} tamanho={tamanho} />
             ) : (
