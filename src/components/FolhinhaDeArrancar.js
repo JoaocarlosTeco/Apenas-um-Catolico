@@ -6,8 +6,8 @@ import Folhinha from './Folhinha';
 import { CORES, chave, diaLiturgico } from '../services/calendarioLiturgico';
 
 // O bloquinho de parede da home: a folha de hoje em cima de outras.
-// Tocar na folha (ou puxar com o dedo, ou o botão) arranca a folha e mostra o dia seguinte,
-// até uma semana à frente. Depois volta para hoje.
+// Tocar na folha (ou deslizar o dedo para o lado, ou o botão) arranca a folha e mostra o dia
+// seguinte, até uma semana à frente. Depois volta para hoje.
 
 const MAXIMO_DIAS = 6;
 const DURACAO_MS = 720;
@@ -146,20 +146,22 @@ const FolhinhaDeArrancar = ({ hoje, liturgia, cor, titulo, fundo }) => {
     }
   };
 
-  // puxar a folha para baixo ou para o lado também arranca
+  // Deslizar o dedo para o lado também arranca, como no calendário e na liturgia.
+  // Só conta gesto claramente horizontal: no celular a folha ocupa quase a tela,
+  // e quem rola a página passando o dedo por cima dela não quer trocar de dia.
   const inicioDoToque = evento => {
     const t = evento.touches[0];
-    toque.current = { x: t.clientX, y: t.clientY };
+    toque.current = { x: t.clientX, y: t.clientY, rolagem: window.scrollY };
   };
   const fimDoToque = evento => {
     if (!toque.current) return;
     const t = evento.changedTouches[0];
-    const distancia = Math.hypot(
-      t.clientX - toque.current.x,
-      t.clientY - toque.current.y
-    );
+    const dx = t.clientX - toque.current.x;
+    const dy = t.clientY - toque.current.y;
+    const rolou = Math.abs(window.scrollY - toque.current.rolagem) > 10;
     toque.current = null;
-    if (distancia > 50) proxima();
+    if (!rolou && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.8)
+      proxima();
   };
 
   const atual = folha(avanco);
